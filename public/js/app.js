@@ -48,8 +48,8 @@ function buildStepsForDay(dayNumber) {
   const mysteryType = state.activeMysteryType || getAutoMysteryType();
   const mysteryObj = NOVENA_DATA.rosario.misterios[mysteryType];
 
-  const oradorBadge = (label = 'Orador') => `<span class="voice-badge guia" style="display:inline-flex; align-items:center; gap:0.3rem;">${icon('speaker', { size: 14 })} ${label}</span>`;
-  const todosBadge = (label = 'Todos responden a coro') => `<span class="voice-badge todos" style="display:inline-flex; align-items:center; gap:0.3rem;">${icon('users', { size: 14 })} ${label}</span>`;
+  const oradorBadge = (label = 'Orador (Guía)') => `<span class="voice-badge guia" style="display:inline-flex; align-items:center; gap:0.35rem;">🎙️ ${label}</span>`;
+  const todosBadge = (label = 'Todos respondemos juntos:') => `<span class="voice-badge todos" style="display:inline-flex; align-items:center; gap:0.35rem;">👥 ${label}</span>`;
 
   return [
     // Paso 0: Portada & Apertura
@@ -58,14 +58,18 @@ function buildStepsForDay(dayNumber) {
       badge: 'Inicio de la Novena',
       title: 'Por la Señal de la Santa Cruz',
       render: () => `
-        <div style="text-align: center; margin-bottom: 0.9rem;">
-          <div class="candle-icon" style="margin: 0 auto 0.4rem auto; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
-            ${icon('candle', { size: 36, color: '#DFB15B' })}
+        <div style="text-align: center; margin-bottom: 1.2rem;">
+          <div class="candle-icon" style="margin: 0 auto 0.5rem auto; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+            ${icon('candle', { size: 42, color: '#DFB15B' })}
           </div>
-          <h2 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--gold-primary); margin-bottom: 0.2rem;">MAMI OLGUITA</h2>
-          <div style="font-family: var(--font-body); font-style: italic; font-size: 0.95rem; color: var(--gold-light);">
+          <h2 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--gold-primary); margin-bottom: 0.3rem;">MAMI OLGUITA</h2>
+          <div style="font-family: var(--font-body); font-style: italic; font-size: 1.08rem; color: var(--gold-light);">
             ${NOVENA_DATA.info.jaculatoria}
           </div>
+        </div>
+
+        <div class="prayer-subheading">
+          ✝️ Rito Inicial
         </div>
 
         <div class="dialogo-block">
@@ -87,15 +91,17 @@ function buildStepsForDay(dayNumber) {
       badge: 'Inicio de la Novena',
       title: NOVENA_DATA.actoContricion.title,
       render: () => `
-        <div class="guia-part" style="margin-bottom: 0.8rem;">
-          ${oradorBadge('Orador lee:')}
-          <div style="font-size: 1.05rem; display: flex; flex-direction: column; gap: 0.75rem;">
-            ${NOVENA_DATA.actoContricion.paragraphs.map(p => `<p>${p}</p>`).join('')}
+        <div class="dialogo-block">
+          <div class="guia-part">
+            ${oradorBadge('Orador (Guía) lee:')}
+            <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              ${NOVENA_DATA.actoContricion.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
+            </div>
           </div>
-        </div>
-        <div class="todos-part">
-          ${todosBadge()}
-          <div class="voice-text">${NOVENA_DATA.actoContricion.response}</div>
+          <div class="todos-part">
+            ${todosBadge('Todos respondemos:')}
+            <div class="voice-text">${NOVENA_DATA.actoContricion.response}</div>
+          </div>
         </div>
       `
     },
@@ -106,20 +112,24 @@ function buildStepsForDay(dayNumber) {
       badge: 'El Santo Rosario',
       title: 'Ofrecimiento y Credo de los Apóstoles',
       render: () => `
-        <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Orador (Ofrecimiento):')}
-          <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 1.02rem;">
-            ${NOVENA_DATA.rosario.oracionInicial.text.map(t => `<p>${t}</p>`).join('')}
+        <div class="guia-part" style="margin-bottom: 1.2rem;">
+          ${oradorBadge('Orador (Ofrecimiento del Rosario):')}
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.35rem;">
+            ${NOVENA_DATA.rosario.oracionInicial.text.map(t => `<p style="margin:0;">${t}</p>`).join('')}
           </div>
+        </div>
+
+        <div class="prayer-subheading">
+          📖 Credo de los Apóstoles
         </div>
 
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador (El Credo)')}
+            ${oradorBadge('Orador (Guía)')}
             <div class="voice-text">${NOVENA_DATA.rosario.credo.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge()}
+            ${todosBadge('Todos respondemos:')}
             <div class="voice-text">${NOVENA_DATA.rosario.credo.todos}</div>
           </div>
         </div>
@@ -136,106 +146,120 @@ function buildStepsForDay(dayNumber) {
         badge: `${mysteryObj.nombre} (${index + 1}/5)`,
         title: `${index + 1}º Misterio: ${mTitulo}`,
         render: () => `
-          <div style="text-align: center; margin-bottom: 0.8rem;">
-            <div style="font-size: 0.8rem; font-family: var(--font-sans); color: var(--gold-primary); text-transform: uppercase; font-weight: 700;">
-              ${mysteryObj.nombre}
-            </div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--gold-light); margin: 0.2rem 0;">
-              ${mTitulo}
-            </h3>
-          </div>
-
           ${mMeditacion ? `
-            <div class="guia-part" style="background: rgba(223, 177, 91, 0.05); border-left: 3px solid var(--gold-primary); padding: 0.65rem 0.85rem; margin-bottom: 0.85rem; border-radius: 4px;">
-              <div style="font-size: 0.78rem; font-weight: 700; color: var(--gold-primary); text-transform: uppercase; margin-bottom: 0.2rem;">
-                Meditación por Mami Olguita:
+            <div class="meditacion-box">
+              <div class="meditacion-title">
+                🕊️ Meditación por Mami Olguita:
               </div>
-              <p style="font-size: 1rem; color: var(--gold-light); font-style: italic; margin: 0; line-height: 1.55;">
+              <p class="meditacion-text">
                 "${mMeditacion}"
               </p>
             </div>
           ` : ''}
 
-          <div class="dialogo-block">
-            <div class="guia-part">
-              ${oradorBadge('Orador — Padre Nuestro')}
-              <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.guia}</div>
+          <!-- 1. Padre Nuestro -->
+          <div class="prayer-section">
+            <div class="prayer-subheading">
+              📖 1. Padre Nuestro
             </div>
-            <div class="todos-part">
-              ${todosBadge()}
-              <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.todos}</div>
-            </div>
-          </div>
-
-          <!-- Rosario Contador de 10 Ave Marías -->
-          <div class="rosario-counter-card">
-            <div class="rosario-counter-header" style="display:flex; align-items:center; justify-content:center; gap:0.35rem;">
-              ${icon('rosary', { size: 15, color: '#DFB15B' })} 10 Ave Marías • (<span id="bead-count-label">${state.currentAveMaria}</span>/10)
-            </div>
-            <div class="beads-row" id="beads-container">
-              ${Array.from({ length: 10 }).map((_, bIdx) => `
-                <div class="bead-item ${bIdx < state.currentAveMaria ? 'completed' : ''} ${bIdx === state.currentAveMaria - 1 ? 'active' : ''}" 
-                     onclick="window.setAveMaria(${bIdx + 1})">
-                  ${bIdx + 1}
-                </div>
-              `).join('')}
-            </div>
-            <div style="margin-top: 0.5rem; display: flex; justify-content: center; gap: 0.4rem;">
-              <button class="btn-speaker-item" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.25rem;" onclick="window.nextAveMaria()">
-                ${icon('plus', { size: 13 })} Contar Ave María
-              </button>
-              <button class="btn-speaker-item" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.25rem;" onclick="window.setAveMaria(0)">
-                ${icon('refresh', { size: 13 })} Reiniciar
-              </button>
+            <div class="dialogo-block">
+              <div class="guia-part">
+                ${oradorBadge('Orador (Guía)')}
+                <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.guia}</div>
+              </div>
+              <div class="todos-part">
+                ${todosBadge('Todos respondemos juntos:')}
+                <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.todos}</div>
+              </div>
             </div>
           </div>
 
-          <div class="dialogo-block">
-            <div class="guia-part">
-              ${oradorBadge('Orador — Ave María')}
-              <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.guia}</div>
+          <!-- 2. Diez Ave Marías -->
+          <div class="prayer-section">
+            <div class="prayer-subheading">
+              📿 2. Diez Ave Marías
             </div>
-            <div class="todos-part">
-              ${todosBadge()}
-              <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
+
+            <!-- Rosario Contador de 10 Ave Marías -->
+            <div class="rosario-counter-card">
+              <div class="rosario-counter-header" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:1rem; font-weight:700; color:var(--gold-light);">
+                📿 Ave Marías: (<span id="bead-count-label">${state.currentAveMaria}</span> de 10 rezadas)
+              </div>
+              <div class="beads-row" id="beads-container">
+                ${Array.from({ length: 10 }).map((_, bIdx) => `
+                  <div class="bead-item ${bIdx < state.currentAveMaria ? 'completed' : ''} ${bIdx === state.currentAveMaria - 1 ? 'active' : ''}" 
+                       onclick="window.setAveMaria(${bIdx + 1})" title="Ave María ${bIdx + 1}">
+                    ${bIdx + 1}
+                  </div>
+                `).join('')}
+              </div>
+              <div class="beads-control-btns" style="margin-top: 0.65rem; display: flex; justify-content: center; gap: 0.5rem;">
+                <button class="btn-speaker-item" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;" onclick="window.nextAveMaria()">
+                  ${icon('plus', { size: 14 })} Siguiente Ave María
+                </button>
+                <button class="btn-speaker-item" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; opacity: 0.8;" onclick="window.setAveMaria(0)">
+                  ${icon('refresh', { size: 14 })} Reiniciar cuentas
+                </button>
+              </div>
+            </div>
+
+            <div class="dialogo-block">
+              <div class="guia-part">
+                ${oradorBadge('Orador (Guía)')}
+                <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.guia}</div>
+              </div>
+              <div class="todos-part">
+                ${todosBadge('Todos respondemos juntos:')}
+                <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
+              </div>
             </div>
           </div>
 
-          <div class="dialogo-block">
-            <div class="guia-part">
-              ${oradorBadge('Orador — Gloria')}
-              <div class="voice-text">${NOVENA_DATA.rosario.gloria.guia}</div>
+          <!-- 3. Gloria al Padre -->
+          <div class="prayer-section">
+            <div class="prayer-subheading">
+              ✨ 3. Gloria al Padre
             </div>
-            <div class="todos-part">
-              ${todosBadge()}
-              <div class="voice-text">${NOVENA_DATA.rosario.gloria.todos}</div>
+            <div class="dialogo-block">
+              <div class="guia-part">
+                ${oradorBadge('Orador (Guía)')}
+                <div class="voice-text">${NOVENA_DATA.rosario.gloria.guia}</div>
+              </div>
+              <div class="todos-part">
+                ${todosBadge('Todos respondemos juntos:')}
+                <div class="voice-text">${NOVENA_DATA.rosario.gloria.todos}</div>
+              </div>
             </div>
           </div>
 
-          <!-- Jaculatorias por Mami Olguita -->
-          <div class="dialogo-block" style="border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 0.75rem 0.9rem; background: rgba(223, 177, 91, 0.08); margin-top: 0.85rem;">
-            <div style="font-size: 0.8rem; font-family: var(--font-sans); color: var(--gold-primary); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem; text-align: center;">
-              Jaculatorias por Mami Olguita
+          <!-- 4. Jaculatorias por Mami Olguita -->
+          <div class="prayer-section">
+            <div class="prayer-subheading">
+              🌹 4. Jaculatorias por Mami Olguita
             </div>
             
             <!-- 1. Sangre Preciosa -->
-            <div class="guia-part" style="background: transparent; border: none; padding: 0;">
-              ${oradorBadge('Orador')}
-              <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.preciosa.guia}</div>
-            </div>
-            <div class="todos-part" style="background: transparent; border: none; padding: 0.25rem 0 0.5rem 0; border-bottom: 1px dashed rgba(223, 177, 91, 0.25);">
-              ${todosBadge('Todos')}
-              <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.preciosa.todos}</div>
+            <div class="dialogo-block">
+              <div class="guia-part">
+                ${oradorBadge('Orador (Guía)')}
+                <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.preciosa.guia}</div>
+              </div>
+              <div class="todos-part">
+                ${todosBadge('Todos respondemos:')}
+                <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.preciosa.todos}</div>
+              </div>
             </div>
 
             <!-- 2. Descanso Eterno -->
-            <div class="guia-part" style="background: transparent; border: none; padding: 0.5rem 0 0 0;">
-              ${oradorBadge('Orador')}
-              <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.descanso.guia}</div>
-            </div>
-            <div class="todos-part" style="background: transparent; border: none; padding: 0.25rem 0 0 0;">
-              ${todosBadge('Todos')}
-              <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.descanso.todos}</div>
+            <div class="dialogo-block">
+              <div class="guia-part">
+                ${oradorBadge('Orador (Guía)')}
+                <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.descanso.guia}</div>
+              </div>
+              <div class="todos-part">
+                ${todosBadge('Todos respondemos:')}
+                <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.descanso.todos}</div>
+              </div>
             </div>
           </div>
         `
@@ -248,44 +272,45 @@ function buildStepsForDay(dayNumber) {
       badge: 'Santo Rosario',
       title: 'Padre Nuestro, 3 Ave Marías y Gloria al Padre',
       render: () => `
-        <div style="text-align: center; margin-bottom: 0.9rem;">
-          <p style="font-size: 0.95rem; color: var(--gold-amber); font-weight: 600;">
-            Al concluir los 5 misterios, rezamos 1 Padre Nuestro, 3 Ave Marías y 1 Gloria al Padre.
+        <div style="text-align: center; margin-bottom: 1.1rem; background: rgba(223, 177, 91, 0.08); padding: 0.85rem 1rem; border-radius: 6px;">
+          <p style="font-size: 1.05rem; color: var(--gold-light); font-weight: 600; margin: 0; line-height: 1.6;">
+            Al concluir los 5 misterios, rezamos 1 Padre Nuestro, 3 Ave Marías (por la Fe, Esperanza y Caridad) y 1 Gloria al Padre.
           </p>
         </div>
 
+        <div class="prayer-subheading">📖 1. Padre Nuestro</div>
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador — Padre Nuestro')}
+            ${oradorBadge('Orador (Guía)')}
             <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge()}
+            ${todosBadge('Todos respondemos juntos:')}
             <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.todos}</div>
           </div>
         </div>
 
-        <div style="margin: 0.8rem 0;">
-          <div class="dialogo-block">
-            <div class="guia-part">
-              ${oradorBadge('Orador — 3 Ave Marías')}
-              <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.guia}</div>
-            </div>
-            <div class="todos-part">
-              ${todosBadge()}
-              <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
-            </div>
-          </div>
-          <p style="font-size: 0.82rem; color: var(--gold-amber); font-style: italic; text-align: center; margin-top: 0.3rem;">(Se rezan tres veces por la Fe, Esperanza y Caridad / Intenciones de la Novena)</p>
-        </div>
-
+        <div class="prayer-subheading">📿 2. Tres Ave Marías</div>
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador — Gloria')}
+            ${oradorBadge('Orador (Guía)')}
+            <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.guia}</div>
+          </div>
+          <div class="todos-part">
+            ${todosBadge('Todos respondemos juntos:')}
+            <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
+          </div>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--gold-amber); font-style: italic; text-align: center; margin: 0.2rem 0 1rem 0;">(Se reza tres veces por el aumento de la Fe, Esperanza y Caridad)</p>
+
+        <div class="prayer-subheading">✨ 3. Gloria al Padre</div>
+        <div class="dialogo-block">
+          <div class="guia-part">
+            ${oradorBadge('Orador (Guía)')}
             <div class="voice-text">${NOVENA_DATA.rosario.gloria.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge()}
+            ${todosBadge('Todos respondemos juntos:')}
             <div class="voice-text">${NOVENA_DATA.rosario.gloria.todos}</div>
           </div>
         </div>
@@ -298,13 +323,16 @@ function buildStepsForDay(dayNumber) {
       badge: 'Santo Rosario',
       title: 'La Salve a la Santísima Virgen',
       render: () => `
+        <div class="prayer-subheading">
+          🌹 Salve Regina
+        </div>
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador')}
+            ${oradorBadge('Orador (Guía) comienza:')}
             <div class="voice-text">${NOVENA_DATA.rosario.salve.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge()}
+            ${todosBadge('Todos continuamos:')}
             <div class="voice-text">${NOVENA_DATA.rosario.salve.todos}</div>
           </div>
         </div>
@@ -317,14 +345,16 @@ function buildStepsForDay(dayNumber) {
       badge: 'Santo Rosario',
       title: 'Letanías a la Santísima Virgen María',
       render: () => `
-        <p style="font-size: 0.85rem; color: var(--gold-primary); margin-bottom: 0.6rem; font-weight: 700;">
-          El Orador menciona cada título y Todos responden "Ruega por ella":
-        </p>
-        <div style="display: flex; flex-direction: column; gap: 0.35rem; max-height: 380px; overflow-y: auto; padding-right: 0.3rem;">
+        <div style="background: rgba(223, 177, 91, 0.1); border-left: 4px solid var(--gold-primary); padding: 0.85rem 1.1rem; border-radius: 0 6px 6px 0; margin-bottom: 1rem;">
+          <p style="font-size: 1.05rem; color: #ffffff; margin: 0; font-weight: 600;">
+            🎙️ El Orador menciona cada título — 👥 Todos respondemos: <strong style="color: #fde047;">"Ruega por ella"</strong> (o "Ten piedad de ella"):
+          </p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.45rem; max-height: 480px; overflow-y: auto; padding-right: 0.35rem;">
           ${NOVENA_DATA.rosario.letanias.map(item => `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.6rem; border-radius: 6px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border-subtle); font-size: 0.95rem;">
-              <span style="color: var(--text-primary); font-family: var(--font-body);">${item.guia || item.invocacion}</span>
-              <span style="color: #fde047; font-weight: 700; font-family: var(--font-sans); font-size: 0.88rem;">${item.todos || item.respuesta}</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0.85rem; border-radius: 6px; background: rgba(255,255,255,0.04); border-bottom: 1px solid var(--border-subtle); font-size: 1.05rem;">
+              <span style="color: #ffffff; font-family: var(--font-body); font-weight: 500;">${item.guia || item.invocacion}</span>
+              <span style="color: #fde047; font-weight: 700; font-family: var(--font-sans); font-size: 1rem; letter-spacing: 0.02em;">${item.todos || item.respuesta}</span>
             </div>
           `).join('')}
         </div>
@@ -338,14 +368,14 @@ function buildStepsForDay(dayNumber) {
       badge: 'Novena — Oración de Todos los Días',
       title: NOVENA_DATA.oracionInicial.title,
       render: () => `
-        <div class="guia-part" style="margin-bottom: 0.8rem;">
-          ${oradorBadge('Orador lee:')}
-          <div style="font-size: 1.05rem; display: flex; flex-direction: column; gap: 0.75rem;">
-            ${NOVENA_DATA.oracionInicial.paragraphs.map(p => `<p>${p}</p>`).join('')}
+        <div class="guia-part" style="margin-bottom: 1rem;">
+          ${oradorBadge('Orador (Guía) lee:')}
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
+            ${NOVENA_DATA.oracionInicial.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
         <div class="todos-part">
-          ${todosBadge()}
+          ${todosBadge('Todos respondemos:')}
           <div class="voice-text">Amén.</div>
         </div>
       `
@@ -358,12 +388,12 @@ function buildStepsForDay(dayNumber) {
       title: dayData.titulo,
       render: () => `
         <div class="bible-quote-box">
-          ${dayData.cita}
-          <span class="bible-ref">— ${dayData.referencia}</span>
+          <p style="font-size: 1.25rem; font-style: italic; line-height: 1.7; margin: 0; color: #ffffff;">${dayData.cita}</p>
+          <span class="bible-ref" style="display: block; margin-top: 0.5rem; font-weight: 700; color: var(--gold-amber);">— ${dayData.referencia}</span>
         </div>
-        <div class="guia-part" style="margin-top: 0.8rem;">
+        <div class="guia-part" style="margin-top: 1.2rem;">
           ${oradorBadge('Orador lee la Reflexión:')}
-          <p style="font-size: 1.08rem; line-height: 1.8;">${dayData.reflexion}</p>
+          <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; margin: 0.4rem 0 0 0;">${dayData.reflexion}</p>
         </div>
       `
     },
@@ -374,14 +404,14 @@ function buildStepsForDay(dayNumber) {
       badge: `Día ${dayData.dia}`,
       title: `Oración del Día ${dayData.dia}`,
       render: () => `
-        <div class="guia-part" style="margin-bottom: 0.8rem;">
-          ${oradorBadge('Orador lee:')}
-          <div style="font-size: 1.05rem; display: flex; flex-direction: column; gap: 0.75rem;">
-            ${dayData.oracion.map(p => `<p>${p}</p>`).join('')}
+        <div class="guia-part" style="margin-bottom: 1rem;">
+          ${oradorBadge('Orador (Guía) lee:')}
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
+            ${dayData.oracion.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
         <div class="todos-part">
-          ${todosBadge()}
+          ${todosBadge('Todos respondemos:')}
           <div class="voice-text">Amén.</div>
         </div>
       `
@@ -393,75 +423,78 @@ function buildStepsForDay(dayNumber) {
       badge: 'Oraciones Finales',
       title: NOVENA_DATA.oracionFinalOlguita.title,
       render: () => `
-        <div class="guia-part" style="margin-bottom: 0.8rem;">
-          ${oradorBadge('Orador lee:')}
-          <div style="font-size: 1.05rem; display: flex; flex-direction: column; gap: 0.75rem;">
-            ${NOVENA_DATA.oracionFinalOlguita.paragraphs.map(p => `<p>${p}</p>`).join('')}
+        <div class="guia-part" style="margin-bottom: 1rem;">
+          ${oradorBadge('Orador (Guía) lee:')}
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
+            ${NOVENA_DATA.oracionFinalOlguita.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
         <div class="todos-part">
-          ${todosBadge()}
+          ${todosBadge('Todos respondemos:')}
           <div class="voice-text">${NOVENA_DATA.oracionFinalOlguita.response}</div>
         </div>
       `
     },
 
-    // Paso 14: Oración Final de la Familia
+    // Paso 15: Oración Final de la Familia
     {
       id: 'oracion-final-familia',
       badge: 'Oraciones Finales',
       title: NOVENA_DATA.oracionFinalFamilia.title,
       render: () => `
-        <div class="guia-part" style="margin-bottom: 0.8rem;">
-          ${oradorBadge('Orador lee:')}
-          <div style="font-size: 1.05rem; display: flex; flex-direction: column; gap: 0.75rem;">
-            ${NOVENA_DATA.oracionFinalFamilia.paragraphs.map(p => `<p>${p}</p>`).join('')}
+        <div class="guia-part" style="margin-bottom: 1rem;">
+          ${oradorBadge('Orador (Guía) lee:')}
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
+            ${NOVENA_DATA.oracionFinalFamilia.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador')}
+            ${oradorBadge('Orador (Guía)')}
             <div class="voice-text">${NOVENA_DATA.oracionFinalFamilia.despedidaJaculatoria.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge()}
+            ${todosBadge('Todos respondemos:')}
             <div class="voice-text">${NOVENA_DATA.oracionFinalFamilia.despedidaJaculatoria.todos}</div>
           </div>
         </div>
       `
     },
 
-    // Paso 15: Mensaje para la Familia
+    // Paso 16: Mensaje para la Familia
     {
       id: 'mensaje-familia',
       badge: `Día ${dayData.dia}`,
       title: 'Mensaje para la Familia',
       render: () => `
-        <div class="guia-part" style="border-left: 3px solid var(--gold-amber); padding: 1rem;">
+        <div class="guia-part" style="border-left: 4px solid var(--gold-amber); padding: 1.1rem 1.25rem;">
           ${oradorBadge('Orador lee para toda la familia:')}
-          <p style="font-size: 1.1rem; line-height: 1.85; color: var(--gold-light);">${dayData.mensajeFamilia}</p>
+          <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; color: var(--gold-light); margin: 0.4rem 0 0 0;">${dayData.mensajeFamilia}</p>
         </div>
       `
     },
 
-    // Paso 16: Despedida & Placa Conmemorativa
+    // Paso 17: Despedida & Placa Conmemorativa
     {
       id: 'despedida-homenaje',
       badge: 'Cierre de la Novena',
       title: 'Despedida, Bendición y Homenaje',
       render: () => `
+        <div class="prayer-subheading">
+          🕊️ Bendición Final
+        </div>
         <div class="dialogo-block" style="margin-bottom: 1.2rem;">
           <div class="guia-part">
-            ${oradorBadge('Orador')}
+            ${oradorBadge('Orador (Guía)')}
             <div class="voice-text">${NOVENA_DATA.despedidaFinal.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge()}
+            ${todosBadge('Todos respondemos:')}
             <div class="voice-text">${NOVENA_DATA.despedidaFinal.todos}</div>
           </div>
         </div>
 
-        <div style="text-align: center; margin: 0.8rem 0; font-family: var(--font-sans); color: var(--gold-amber); font-weight: 700; font-size: 1.05rem;">
+        <div style="text-align: center; margin: 1.2rem 0; font-family: var(--font-serif); color: var(--gold-primary); font-weight: 700; font-size: 1.18rem; line-height: 1.6;">
           ${NOVENA_DATA.despedidaFinal.bendicion}
         </div>
 
@@ -634,11 +667,11 @@ function updateSpeakerUI(speakerSocketId, speakerName) {
   const label = document.getElementById('speaker-name-label');
   if (label) {
     if (isMe) {
-      label.innerHTML = `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('speaker', { size: 13 })} ¡Tú eres el Orador!</span>`;
+      label.innerHTML = `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('speaker', { size: 13 })} ¡Tú eres el Guía!</span>`;
     } else if (speakerSocketId) {
-      label.innerHTML = `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('speaker', { size: 13 })} ${state.speakerName}</span>`;
+      label.innerHTML = `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('speaker', { size: 13 })} Guía: ${state.speakerName}</span>`;
     } else {
-      label.textContent = 'Esperando Orador';
+      label.textContent = '🕊️ Oración Familiar';
     }
   }
 
@@ -1577,14 +1610,14 @@ function updateCallControlsUI() {
       famMicBtn.className = 'listener-mic-action listener-mic-muted';
       famMicIcon.innerHTML = icon('mic-off', { size: 18 });
       famMicText.textContent = isSpeaker 
-        ? 'Voz de Orador en SILENCIO (Toca para hablar)' 
-        : 'Mi voz en SILENCIO (Toca para responder)';
+        ? 'Micrófono en SILENCIO (Toca para hablar como Guía)' 
+        : 'Micrófono en SILENCIO (Toca para responder)';
     } else {
       famMicBtn.className = 'listener-mic-action listener-mic-open';
       famMicIcon.innerHTML = icon('mic', { size: 18 });
       famMicText.innerHTML = isSpeaker 
-        ? `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('speaker', { size: 13 })} Voz de Orador: ABIERTA (Leyendo)</span>` 
-        : 'Mi voz: ABIERTA (Respondiendo a coro)';
+        ? `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('speaker', { size: 13 })} Micrófono ENCENDIDO (Guía leyendo)</span>` 
+        : 'Micrófono ENCENDIDO (Te escuchan todos)';
     }
   }
 }

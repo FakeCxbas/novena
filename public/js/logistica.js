@@ -91,7 +91,7 @@ function buildSteps(diaNum, mysteryType) {
       preview: 'Al terminar los misterios: 1 Padre Nuestro, 3 Ave Marías por la Fe, Esperanza y Caridad, y 1 Gloria al Padre.'
     },
     {
-      id: 'salve',
+      id: 'la-salve',
       badge: 'Santo Rosario',
       title: 'La Salve a la Santísima Virgen',
       role: 'chorus',
@@ -147,7 +147,7 @@ function buildSteps(diaNum, mysteryType) {
       preview: dayData.mensajeFamilia.slice(0, 140) + '...'
     },
     {
-      id: 'homenaje',
+      id: 'despedida-homenaje',
       badge: 'Descanso Eterno',
       title: 'Despedida y Homenaje a Mami Olguita',
       role: 'chorus',

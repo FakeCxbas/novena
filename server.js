@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
   lastModified: true,
   maxAge: '1d',
   setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.html')) {
+    if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.css')) {
       res.setHeader('Cache-Control', 'no-cache, must-revalidate, proxy-revalidate');
     } else {
       res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=3600');

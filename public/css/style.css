@@ -610,134 +610,175 @@ body {
 }
 
 /* ========================================================
-   REZO INTELIGENTE POR ROLES:
-   - Espectadores: SOLO ven su parte a coro (todos-part).
-     La parte del orador en diálogos no se muestra para evitar confusiones.
-   - Orador (y Anfitrión): ven lo que el orador dice (guia-part) 
-     Y lo que los otros tienen que decir (todos-part).
+   DIÁLOGOS CLAROS Y LEGIBLES PARA TODAS LAS EDADES
+   - Guía / Orador: Muestra la primera parte con claridad para seguir la lectura.
+   - Todos responden: Muestra la respuesta en caja dorada destacada con letra grande y nítida.
    ======================================================== */
 
-/* ESPECTADORES (cualquier persona que NO sea el orador ni el anfitrión):
-   En los bloques de diálogo, ocultar completamente la parte del orador */
-body:not(.is-speaker):not(.is-host) .dialogo-block .guia-part {
-  display: none !important;
+.dialogo-block {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
 }
 
-/* El recuadro del espectador se muestra limpio y destacado */
-body:not(.is-speaker):not(.is-host) .dialogo-block .todos-part {
-  background: rgba(223, 177, 91, 0.20) !important;
-  border: 1.5px solid var(--gold-amber) !important;
+/* Parte que lee el Orador (Visible para TODOS) */
+.dialogo-block .guia-part {
+  display: block !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-left: 4px solid var(--gold-primary) !important;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.85rem 1.1rem !important;
+  box-shadow: none !important;
+}
+
+.dialogo-block .guia-part .voice-badge.guia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #fde047 !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+.dialogo-block .guia-part .voice-text {
+  font-size: 1.18rem !important;
+  line-height: 1.8 !important;
+  color: #f3f4f6 !important;
+  font-weight: 500 !important;
+}
+
+/* Parte que responde la Familia a Coro (Destacada en dorado cálido) */
+.dialogo-block .todos-part {
+  display: block !important;
+  background: rgba(223, 177, 91, 0.16) !important;
+  border: 1.5px solid rgba(223, 177, 91, 0.45) !important;
   border-left: 5px solid #DFB15B !important;
-  padding: 0.9rem 1.1rem !important;
+  border-radius: var(--radius-sm);
+  padding: 0.95rem 1.15rem !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
-body:not(.is-speaker):not(.is-host) .dialogo-block .todos-part .voice-badge.todos {
+.dialogo-block .todos-part .voice-badge.todos {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   color: #fef08a !important;
-  font-size: 0.85rem !important;
+  font-size: 0.88rem !important;
   font-weight: 800 !important;
   letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
 }
 
-body:not(.is-speaker):not(.is-host) .dialogo-block .todos-part .voice-text {
-  font-size: 1.18rem !important;
+.dialogo-block .todos-part .voice-text {
+  font-size: 1.22rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
   line-height: 1.8 !important;
 }
 
-/* ORADOR (y Anfitrión):
-   Ve lo que ÉL dice (guia-part) Y lo que los otros dicen (todos-part) */
-body.is-speaker .dialogo-block .guia-part,
-body.is-host .dialogo-block .guia-part {
-  display: block !important;
+/* Si el usuario actual es el Orador designado */
+body.is-speaker .dialogo-block .guia-part {
   background: rgba(223, 177, 91, 0.22) !important;
   border: 1.5px solid var(--gold-amber) !important;
   border-left: 5px solid #DFB15B !important;
-  padding: 0.9rem 1.1rem !important;
-  box-shadow: 0 4px 18px rgba(223, 177, 91, 0.18);
+  box-shadow: 0 4px 18px rgba(223, 177, 91, 0.18) !important;
 }
 
-body.is-speaker .dialogo-block .guia-part .voice-badge.guia,
-body.is-host .dialogo-block .guia-part .voice-badge.guia {
-  color: #fef08a !important;
-  font-size: 0.85rem !important;
-  font-weight: 800 !important;
+/* Ocultar botones de conteo de Ave Marías a personas que solo son oyentes (para no saturar a personas mayores) */
+body:not(.is-speaker):not(.is-host) .beads-control-btns {
+  display: none !important;
+}
+
+/* Subtítulo claro de sección de rezo */
+.prayer-subheading {
+  font-family: var(--font-serif);
+  font-size: 1.22rem;
+  color: var(--gold-light);
+  margin: 1.4rem 0 0.65rem 0;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(223, 177, 91, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* Recuadro digno de meditación por Mami Olguita */
+.meditacion-box {
+  background: rgba(223, 177, 91, 0.08);
+  border-left: 4px solid var(--gold-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.95rem 1.15rem;
+  margin-bottom: 1.25rem;
+}
+
+.meditacion-box .meditacion-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  text-transform: uppercase;
   letter-spacing: 0.03em;
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
-body.is-speaker .dialogo-block .guia-part .voice-text,
-body.is-host .dialogo-block .guia-part .voice-text {
-  font-size: 1.18rem !important;
-  font-weight: 700 !important;
-  color: #ffffff !important;
-  line-height: 1.8 !important;
-}
-
-body.is-speaker .dialogo-block .todos-part,
-body.is-host .dialogo-block .todos-part {
-  display: block !important;
-  background: rgba(230, 154, 40, 0.12) !important;
-  border: 1px solid rgba(230, 154, 40, 0.4) !important;
-  border-left: 3.5px solid var(--gold-amber) !important;
-  padding: 0.75rem 0.95rem !important;
-}
-
-body.is-speaker .dialogo-block .todos-part .voice-badge.todos,
-body.is-host .dialogo-block .todos-part .voice-badge.todos {
-  color: #fde047 !important;
-  font-size: 0.78rem !important;
-  font-weight: 700 !important;
-}
-
-body.is-speaker .dialogo-block .todos-part .voice-text,
-body.is-host .dialogo-block .todos-part .voice-text {
-  font-size: 1.05rem !important;
-  color: var(--gold-light) !important;
+.meditacion-box .meditacion-text {
+  font-size: 1.16rem;
+  color: #f9fafb;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.7;
 }
 
 /* Rosario Contador de 10 Ave Marías */
 .rosario-counter-card {
   background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(223, 177, 91, 0.3);
   border-radius: var(--radius-md);
-  padding: 0.85rem;
-  margin: 1rem 0;
+  padding: 0.95rem 1rem;
+  margin: 1rem 0 1.2rem 0;
   text-align: center;
 }
 
 .rosario-counter-header {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  color: var(--gold-primary);
-  margin-bottom: 0.6rem;
-  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 0.75rem;
 }
 
 .beads-row {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.45rem;
   flex-wrap: wrap;
 }
 
 .bead-item {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius-full);
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border-subtle);
+  border: 1.5px solid rgba(223, 177, 91, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #d1d5db;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .bead-item.completed {
@@ -750,8 +791,8 @@ body.is-host .dialogo-block .todos-part .voice-text {
   background: var(--gold-amber);
   border-color: #fff;
   color: #fff;
-  transform: scale(1.15);
-  box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+  transform: scale(1.18);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.9);
 }
 
 /* ========================================================
