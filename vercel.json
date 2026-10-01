@@ -16,8 +16,8 @@
       "dest": "server.js"
     },
     {
-      "src": "/logistica",
-      "dest": "server.js"
+      "src": "/(logistica|control)/?",
+      "dest": "public/logistica.html"
     },
     {
       "src": "/(.*)",

@@ -545,7 +545,12 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`[Novena] Servidor activo en http://localhost:${PORT}`);
-  console.log(`[Novena] PIN de Anfitrión: ${HOST_PIN}`);
-});
+if (!process.env.VERCEL) {
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`[Novena] Servidor activo en http://localhost:${PORT}`);
+    console.log(`[Novena] PIN de Anfitrión: ${HOST_PIN}`);
+  });
+}
+
+module.exports = app;
+
