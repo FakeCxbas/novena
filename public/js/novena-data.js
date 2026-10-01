@@ -46,18 +46,16 @@ export const NOVENA_DATA = {
     },
     {
       dia: 2,
-      titulo: "DÍA 2 — DIOS ENJUGARÁ NUESTRAS LÁGRIMAS",
-      cita: "“Dios enjugará toda lágrima de sus ojos; ya no habrá muerte, ni luto, ni llanto, ni dolor.”",
-      referencia: "Apocalipsis 21,4",
-      reflexion: "La partida de un ser querido deja un vacío que solamente Dios puede ayudar a sanar. Hoy presentamos nuestras lágrimas ante Él y confiamos en que llegará el día en que el dolor se transforme en paz.",
+      titulo: "DÍA 2 — LA MORADA CELESTIAL",
+      cita: "“No se inquiete el corazón de ustedes. Crean en Dios y crean también en mí. En la casa de mi Padre hay muchas habitaciones... Yo voy a prepararles un lugar.”",
+      referencia: "Juan 14, 1-2",
+      reflexion: "Hoy nos unimos con la firme esperanza de que Jesús ya preparó esa morada celestial para nuestra querida Mami Olguita. Dejamos ir la tristeza de este mundo sabiendo que ella descansa donde ya no existe la fatiga ni la enfermedad. Guardemos en familia un momento de oración y silencio para recordarla con amor y gratitud.",
       oracion: [
-        "Padre amado, mira el dolor de nuestra familia por la partida de Mami Olguita.",
-        "Tú conoces nuestras lágrimas, nuestros recuerdos y el vacío que sentimos.",
-        "Te pedimos que la recibas en tu presencia y que le concedas la paz eterna.",
-        "Ayúdanos a recordar su vida con alegría y no solamente con tristeza. Enséñanos a agradecer por cada momento que compartimos con ella.",
-        "Cuando nos sintamos débiles, sostennos. Cuando la extrañemos, danos consuelo. Y cuando el dolor sea grande, recuérdanos que quienes creemos en Ti tenemos la esperanza de volver a encontrarnos en tu Reino."
+        "Oh Dios, cuya misericordia es infinita, acoge las oraciones que te dirigimos en este segundo día por el alma de nuestra querida Mami Olguita.",
+        "Ábrele las puertas del paraíso para que viva feliz en tu presencia y concédenos a nosotros la fe y el consuelo necesarios para aceptar tu santa voluntad.",
+        "Te lo pedimos por Jesucristo, nuestro Señor."
       ],
-      mensajeFamilia: "Permitámonos llorar, extrañar y recordar. No tenemos que esconder nuestro dolor. Pero hagamos que, poco a poco, las lágrimas den paso a la gratitud. Mami Olguita vivirá en nosotros mientras conservemos vivo el amor que nos enseñó."
+      mensajeFamilia: "Permitámonos recordar a Mami Olguita con paz y agradecimiento en el corazón. El amor que sembró entre nosotros no muere, permanece vivo cada vez que nos unimos en familia y oramos por ella."
     },
     {
       dia: 3,
@@ -167,12 +165,11 @@ export const NOVENA_DATA = {
 
   rosario: {
     oracionInicial: {
-      title: "Oración inicial del Santo Rosario",
+      title: "Ofrecimiento del Santo Rosario",
       text: [
-        "Señor Dios, te ofrecemos este Santo Rosario por el eterno descanso de nuestra querida Mami Olguita.",
-        "Te pedimos que recibas su alma en tu Reino, que perdones sus pecados y que le concedas la vida eterna.",
-        "También te pedimos por nuestra familia: danos fortaleza, unión, consuelo y esperanza.",
-        "Santa María, Madre de Dios, acompáñanos durante esta oración e intercede por Mami Olguita ante tu Hijo Jesucristo.",
+        "Ofrecemos este Santo Rosario por el eterno descanso de nuestra querida Mami Olguita.",
+        "Pedimos al Señor que purifique su alma, que perdone sus faltas y que la reciba en su gloria celestial, concediendo también el consuelo, la paz y la unión a nuestra familia en este momento de dolor.",
+        "Santa María, Madre de Dios, acompáñanos durante esta santa oración e intercede por ella ante tu Hijo Jesucristo.",
         "Amén."
       ]
     },
@@ -199,8 +196,14 @@ export const NOVENA_DATA = {
     },
 
     jaculatoriaOlguita: {
-      guia: "Dale, Señor, el descanso eterno.",
-      todos: "Y brille para ella la luz perpetua. Que su alma y las almas de todos los fieles difuntos, por la misericordia de Dios, descansen en paz. Amén."
+      preciosa: {
+        guia: "Si por tu sangre preciosa, Señor, la has redimido.",
+        todos: "Que la perdones, te pido, por tu Pasión dolorosa."
+      },
+      descanso: {
+        guia: "Dale, Señor, el descanso eterno.",
+        todos: "Y brille para ella la luz perpetua. Que por la misericordia de Dios, el alma de Mami Olguita descanse en paz. Amén."
+      }
     },
 
     misterios: {
@@ -208,44 +211,104 @@ export const NOVENA_DATA = {
         nombre: "Misterios Gozosos",
         dias: "Lunes y Sábado",
         lista: [
-          "1. La Anunciación del Ángel a María.",
-          "2. La Visitación de María a su prima Isabel.",
-          "3. El Nacimiento de Jesús.",
-          "4. La Presentación de Jesús en el Templo.",
-          "5. El Niño Jesús perdido y hallado en el Templo."
+          {
+            titulo: "1. La Anunciación del Ángel a María",
+            meditacion: "Agradecemos a Dios por el don sagrado de la vida de nuestra querida Mami Olguita y su fe sencilla y generosa."
+          },
+          {
+            titulo: "2. La Visitación de María a su prima Santa Isabel",
+            meditacion: "Recordamos el cariño y la generosidad con que Mami Olguita siempre estuvo atenta a servir, visitar y apoyar a su familia."
+          },
+          {
+            titulo: "3. El Nacimiento de Jesús en Belén",
+            meditacion: "Pedimos que la ternura y el amor de Jesús acojan con calidez el alma de Mami Olguita en el descanso celestial."
+          },
+          {
+            titulo: "4. La Presentación de Jesús en el Templo",
+            meditacion: "Ofrecemos con amor el alma de Mami Olguita a Dios Padre, reconociendo con gratitud todo el bien que dejó entre nosotros."
+          },
+          {
+            titulo: "5. El Niño Jesús perdido y hallado en el Templo",
+            meditacion: "Confiamos en que Mami Olguita ha llegado a la casa del Padre para gozar de su presencia y no separarse jamás de Él."
+          }
         ]
       },
       dolorosos: {
         nombre: "Misterios Dolorosos",
-        dias: "Martes y Viernes",
+        dias: "Martes y Viernes (y devoción de novenario)",
         lista: [
-          "1. La Agonía de Jesús en el Huerto.",
-          "2. La Flagelación de Jesús.",
-          "3. La Coronación de espinas.",
-          "4. Jesús carga con la Cruz.",
-          "5. La Crucifixión y muerte de Jesús."
+          {
+            titulo: "1. La Agonía de Jesús en el Huerto",
+            meditacion: "Unimos las fatigas y sufrimientos de la vida terrenal de Mami Olguita a la oración de Jesús, pidiendo paz infinita para su alma."
+          },
+          {
+            titulo: "2. La Flagelación de Jesús",
+            meditacion: "Por los méritos del dolor de Cristo, suplicamos que perdone cualquier falta humana de Mami Olguita y purifique su espíritu."
+          },
+          {
+            titulo: "3. La Coronación de Espinas",
+            meditacion: "Pedimos que, a cambio de las pruebas de este mundo, el Señor corone a Mami Olguita con la corona de la vida eterna."
+          },
+          {
+            titulo: "4. Jesús carga con la Cruz",
+            meditacion: "Recordamos la entereza con que Mami Olguita afrontó los momentos difíciles de la vida, y pedimos que ahora descanse en los brazos de Dios."
+          },
+          {
+            titulo: "5. La Crucifixión y Muerte de Jesús",
+            meditacion: "Por la entrega en la Cruz, confiamos en que Jesús acogió a Mami Olguita en el paraíso prometido a quienes creen en Él."
+          }
         ]
       },
       luminosos: {
         nombre: "Misterios Luminosos",
         dias: "Jueves",
         lista: [
-          "1. El Bautismo de Jesús en el Jordán.",
-          "2. Las Bodas de Caná.",
-          "3. El anuncio del Reino de Dios.",
-          "4. La Transfiguración de Jesús.",
-          "5. La institución de la Eucaristía."
+          {
+            titulo: "1. El Bautismo de Jesús en el Jordán",
+            meditacion: "Así como Jesús descendió a las aguas, pedimos que el bautismo de nuestra querida Mami Olguita la lleve a la vida nueva y eterna."
+          },
+          {
+            titulo: "2. La autorrevelación de Jesús en las Bodas de Caná",
+            meditacion: "Pedimos para que Mami Olguita sea invitada al banquete celestial en el Reino de los Cielos."
+          },
+          {
+            titulo: "3. El Anuncio del Reino de Dios invitando a la conversión",
+            meditacion: "Rogamos al Señor que haya tenido misericordia de sus debilidades humanas y la reciba en su Reino."
+          },
+          {
+            titulo: "4. La Transfiguración de Jesús",
+            meditacion: "Pedimos que el rostro de nuestra querida Mami Olguita sea transfigurado y brille con la luz divina en el cielo."
+          },
+          {
+            titulo: "5. La Institución de la Eucaristía",
+            meditacion: "Damos gracias por el pan de vida que la sostuvo en la Tierra y pedimos que ahora goce de la plenitud de Dios."
+          }
         ]
       },
       gloriosos: {
         nombre: "Misterios Gloriosos",
         dias: "Miércoles y Domingo",
         lista: [
-          "1. La Resurrección de Jesús.",
-          "2. La Ascensión de Jesús al cielo.",
-          "3. La venida del Espíritu Santo.",
-          "4. La Asunción de María al cielo.",
-          "5. La Coronación de María como Reina del cielo y de la tierra."
+          {
+            titulo: "1. La Resurrección de Jesús",
+            meditacion: "Con fe viva proclamamos que la muerte ha sido vencida y que Mami Olguita resucitará para la vida eterna junto al Señor."
+          },
+          {
+            titulo: "2. La Ascensión de Jesús al Cielo",
+            meditacion: "Rogamos a Jesús que eleve el alma de nuestra querida Mami Olguita a su presencia santa y bienaventurada."
+          },
+          {
+            titulo: "3. La Venida del Espíritu Santo",
+            meditacion: "Invocamos al Espíritu Consolador sobre toda nuestra familia, para que llene de unión, consuelo y fortaleza nuestros corazones."
+          },
+          {
+            titulo: "4. La Asunción de la Virgen María",
+            meditacion: "Pedimos a la Virgen María que tome de la mano a Mami Olguita y la acompañe a la presencia gloriosa del Altísimo."
+          },
+          {
+            titulo: "5. La Coronación de María como Reina del Cielo y de la Tierra",
+            meditacion: "Pedimos que Mami Olguita participe del gozo de los santos y de la paz que Dios tiene reservada a sus hijos."
+          }
         ]
       }
     },
@@ -359,6 +422,6 @@ export const NOVENA_DATA = {
   despedidaFinal: {
     guia: "Dale, Señor, el descanso eterno.",
     todos: "Y brille para ella la luz perpetua. Que Mami Olguita descanse en paz. Amén.",
-    bendicion: "En el nombre del Padre, del Hijo y del Espíritu Santo. Amén."
+    bendicion: "El Señor nos bendiga, nos guarde de todo mal y nos lleve a la vida eterna. En el nombre del Padre, del Hijo y del Espíritu Santo. Amén."
   }
 };

@@ -59,14 +59,54 @@ function buildSteps(diaNum, mysteryType) {
     },
     {
       id: 'acto-contricion',
-      badge: 'Inicio de la Novena',
+      badge: 'Ritos Iniciales',
       title: NOVENA_DATA.actoContricion.title,
       role: 'orador',
       preview: NOVENA_DATA.actoContricion.paragraphs[0]
     },
     {
+      id: 'rosario-inicio',
+      badge: 'Santo Rosario',
+      title: 'Ofrecimiento y Credo',
+      role: 'orador',
+      preview: NOVENA_DATA.rosario.credo.guia.slice(0, 130) + '...'
+    },
+    // Pasos 3 al 7: Los 5 misterios
+    ...mysteryObj.lista.map((mItem, idx) => {
+      const mTitulo = typeof mItem === 'string' ? mItem : mItem.titulo;
+      const mMeditacion = typeof mItem === 'object' && mItem.meditacion ? mItem.meditacion : '';
+      return {
+        id: `misterio-${idx + 1}`,
+        badge: `${mysteryObj.nombre} (${idx + 1}/5)`,
+        title: `${idx + 1}º Misterio: ${mTitulo}`,
+        role: 'rosario',
+        preview: mMeditacion ? `Meditación: "${mMeditacion.slice(0, 75)}..." | 1 PN, 10 AM, Gloria y Jaculatorias.` : `Rezo del misterio: 1 Padre Nuestro, 10 Ave Marías y 1 Gloria al Padre.`
+      };
+    }),
+    {
+      id: 'cuentas-finales',
+      badge: 'Santo Rosario',
+      title: 'Padre Nuestro, 3 Ave Marías y Gloria al Padre',
+      role: 'chorus',
+      preview: 'Al terminar los misterios: 1 Padre Nuestro, 3 Ave Marías por la Fe, Esperanza y Caridad, y 1 Gloria al Padre.'
+    },
+    {
+      id: 'salve',
+      badge: 'Santo Rosario',
+      title: 'La Salve a la Santísima Virgen',
+      role: 'chorus',
+      preview: NOVENA_DATA.rosario.salve.guia.slice(0, 130) + '...'
+    },
+    {
+      id: 'letanias',
+      badge: 'Santo Rosario',
+      title: 'Letanías Lauretanas',
+      role: 'chorus',
+      preview: 'Señor, ten piedad de ella... Santa María, ruega por ella...'
+    },
+    {
       id: 'oracion-inicial',
-      badge: 'Oración de Todos los Días',
+      badge: 'Novena',
       title: NOVENA_DATA.oracionInicial.title,
       role: 'orador',
       preview: NOVENA_DATA.oracionInicial.paragraphs[0]
@@ -86,70 +126,34 @@ function buildSteps(diaNum, mysteryType) {
       preview: dayData.oracion[0]
     },
     {
-      id: 'rosario-inicio',
-      badge: 'Santo Rosario',
-      title: 'Ofrecimiento y Credo',
+      id: 'oracion-final-olguita',
+      badge: 'Oraciones Finales',
+      title: NOVENA_DATA.oracionFinalOlguita.title,
       role: 'orador',
-      preview: NOVENA_DATA.rosario.credo.guia.slice(0, 130) + '...'
+      preview: NOVENA_DATA.oracionFinalOlguita.paragraphs[0]
     },
-    // Pasos 6 al 10: Los 5 misterios
-    ...mysteryObj.lista.map((txt, idx) => ({
-      id: `misterio-${idx + 1}`,
-      badge: `${mysteryObj.nombre} (${idx + 1}/5)`,
-      title: `${idx + 1}º Misterio: ${txt}`,
-      role: 'rosario',
-      preview: `Rezo del misterio: 1 Padre Nuestro, 10 Ave Marías y 1 Gloria al Padre.`
-    })),
     {
-      id: 'cuentas-finales',
-      badge: 'Santo Rosario',
-      title: 'Padre Nuestro, 3 Ave Marías y Gloria al Padre',
-      role: 'chorus',
-      preview: 'Al terminar los misterios: 1 Padre Nuestro, 3 Ave Marías por la Fe, Esperanza y Caridad, y 1 Gloria al Padre.'
+      id: 'oracion-final-familia',
+      badge: 'Oraciones Finales',
+      title: NOVENA_DATA.oracionFinalFamilia.title,
+      role: 'orador',
+      preview: NOVENA_DATA.oracionFinalFamilia.paragraphs[0]
     },
-      {
-        id: 'salve',
-        badge: 'Santo Rosario',
-        title: 'La Salve a la Santísima Virgen',
-        role: 'chorus',
-        preview: NOVENA_DATA.rosario.salve.guia.slice(0, 130) + '...'
-      },
-      {
-        id: 'letanias',
-        badge: 'Santo Rosario',
-        title: 'Letanías Lauretanas',
-        role: 'chorus',
-        preview: 'Señor, ten piedad de ella... Santa María, ruega por ella...'
-      },
-      {
-        id: 'oracion-final-olguita',
-        badge: 'Oraciones Finales',
-        title: NOVENA_DATA.oracionFinalOlguita.title,
-        role: 'orador',
-        preview: NOVENA_DATA.oracionFinalOlguita.paragraphs[0]
-      },
-      {
-        id: 'oracion-final-familia',
-        badge: 'Oraciones Finales',
-        title: NOVENA_DATA.oracionFinalFamilia.title,
-        role: 'orador',
-        preview: NOVENA_DATA.oracionFinalFamilia.paragraphs[0]
-      },
-      {
-        id: 'mensaje-familia',
-        badge: 'Unión Familiar',
-        title: 'Mensaje para la Familia',
-        role: 'orador',
-        preview: dayData.mensajeFamilia.slice(0, 140) + '...'
-      },
-      {
-        id: 'homenaje',
-        badge: 'Descanso Eterno',
-        title: 'Despedida y Homenaje a Mami Olguita',
-        role: 'chorus',
-        preview: 'Dale, Señor, el descanso eterno, y brille para ella la luz perpetua. Que descanse en paz. Amén.'
-      }
-    ];
+    {
+      id: 'mensaje-familia',
+      badge: 'Unión Familiar',
+      title: 'Mensaje para la Familia',
+      role: 'orador',
+      preview: dayData.mensajeFamilia.slice(0, 140) + '...'
+    },
+    {
+      id: 'homenaje',
+      badge: 'Descanso Eterno',
+      title: 'Despedida y Homenaje a Mami Olguita',
+      role: 'chorus',
+      preview: 'Dale, Señor, el descanso eterno, y brille para ella la luz perpetua. Que descanse en paz. Amén.'
+    }
+  ];
   }
 
 // Retroalimentación Háptica
