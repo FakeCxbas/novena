@@ -588,13 +588,11 @@ function renderCurrentStep(force = false) {
   const badgeEl = document.getElementById('day-step-badge');
   const titleEl = document.getElementById('card-section-title');
   const bodyEl = document.getElementById('card-step-body');
-  const stepNumberLabel = document.getElementById('step-counter-text');
   const prevBtn = document.getElementById('btn-prev');
   const nextBtn = document.getElementById('btn-next');
 
   if (badgeEl) badgeEl.textContent = `Día ${state.currentDay} • ${currentStep.badge}`;
   if (titleEl) titleEl.textContent = currentStep.title;
-  if (stepNumberLabel) stepNumberLabel.textContent = `Paso ${state.currentStepIndex + 1} de ${totalSteps}`;
 
   // Solo reinyectar contenido HTML si el paso cambió o se fuerza la recarga
   if (force || lastRenderedKey !== currentKey) {
