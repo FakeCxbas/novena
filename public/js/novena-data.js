@@ -7,6 +7,15 @@ export const NOVENA_DATA = {
     dedication: "Con amor y gratitud de toda su familia"
   },
 
+  actoContricion: {
+    title: "Acto de Contrición",
+    paragraphs: [
+      "Señor mío Jesucristo, Dios y Hombre verdadero, Creador, Padre y Redentor mío; por ser Vos quien sois, bondad infinita, y porque os amo sobre todas las cosas, me pesa de todo corazón haberos ofendido; también me pesa porque podéis castigarme con las penas del infierno.",
+      "Ayudado de vuestra divina gracia, propongo firmemente nunca más pecar, confesarme y cumplir la penitencia que me fuere impuesta."
+    ],
+    response: "Amén."
+  },
+
   oracionInicial: {
     title: "Oración inicial de todos los días",
     paragraphs: [

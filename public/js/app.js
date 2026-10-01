@@ -81,7 +81,26 @@ function buildStepsForDay(dayNumber) {
       `
     },
 
-    // Paso 1: Oración Inicial de todos los días
+    // Paso 1: Acto de Contrición
+    {
+      id: 'acto-contricion',
+      badge: 'Inicio de la Novena',
+      title: NOVENA_DATA.actoContricion.title,
+      render: () => `
+        <div class="guia-part" style="margin-bottom: 0.8rem;">
+          ${oradorBadge('Orador lee:')}
+          <div style="font-size: 1.05rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            ${NOVENA_DATA.actoContricion.paragraphs.map(p => `<p>${p}</p>`).join('')}
+          </div>
+        </div>
+        <div class="todos-part">
+          ${todosBadge()}
+          <div class="voice-text">${NOVENA_DATA.actoContricion.response}</div>
+        </div>
+      `
+    },
+
+    // Paso 2: Oración Inicial de todos los días
     {
       id: 'oracion-inicial',
       badge: 'Oración de Todos los Días',
@@ -100,7 +119,7 @@ function buildStepsForDay(dayNumber) {
       `
     },
 
-    // Paso 2: Lectura y Reflexión del Día
+    // Paso 3: Lectura y Reflexión del Día
     {
       id: 'reflexion-dia',
       badge: `Día ${dayData.dia} de la Novena`,
@@ -117,7 +136,7 @@ function buildStepsForDay(dayNumber) {
       `
     },
 
-    // Paso 3: Oración del Día
+    // Paso 4: Oración del Día
     {
       id: 'oracion-dia',
       badge: `Día ${dayData.dia}`,
@@ -136,7 +155,7 @@ function buildStepsForDay(dayNumber) {
       `
     },
 
-    // Paso 4: Santo Rosario - Oración Inicial y Credo
+    // Paso 5: Santo Rosario - Oración Inicial y Credo
     {
       id: 'rosario-inicio',
       badge: 'El Santo Rosario',
@@ -157,50 +176,6 @@ function buildStepsForDay(dayNumber) {
           <div class="todos-part">
             ${todosBadge()}
             <div class="voice-text">${NOVENA_DATA.rosario.credo.todos}</div>
-          </div>
-        </div>
-      `
-    },
-
-    // Paso 5: Cuentas Iniciales
-    {
-      id: 'cuentas-iniciales',
-      badge: 'Santo Rosario',
-      title: 'Cuentas Iniciales del Rosario',
-      render: () => `
-        <div class="dialogo-block">
-          <div class="guia-part">
-            ${oradorBadge('Orador — Padre Nuestro')}
-            <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.guia}</div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge()}
-            <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.todos}</div>
-          </div>
-        </div>
-
-        <div style="margin: 0.8rem 0;">
-          <div class="dialogo-block">
-            <div class="guia-part">
-              ${oradorBadge('Orador — 3 Ave Marías')}
-              <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.guia}</div>
-            </div>
-            <div class="todos-part">
-              ${todosBadge()}
-              <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
-            </div>
-          </div>
-          <p style="font-size: 0.82rem; color: var(--gold-amber); font-style: italic; text-align: center;">(Se rezan tres veces por la Fe, Esperanza y Caridad)</p>
-        </div>
-
-        <div class="dialogo-block">
-          <div class="guia-part">
-            ${oradorBadge('Orador — Gloria')}
-            <div class="voice-text">${NOVENA_DATA.rosario.gloria.guia}</div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge()}
-            <div class="voice-text">${NOVENA_DATA.rosario.gloria.todos}</div>
           </div>
         </div>
       `
@@ -291,7 +266,57 @@ function buildStepsForDay(dayNumber) {
       `
     })),
 
-    // Paso 11: La Salve
+    // Paso 11: Cuentas Finales después del Santo Rosario
+    {
+      id: 'cuentas-finales',
+      badge: 'Santo Rosario',
+      title: 'Padre Nuestro, 3 Ave Marías y Gloria al Padre',
+      render: () => `
+        <div style="text-align: center; margin-bottom: 0.9rem;">
+          <p style="font-size: 0.95rem; color: var(--gold-amber); font-weight: 600;">
+            Al concluir los 5 misterios, rezamos 1 Padre Nuestro, 3 Ave Marías y 1 Gloria al Padre.
+          </p>
+        </div>
+
+        <div class="dialogo-block">
+          <div class="guia-part">
+            ${oradorBadge('Orador — Padre Nuestro')}
+            <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.guia}</div>
+          </div>
+          <div class="todos-part">
+            ${todosBadge()}
+            <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.todos}</div>
+          </div>
+        </div>
+
+        <div style="margin: 0.8rem 0;">
+          <div class="dialogo-block">
+            <div class="guia-part">
+              ${oradorBadge('Orador — 3 Ave Marías')}
+              <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.guia}</div>
+            </div>
+            <div class="todos-part">
+              ${todosBadge()}
+              <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
+            </div>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--gold-amber); font-style: italic; text-align: center; margin-top: 0.3rem;">(Se rezan tres veces por la Fe, Esperanza y Caridad / Intenciones de la Novena)</p>
+        </div>
+
+        <div class="dialogo-block">
+          <div class="guia-part">
+            ${oradorBadge('Orador — Gloria')}
+            <div class="voice-text">${NOVENA_DATA.rosario.gloria.guia}</div>
+          </div>
+          <div class="todos-part">
+            ${todosBadge()}
+            <div class="voice-text">${NOVENA_DATA.rosario.gloria.todos}</div>
+          </div>
+        </div>
+      `
+    },
+
+    // Paso 12: La Salve
     {
       id: 'la-salve',
       badge: 'Santo Rosario',

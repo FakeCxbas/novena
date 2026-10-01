@@ -58,6 +58,13 @@ function buildSteps(diaNum, mysteryType) {
       preview: 'Por la señal de la Santa Cruz, de nuestros enemigos líbranos Señor, Dios nuestro...'
     },
     {
+      id: 'acto-contricion',
+      badge: 'Inicio de la Novena',
+      title: NOVENA_DATA.actoContricion.title,
+      role: 'orador',
+      preview: NOVENA_DATA.actoContricion.paragraphs[0]
+    },
+    {
       id: 'oracion-inicial',
       badge: 'Oración de Todos los Días',
       title: NOVENA_DATA.oracionInicial.title,
@@ -85,13 +92,6 @@ function buildSteps(diaNum, mysteryType) {
       role: 'orador',
       preview: NOVENA_DATA.rosario.credo.guia.slice(0, 130) + '...'
     },
-    {
-      id: 'cuentas-iniciales',
-      badge: 'Santo Rosario',
-      title: 'Cuentas Iniciales (Padre Nuestro y 3 Ave Marías)',
-      role: 'chorus',
-      preview: 'Padre Nuestro que estás en el cielo... 3 Ave Marías por la Fe, Esperanza y Caridad.'
-    },
     // Pasos 6 al 10: Los 5 misterios
     ...mysteryObj.lista.map((txt, idx) => ({
       id: `misterio-${idx + 1}`,
@@ -100,6 +100,13 @@ function buildSteps(diaNum, mysteryType) {
       role: 'rosario',
       preview: `Rezo del misterio: 1 Padre Nuestro, 10 Ave Marías y 1 Gloria al Padre.`
     })),
+    {
+      id: 'cuentas-finales',
+      badge: 'Santo Rosario',
+      title: 'Padre Nuestro, 3 Ave Marías y Gloria al Padre',
+      role: 'chorus',
+      preview: 'Al terminar los misterios: 1 Padre Nuestro, 3 Ave Marías por la Fe, Esperanza y Caridad, y 1 Gloria al Padre.'
+    },
       {
         id: 'salve',
         badge: 'Santo Rosario',
