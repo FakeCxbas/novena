@@ -72,11 +72,11 @@
       </div>
     </header>
 
-    <!-- 2. BARRA DE PESTAÑAS TÁCTILES -->
+    <!-- 2. BARRA DE PESTAÑAS TÁCTILES (4 PESTAÑAS) -->
     <nav class="nav-tab-bar">
       <button class="tab-btn active" data-tab="rezo" onclick="window.switchTab('rezo')">
         <span class="tab-icon"><i data-icon="book" data-size="18"></i></span>
-        <span>Diapositivas</span>
+        <span>Rezo</span>
       </button>
       <button class="tab-btn" data-tab="audio" onclick="window.switchTab('audio')">
         <span class="tab-icon"><i data-icon="mic" data-size="18"></i></span>
@@ -85,6 +85,10 @@
       <button class="tab-btn" data-tab="video" onclick="window.switchTab('video')">
         <span class="tab-icon"><i data-icon="video" data-size="18"></i></span>
         <span>Cámaras</span>
+      </button>
+      <button class="tab-btn" data-tab="tools" onclick="window.switchTab('tools')">
+        <span class="tab-icon"><i data-icon="sliders" data-size="18"></i></span>
+        <span>Mando</span>
       </button>
     </nav>
 
@@ -126,6 +130,16 @@
           </button>
         </div>
 
+        <!-- Salto Rápido por Secciones Litúrgicas -->
+        <div class="category-pills-strip">
+          <button class="category-pill-btn" onclick="window.jumpToStep(0)"><i data-icon="cross" data-size="12"></i> Cruz</button>
+          <button class="category-pill-btn" onclick="window.jumpToStep(1)"><i data-icon="book" data-size="12"></i> Oración</button>
+          <button class="category-pill-btn" onclick="window.jumpToStep(2)"><i data-icon="heart" data-size="12"></i> Reflexión</button>
+          <button class="category-pill-btn" onclick="window.jumpToStep(4)"><i data-icon="rosary" data-size="12"></i> Rosario</button>
+          <button class="category-pill-btn" onclick="window.jumpToStep(11)"><i data-icon="star" data-size="12"></i> Letanías</button>
+          <button class="category-pill-btn" onclick="window.jumpToStep(12)"><i data-icon="candle" data-size="12"></i> Final</button>
+        </div>
+
         <!-- Tarjeta del Paso Actual en Pantalla -->
         <div class="current-slide-card">
           <div class="slide-header-meta">
@@ -148,7 +162,7 @@
 
           <div style="margin-top: 0.8rem; display: flex; justify-content: flex-end;">
             <button class="btn-change-speaker" style="width: 100%; text-align: center; display:flex; align-items:center; justify-content:center; gap:0.4rem;" onclick="window.openJumpModal()">
-              <i data-icon="layers" data-size="15"></i> Saltar directamente a otra oración o misterio
+              <i data-icon="layers" data-size="15"></i> Ver Índice de Todos los Pasos
             </button>
           </div>
         </div>
@@ -172,10 +186,33 @@
               <i data-icon="plus" data-size="16"></i> Contar Ave María
             </button>
           </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-top: 0.5rem;">
+            <button class="btn-bead-action" onclick="window.completeMystery()" style="background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.4); color: #86efac; font-size: 0.72rem; padding: 0.4rem;">
+              <i data-icon="check" data-size="13"></i> Completar 10
+            </button>
+            <button class="btn-bead-action" onclick="window.resetBeads()" style="background: rgba(255, 255, 255, 0.05); font-size: 0.72rem; padding: 0.4rem;">
+              <i data-icon="refresh" data-size="13"></i> Reiniciar a 0
+            </button>
+          </div>
+        </div>
+
+        <!-- Selector de Tipo de Misterio -->
+        <div style="margin-top: 0.4rem;">
+          <div class="section-subtitle">
+            <span style="display:inline-flex; align-items:center; gap:0.35rem;"><i data-icon="rosary" data-size="15"></i> Tipo de Misterios del Rosario</span>
+          </div>
+          <div class="mystery-pills-strip" id="mystery-pills-container">
+            <button class="mystery-pill-btn active" data-mystery="auto" onclick="window.setMysteryType('auto')">Auto (Día)</button>
+            <button class="mystery-pill-btn" data-mystery="gozosos" onclick="window.setMysteryType('gozosos')">Gozosos</button>
+            <button class="mystery-pill-btn" data-mystery="dolorosos" onclick="window.setMysteryType('dolorosos')">Dolorosos</button>
+            <button class="mystery-pill-btn" data-mystery="luminosos" onclick="window.setMysteryType('luminosos')">Luminosos</button>
+            <button class="mystery-pill-btn" data-mystery="gloriosos" onclick="window.setMysteryType('gloriosos')">Gloriosos</button>
+          </div>
         </div>
 
         <!-- Selector Rápido de Días 1 al 9 -->
-        <div>
+        <div style="margin-top: 0.4rem;">
           <div class="section-subtitle">
             <span style="display:inline-flex; align-items:center; gap:0.35rem;"><i data-icon="calendar" data-size="15"></i> Cambiar Día de la Novena</span>
             <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">Toque para cambiar</span>
@@ -190,23 +227,40 @@
       <!-- ================= PESTAÑA 2: MESA DE AUDIO Y MICRÓFONOS ================= -->
       <section class="tab-panel" id="tab-panel-audio">
 
-        <!-- Caja de Mandos Maestros de Audio -->
+        <!-- Caja de Mandos Maestros de Audio con Presets de 1 Toque -->
         <div class="audio-master-box">
           <div class="master-audio-title">
             <span style="display:inline-flex; align-items:center; gap:0.4rem;"><i data-icon="sliders" data-size="17"></i> Control Maestro de Voces</span>
           </div>
 
-          <div class="master-audio-grid">
+          <!-- Presets de 1 toque -->
+          <div class="audio-presets-grid">
+            <div class="btn-preset-card preset-orador" onclick="window.applyAudioPreset('orador')">
+              <i data-icon="speaker" data-size="20" data-color="#7dd3fc"></i>
+              <span class="preset-card-title">Orador Solo</span>
+              <span class="preset-card-desc">Silencia oyentes</span>
+            </div>
+            <div class="btn-preset-card preset-coro" onclick="window.applyAudioPreset('coro')">
+              <i data-icon="users" data-size="20" data-color="#22c55e"></i>
+              <span class="preset-card-title">Todos a Coro</span>
+              <span class="preset-card-desc">Abre todos los mics</span>
+            </div>
+            <div class="btn-preset-card preset-silencio" onclick="window.applyAudioPreset('silencio')">
+              <i data-icon="mic-off" data-size="20" data-color="#ef4444"></i>
+              <span class="preset-card-title">Silencio</span>
+              <span class="preset-card-desc">Para meditación</span>
+            </div>
+          </div>
+
+          <div class="master-audio-grid" style="margin-top: 0.6rem;">
             <button class="btn-master-sound unmute-all" onclick="window.masterUnmuteAll()">
-              <i data-icon="mic" data-size="28"></i>
-              <span>PRENDER A TODOS</span>
-              <span class="btn-master-sound-sub">Para rezar en coro</span>
+              <i data-icon="mic" data-size="24"></i>
+              <span>ABRIR TODOS</span>
             </button>
 
             <button class="btn-master-sound mute-all" onclick="window.masterMuteAll()">
-              <i data-icon="mic-off" data-size="28"></i>
-              <span>SILENCIAR A TODOS</span>
-              <span class="btn-master-sound-sub">Para oír al orador</span>
+              <i data-icon="mic-off" data-size="24"></i>
+              <span>SILENCIAR TODOS</span>
             </button>
           </div>
         </div>
@@ -238,7 +292,9 @@
           <div class="section-subtitle" style="margin: 0; display:inline-flex; align-items:center; gap:0.35rem;">
             <i data-icon="video" data-size="16"></i> Cámaras de la Familia en Vivo
           </div>
-          <span style="font-size: 0.72rem; color: var(--gold-amber);">WebRTC Activo</span>
+          <button class="btn-change-speaker" onclick="window.syncAllCameraMonitors()" style="font-size: 0.72rem; padding: 0.3rem 0.6rem; display: inline-flex; align-items: center; gap: 0.3rem;">
+            <i data-icon="refresh" data-size="13"></i> Refrescar
+          </button>
         </div>
 
         <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.6rem;">
@@ -247,6 +303,91 @@
 
         <div class="video-wall-grid" id="video-wall-grid">
           <!-- Miniaturas de video inyectadas por logistica.js -->
+        </div>
+
+      </section>
+
+      <!-- ================= PESTAÑA 4: MANDO & HERRAMIENTAS DE LOGÍSTICA ================= -->
+      <section class="tab-panel" id="tab-panel-tools">
+        
+        <!-- 1. Cronómetro de la Sesión de Rezo -->
+        <div class="tools-card-box">
+          <div class="tools-card-header">
+            <span class="tools-card-title"><i data-icon="sliders" data-size="16"></i> Tiempo de Novena</span>
+            <span style="font-size: 0.72rem; color: var(--gold-amber);" id="timer-status-badge">En Curso</span>
+          </div>
+
+          <div class="stopwatch-display-container">
+            <span class="stopwatch-digits" id="session-stopwatch">00:00</span>
+            <div class="stopwatch-actions">
+              <button class="btn-stopwatch-ctrl" id="btn-timer-toggle" onclick="window.toggleSessionTimer()">
+                <i data-icon="refresh" data-size="14"></i> Pausar
+              </button>
+              <button class="btn-stopwatch-ctrl" onclick="window.resetSessionTimer()">
+                Reiniciar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Compartir con la Familia -->
+        <div class="tools-card-box">
+          <div class="tools-card-header">
+            <span class="tools-card-title"><i data-icon="users" data-size="16"></i> Compartir Enlace con la Familia</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">
+            Envía el enlace al grupo familiar de WhatsApp para que entren con un toque desde su teléfono:
+          </p>
+
+          <div class="share-action-grid">
+            <a href="#" class="btn-share-channel btn-share-whatsapp" onclick="window.shareWhatsApp(); return false;">
+              <span>📲 Compartir WhatsApp</span>
+            </a>
+            <button class="btn-share-channel btn-share-copy" onclick="window.copyRoomLink()">
+              <i data-icon="check" data-size="16"></i>
+              <span>Copiar Enlace</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Telemetría y Calidad de Red Rural -->
+        <div class="tools-card-box">
+          <div class="tools-card-header">
+            <span class="tools-card-title"><i data-icon="sliders" data-size="16"></i> Conexión & Rendimiento</span>
+          </div>
+
+          <div class="telemetry-row">
+            <div class="telemetry-stat-tile">
+              <span class="telemetry-stat-label">Latencia (Ping)</span>
+              <span class="telemetry-stat-val latency-indicator-good" id="telemetry-ping-val">
+                <i data-icon="check" data-size="14"></i> <span id="ping-ms-text">-- ms</span>
+              </span>
+            </div>
+            <div class="telemetry-stat-tile">
+              <span class="telemetry-stat-label">Canal Socket</span>
+              <span class="telemetry-stat-val" style="color: #22c55e;" id="telemetry-socket-status">
+                En Tiempo Real
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Acciones del Anfitrión y Seguridad -->
+        <div class="tools-card-box">
+          <div class="tools-card-header">
+            <span class="tools-card-title"><i data-icon="lock" data-size="16"></i> Seguridad de Anfitrión</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center;">
+            <span>PIN de Anfitrión: <strong style="color: var(--gold-light);">1234</strong></span>
+            <button class="btn-change-speaker" onclick="window.lockConsole()" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;">
+              <i data-icon="lock" data-size="13"></i> Bloquear Consola
+            </button>
+          </div>
+          <div style="margin-top: 0.4rem;">
+            <a href="/" target="_blank" class="btn-change-speaker" style="width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.6rem;">
+              <i data-icon="book" data-size="15"></i> Ver Pantalla de Rezo Familiar (Nueva pestaña)
+            </a>
+          </div>
         </div>
 
       </section>

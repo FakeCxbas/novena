@@ -261,24 +261,36 @@ export const ICONS = {
   `
 };
 
+// Cache en memoria para evitar llamadas repetidas a replaceAll y recálculo de strings SVG
+const iconCache = new Map();
+
 /**
- * Genera el string HTML del SVG solicitado con las dimensiones y estilo deseado.
+ * Genera el string HTML del SVG solicitado con las dimensiones y estilo deseado (con caché LRU-like).
  */
 export function icon(name, { size = 18, color = 'currentColor', stroke = 2, className = 'icon-svg' } = {}) {
-  const template = ICONS[name] || ICONS['candle'];
-  return template
-    .replaceAll('{size}', size)
-    .replaceAll('{color}', color)
-    .replaceAll('{stroke}', stroke)
-    .replaceAll('{class}', className);
+  const cacheKey = `${name}|${size}|${color}|${stroke}|${className}`;
+  let cached = iconCache.get(cacheKey);
+  if (!cached) {
+    const template = ICONS[name] || ICONS['candle'];
+    cached = template
+      .replaceAll('{size}', size)
+      .replaceAll('{color}', color)
+      .replaceAll('{stroke}', stroke)
+      .replaceAll('{class}', className);
+    iconCache.set(cacheKey, cached);
+  }
+  return cached;
 }
 
 /**
- * Escanea el DOM y reemplaza todos los elementos `<i data-icon="..."></i>` por su respectivo SVG.
+ * Escanea el DOM y reemplaza elementos `<i data-icon="..."></i>` por su respectivo SVG.
+ * Optimizado: salta los elementos que ya fueron renderizados anteriormente para evitar layout thrashing.
  */
-export function replaceDomIcons(root = document) {
-  const elements = root.querySelectorAll('[data-icon]');
-  elements.forEach(el => {
+export function replaceDomIcons(root = document, force = false) {
+  const selector = force ? '[data-icon]' : '[data-icon]:not([data-icon-rendered])';
+  const elements = root.querySelectorAll(selector);
+  for (let i = 0; i < elements.length; i++) {
+    const el = elements[i];
     const name = el.getAttribute('data-icon');
     const size = parseInt(el.getAttribute('data-size') || '18', 10);
     const color = el.getAttribute('data-color') || 'currentColor';
@@ -286,11 +298,12 @@ export function replaceDomIcons(root = document) {
     const extraClass = el.getAttribute('data-class') || '';
     
     el.innerHTML = icon(name, { size, color, stroke, className: `icon-svg ${extraClass}`.trim() });
+    el.setAttribute('data-icon-rendered', 'true');
     el.style.display = 'inline-flex';
     el.style.alignItems = 'center';
     el.style.justifyContent = 'center';
     el.style.lineHeight = '1';
-  });
+  }
 }
 
 // Iniciar reemplazo automático al cargar

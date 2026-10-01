@@ -453,15 +453,43 @@ window.selectEntryRole = function(role) {
 };
 
 // ========================================================
-// RENDERIZADO DEL PASO ACTUAL (SINCRONIZACIÓN Y AUTO-SCROLL)
+// RENDERIZADO DEL PASO ACTUAL (MEMOIZADO Y DIFERENCIAL)
 // ========================================================
-function renderCurrentStep() {
-  steps = buildStepsForDay(state.currentDay);
+const stepsCache = new Map();
+function getStepsForDay(dayNumber, mysteryType) {
+  const mType = mysteryType || state.activeMysteryType || getAutoMysteryType();
+  const cacheKey = `${dayNumber}_${mType}`;
+  if (!stepsCache.has(cacheKey)) {
+    stepsCache.set(cacheKey, buildStepsForDay(dayNumber));
+  }
+  return stepsCache.get(cacheKey);
+}
+
+let lastRenderedKey = null;
+
+function updateBeadsUI(count) {
+  const label = document.getElementById('bead-count-label');
+  if (label) label.textContent = count;
+
+  const container = document.getElementById('beads-container');
+  if (container) {
+    const items = container.children;
+    for (let idx = 0; idx < items.length; idx++) {
+      const b = items[idx];
+      b.classList.toggle('completed', idx < count);
+      b.classList.toggle('active', idx === count - 1);
+    }
+  }
+}
+
+function renderCurrentStep(force = false) {
+  steps = getStepsForDay(state.currentDay, state.activeMysteryType);
   const totalSteps = steps.length;
   if (state.currentStepIndex >= totalSteps) state.currentStepIndex = totalSteps - 1;
   if (state.currentStepIndex < 0) state.currentStepIndex = 0;
 
   const currentStep = steps[state.currentStepIndex];
+  const currentKey = `${state.currentDay}_${state.currentStepIndex}_${state.activeMysteryType || 'auto'}`;
 
   // Actualizar títulos e indicadores
   const badgeEl = document.getElementById('day-step-badge');
@@ -473,8 +501,21 @@ function renderCurrentStep() {
 
   if (badgeEl) badgeEl.textContent = `Día ${state.currentDay} • ${currentStep.badge}`;
   if (titleEl) titleEl.textContent = currentStep.title;
-  if (bodyEl) bodyEl.innerHTML = currentStep.render();
   if (stepNumberLabel) stepNumberLabel.textContent = `Paso ${state.currentStepIndex + 1} de ${totalSteps}`;
+
+  // Solo reinyectar contenido HTML si el paso cambió o se fuerza la recarga
+  if (force || lastRenderedKey !== currentKey) {
+    lastRenderedKey = currentKey;
+    if (bodyEl) {
+      bodyEl.innerHTML = currentStep.render();
+      replaceDomIcons(bodyEl);
+    }
+    // AUTO-SCROLL AL TOPE: Para que en teléfono celular NUNCA quede cortado el texto
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Actualizar visualización de las cuentas si es un misterio
+  updateBeadsUI(state.currentAveMaria);
 
   // Botones de navegación del anfitrión
   if (prevBtn) prevBtn.disabled = state.currentStepIndex === 0;
@@ -483,14 +524,11 @@ function renderCurrentStep() {
       nextBtn.innerHTML = `<span>Finalizar</span>`;
     } else {
       nextBtn.innerHTML = `<span>Siguiente</span> <i data-icon="chevron-right" data-size="16"></i>`;
+      replaceDomIcons(nextBtn);
     }
   }
 
-  // AUTO-SCROLL AL TOPE: Para que en teléfono celular NUNCA quede cortado el texto
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
   applyRoleUI();
-  replaceDomIcons();
 
   // Si somos anfitrión, transmitir cambio a toda la familia inmediatamente
   if (state.isHost && state.socket && state.socket.connected) {
@@ -567,7 +605,7 @@ window.nextStep = function() {
   if (state.currentStepIndex < steps.length - 1) {
     state.currentStepIndex++;
     state.currentAveMaria = 0;
-    renderCurrentStep();
+    renderCurrentStep(true);
   }
 };
 
@@ -575,7 +613,7 @@ window.prevStep = function() {
   if (state.currentStepIndex > 0) {
     state.currentStepIndex--;
     state.currentAveMaria = 0;
-    renderCurrentStep();
+    renderCurrentStep(true);
   }
 };
 
@@ -584,31 +622,22 @@ window.selectDay = function(dayNumber) {
   state.currentStepIndex = 0;
   state.currentAveMaria = 0;
   renderLogisticsModal();
-  renderCurrentStep();
+  renderCurrentStep(true);
 };
 
 window.jumpToStep = function(stepIdx) {
   state.currentStepIndex = stepIdx;
   state.currentAveMaria = 0;
-  renderCurrentStep();
+  renderCurrentStep(true);
   closeModal('logistics-modal');
 };
 
-// Ave María contador
-window.setAveMaria = function(count) {
-  state.currentAveMaria = count;
-  const label = document.getElementById('bead-count-label');
-  if (label) label.textContent = count;
+// Ave María contador con actualización DOM in-place ultra ligera
+window.setAveMaria = function(count, emit = true) {
+  state.currentAveMaria = Math.min(10, Math.max(0, count));
+  updateBeadsUI(state.currentAveMaria);
 
-  const container = document.getElementById('beads-container');
-  if (container) {
-    container.querySelectorAll('.bead-item').forEach((b, idx) => {
-      b.classList.toggle('completed', idx < count);
-      b.classList.toggle('active', idx === count - 1);
-    });
-  }
-
-  if (state.isHost && state.socket && state.socket.connected) {
+  if (emit && state.isHost && state.socket && state.socket.connected) {
     state.socket.emit('update-step', {
       currentAveMaria: state.currentAveMaria
     });
@@ -624,6 +653,19 @@ window.nextAveMaria = function() {
 // ========================================================
 // SINCRONIZACIÓN EN TIEMPO REAL (Socket.io)
 // ========================================================
+let appFallbackPollInterval = null;
+function startAppFallbackPolling() {
+  if (!appFallbackPollInterval) {
+    appFallbackPollInterval = setInterval(syncFromHttpState, 3500);
+  }
+}
+function stopAppFallbackPolling() {
+  if (appFallbackPollInterval) {
+    clearInterval(appFallbackPollInterval);
+    appFallbackPollInterval = null;
+  }
+}
+
 function initRealtimeSync() {
   if (typeof io !== 'undefined') {
     state.socket = io({
@@ -635,6 +677,7 @@ function initRealtimeSync() {
 
     state.socket.on('connect', () => {
       state.isOffline = false;
+      stopAppFallbackPolling();
 
       const savedName = localStorage.getItem('novena-user-name') || callState.userName;
       if (savedName) {
@@ -655,24 +698,62 @@ function initRealtimeSync() {
       }
     });
 
+    state.socket.on('disconnect', () => {
+      state.isOffline = true;
+      startAppFallbackPolling();
+    });
+
     state.socket.on('state-update', (data) => {
       // Sincronizar el rezo familiar inmediatamente con lo que dicte el servidor
-      if (data.currentDay !== undefined) state.currentDay = data.currentDay;
-      if (data.currentStepIndex !== undefined) state.currentStepIndex = data.currentStepIndex;
-      if (data.selectedMystery) state.activeMysteryType = data.selectedMystery;
-      if (data.currentAveMaria !== undefined) state.currentAveMaria = data.currentAveMaria;
+      let changed = false;
+      if (data.currentDay !== undefined && data.currentDay !== state.currentDay) {
+        state.currentDay = data.currentDay;
+        changed = true;
+      }
+      if (data.currentStepIndex !== undefined && data.currentStepIndex !== state.currentStepIndex) {
+        state.currentStepIndex = data.currentStepIndex;
+        changed = true;
+      }
+      if (data.selectedMystery && data.selectedMystery !== state.activeMysteryType) {
+        state.activeMysteryType = data.selectedMystery;
+        changed = true;
+      }
+      if (data.currentAveMaria !== undefined) {
+        state.currentAveMaria = data.currentAveMaria;
+      }
       if (data.speakerName) updateSpeakerUI(data.speakerSocketId, data.speakerName);
-      renderCurrentStep();
+      
+      if (changed) {
+        renderCurrentStep();
+      } else {
+        updateBeadsUI(state.currentAveMaria);
+      }
     });
 
     // Evento de paso cambiado por el anfitrión (Logística o Host)
     state.socket.on('step-changed', (data) => {
-      // Sincronización en tiempo real garantizada para toda la familia
-      if (data.currentDay !== undefined) state.currentDay = data.currentDay;
-      if (data.currentStepIndex !== undefined) state.currentStepIndex = data.currentStepIndex;
-      if (data.selectedMystery) state.activeMysteryType = data.selectedMystery;
-      if (data.currentAveMaria !== undefined) state.currentAveMaria = data.currentAveMaria;
-      renderCurrentStep();
+      let changed = false;
+      if (data.currentDay !== undefined && data.currentDay !== state.currentDay) {
+        state.currentDay = data.currentDay;
+        changed = true;
+      }
+      if (data.currentStepIndex !== undefined && data.currentStepIndex !== state.currentStepIndex) {
+        state.currentStepIndex = data.currentStepIndex;
+        changed = true;
+      }
+      if (data.selectedMystery && data.selectedMystery !== state.activeMysteryType) {
+        state.activeMysteryType = data.selectedMystery;
+        changed = true;
+      }
+      if (data.currentAveMaria !== undefined) {
+        state.currentAveMaria = data.currentAveMaria;
+      }
+
+      if (changed) {
+        renderCurrentStep();
+      } else {
+        updateBeadsUI(state.currentAveMaria);
+      }
     });
 
     state.socket.on('speaker-changed', ({ speakerSocketId, speakerName }) => {
@@ -704,6 +785,31 @@ function initRealtimeSync() {
           isAudioMuted: callState.isAudioMuted,
           isVideoOff: callState.isVideoOff
         });
+      }
+    });
+
+    // Presintonía de audio recibida desde logística
+    state.socket.on('set-audio-preset', ({ preset }) => {
+      if (!callState.localStream) return;
+      if (preset === 'orador') {
+        const isMe = state.socket && state.socket.id === state.speakerSocketId;
+        callState.isAudioMuted = !isMe;
+        callState.localStream.getAudioTracks().forEach(t => { t.enabled = isMe; });
+        updateCallControlsUI();
+        updateLocalTileMicUI();
+        showToast(isMe ? 'Modo Orador: Tu voz está al aire' : 'Modo Orador: Micrófono silenciado para escuchar', isMe ? 'speaker' : 'mic-off');
+      } else if (preset === 'coro') {
+        callState.isAudioMuted = false;
+        callState.localStream.getAudioTracks().forEach(t => { t.enabled = true; });
+        updateCallControlsUI();
+        updateLocalTileMicUI();
+        showToast('Modo Coro: Micrófono abierto para responder a coro', 'users');
+      } else if (preset === 'silencio') {
+        callState.isAudioMuted = true;
+        callState.localStream.getAudioTracks().forEach(t => { t.enabled = false; });
+        updateCallControlsUI();
+        updateLocalTileMicUI();
+        showToast('Momento de silencio y oración silenciosa', 'mic-off');
       }
     });
 
@@ -850,6 +956,27 @@ window.setAllListenersAudio = function(enabled) {
   closeModal('logistics-modal');
 };
 
+// Presintonías maestras de audio (Orador solo, Coro, Silencio total)
+window.setAudioPreset = function(preset) {
+  if (state.socket && state.socket.connected) {
+    state.socket.emit('set-audio-preset', { preset });
+  }
+  fetch('/api/audio/preset', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ preset })
+  }).catch(() => {});
+
+  if (preset === 'orador') {
+    showToast('Modo Orador: solo habla quien lee', 'speaker');
+  } else if (preset === 'coro') {
+    showToast('Modo Coro: micrófonos abiertos para responder', 'users');
+  } else if (preset === 'silencio') {
+    showToast('Silencio total activado', 'mic-off');
+  }
+  closeModal('logistics-modal');
+};
+
 // Control individual de micrófono por el anfitrión
 window.setUserAudio = function(targetSocketId, enabled) {
   if (state.socket && state.socket.connected) {
@@ -901,6 +1028,55 @@ window.submitHostPin = function() {
 // ========================================================
 // VIDEOLLAMADA FAMILIAR CON CÁMARAS ACTIVAS EN CELULAR (WebRTC)
 // ========================================================
+
+// Detector de actividad vocal en tiempo real (ilumina la cámara con borde verde al hablar)
+let speechAudioContext = null;
+function setupSpeechDetector(stream, onStateChange) {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    if (!speechAudioContext) {
+      speechAudioContext = new AudioCtx();
+    }
+    if (speechAudioContext.state === 'suspended') {
+      const resume = () => {
+        if (speechAudioContext && speechAudioContext.state === 'suspended') {
+          speechAudioContext.resume();
+        }
+        window.removeEventListener('click', resume);
+        window.removeEventListener('touchstart', resume);
+      };
+      window.addEventListener('click', resume, { once: true });
+      window.addEventListener('touchstart', resume, { once: true });
+    }
+    const source = speechAudioContext.createMediaStreamSource(stream);
+    const analyser = speechAudioContext.createAnalyser();
+    analyser.fftSize = 128;
+    analyser.smoothingTimeConstant = 0.4;
+    source.connect(analyser);
+
+    const buffer = new Uint8Array(analyser.frequencyBinCount);
+    let speaking = false;
+
+    const timer = setInterval(() => {
+      if (!stream.active) {
+        clearInterval(timer);
+        return;
+      }
+      analyser.getByteFrequencyData(buffer);
+      let sum = 0;
+      for (let i = 0; i < buffer.length; i++) sum += buffer[i];
+      const avg = sum / buffer.length;
+      const isNowSpeaking = avg > 14;
+      if (isNowSpeaking !== speaking) {
+        speaking = isNowSpeaking;
+        onStateChange(speaking);
+      }
+    }, 200);
+  } catch (e) {
+    // AudioContext no disponible o política de autoplay
+  }
+}
 
 const callState = {
   inCall: false,
@@ -1012,6 +1188,14 @@ window.enterRoomOneTouch = async function() {
       localAvatar.style.display = 'none';
       localVideo.style.display = 'block';
     }
+
+    // Monitorear actividad vocal propia para iluminar miniatura
+    setupSpeechDetector(callState.localStream, (isSpeaking) => {
+      const localTile = document.getElementById('local-camera-tile');
+      if (localTile) {
+        localTile.classList.toggle('is-speaking', isSpeaking && !callState.isAudioMuted);
+      }
+    });
 
     // Agregar tracks a peers existentes que ya estuvieran negociados (ej. Mando de Logística)
     callState.peers.forEach(peer => {
@@ -1143,6 +1327,9 @@ function createPeerConnection(targetSocketId, targetUserName, isInitiator) {
     } else if (event.track.kind === 'audio' && audioEl) {
       audioEl.srcObject = peerData.remoteStream;
       audioEl.play().catch(e => console.log('Remote audio play err', e));
+      setupSpeechDetector(peerData.remoteStream, (isSpeaking) => {
+        if (tileEl) tileEl.classList.toggle('is-speaking', isSpeaking && !peerData.isAudioMuted);
+      });
     }
   };
 
@@ -1441,9 +1628,8 @@ function init() {
   renderCurrentStep();
   initRealtimeSync();
 
-  // Carga inmediata de estado actual por HTTP (0ms)
+  // Carga inmediata de estado actual por HTTP para renderizado inicial instantáneo (0ms)
   syncFromHttpState();
-  setInterval(syncFromHttpState, 2500);
 
   const savedName = localStorage.getItem('novena-user-name');
   const nameField = document.getElementById('welcome-name-input');

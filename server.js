@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
+const compression = require('compression');
 
 const app = express();
 const server = http.createServer(app);
@@ -9,38 +10,55 @@ const io = new Server(server, {
   cors: {
     origin: '*',
     methods: ['GET', 'POST']
-  }
+  },
+  pingInterval: 10000,
+  pingTimeout: 5000
 });
 
 const PORT = process.env.PORT || 3005;
 const HOST_PIN = process.env.HOST_PIN || '1234';
 
-// No-cache middleware to ensure phones always get the latest code without reload issues
-app.use((req, res, next) => {
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-  next();
-});
+// Gzip / Deflate compression middleware (reduces network transfer by 75-80%)
+app.use(compression({
+  threshold: 512
+}));
 
-// Serve static frontend
+// Static files with smart caching and ETags enabled
 app.use(express.static(path.join(__dirname, 'public'), {
-  etag: false,
-  lastModified: false
+  etag: true,
+  lastModified: true,
+  maxAge: '1d',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, must-revalidate, proxy-revalidate');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=3600');
+    }
+  }
 }));
 app.use(express.json());
 
 // Routes for logistics control app on phones
 app.get(['/logistica', '/logistica/'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, must-revalidate');
   res.sendFile(path.join(__dirname, 'public', 'logistica.html'));
 });
 app.get(['/control', '/control/'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, must-revalidate');
   res.sendFile(path.join(__dirname, 'public', 'logistica.html'));
 });
 
 // Fallback to serve assets under /logistica/ and /control/ in case of relative paths
-app.use('/logistica', express.static(path.join(__dirname, 'public')));
-app.use('/control', express.static(path.join(__dirname, 'public')));
+app.use('/logistica', express.static(path.join(__dirname, 'public'), {
+  etag: true,
+  lastModified: true,
+  maxAge: '1d'
+}));
+app.use('/control', express.static(path.join(__dirname, 'public'), {
+  etag: true,
+  lastModified: true,
+  maxAge: '1d'
+}));
 
 // Persistent in-memory state of the active Novena
 const novenaState = {
@@ -52,7 +70,8 @@ const novenaState = {
   hostName: null,
   speakerSocketId: null,
   speakerName: 'Esperando Orador',
-  lastUpdate: Date.now()
+  lastUpdate: Date.now(),
+  sessionStartTime: Date.now()
 };
 
 function getParticipantsList() {
@@ -77,12 +96,25 @@ function getParticipantsList() {
   return list;
 }
 
+// Debounced broadcast to avoid flood emissions when multiple sockets connect
+let broadcastTimer = null;
 function broadcastParticipantsList() {
-  io.emit('participants-list', getParticipantsList());
+  if (broadcastTimer) clearTimeout(broadcastTimer);
+  broadcastTimer = setTimeout(() => {
+    broadcastTimer = null;
+    io.emit('participants-list', getParticipantsList());
+  }, 35);
 }
+
+// Lightweight ping endpoint for measuring round-trip latency (rural connection quality)
+app.get('/api/ping', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.json({ pong: true, time: Date.now() });
+});
 
 // HTTP Endpoint for light polling fallback if WebSockets fail in rural 3G
 app.get('/api/state', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, must-revalidate');
   res.json({
     ...novenaState,
     isHostActive: Boolean(novenaState.hostSocketId && io.sockets.sockets.get(novenaState.hostSocketId)),
@@ -131,6 +163,38 @@ app.post('/api/audio/all', (req, res) => {
   broadcastParticipantsList();
   console.log(`[Novena Audio HTTP] Todos los micrófonos: ${isOpening ? 'ABIERTOS' : 'SILENCIADOS'}`);
   res.json({ success: true, enabled: isOpening });
+});
+
+// HTTP Endpoint para presintonías maestras de audio (Orador solo, Coro, Silencio total)
+app.post('/api/audio/preset', (req, res) => {
+  const { preset } = req.body; // 'orador' | 'coro' | 'silencio'
+  if (preset === 'orador') {
+    // Silencia a todos los oyentes y abre únicamente el micrófono del orador
+    for (const [id, s] of io.sockets.sockets) {
+      if (id === novenaState.speakerSocketId) {
+        s.isAudioMuted = false;
+        io.to(id).emit('force-audio-state', { enabled: true });
+      } else {
+        s.isAudioMuted = true;
+        io.to(id).emit('force-audio-state', { enabled: false });
+      }
+    }
+  } else if (preset === 'coro') {
+    // Abre todos los micrófonos para respuesta comunitaria
+    for (const [id, s] of io.sockets.sockets) {
+      s.isAudioMuted = false;
+    }
+    io.emit('force-audio-state', { enabled: true });
+  } else if (preset === 'silencio') {
+    // Silencio completo para reflexión
+    for (const [id, s] of io.sockets.sockets) {
+      s.isAudioMuted = true;
+    }
+    io.emit('force-audio-state', { enabled: false });
+  }
+  broadcastParticipantsList();
+  console.log(`[Novena Audio Preset] Preset aplicado: ${preset}`);
+  res.json({ success: true, preset });
 });
 
 // HTTP Endpoint para silenciar o abrir micrófono a un usuario específico
@@ -290,6 +354,33 @@ io.on('connection', (socket) => {
       }
     }
     io.emit('force-audio-state', { enabled: isOpening });
+    broadcastParticipantsList();
+  });
+
+  // Presintonías maestras de audio (Orador solo, Coro, Silencio total) por Socket
+  socket.on('set-audio-preset', ({ preset }) => {
+    console.log(`[Novena Audio Socket] Preset recibido: ${preset}`);
+    if (preset === 'orador') {
+      for (const [id, s] of io.sockets.sockets) {
+        if (id === novenaState.speakerSocketId) {
+          s.isAudioMuted = false;
+          io.to(id).emit('force-audio-state', { enabled: true });
+        } else {
+          s.isAudioMuted = true;
+          io.to(id).emit('force-audio-state', { enabled: false });
+        }
+      }
+    } else if (preset === 'coro') {
+      for (const [id, s] of io.sockets.sockets) {
+        s.isAudioMuted = false;
+      }
+      io.emit('force-audio-state', { enabled: true });
+    } else if (preset === 'silencio') {
+      for (const [id, s] of io.sockets.sockets) {
+        s.isAudioMuted = true;
+      }
+      io.emit('force-audio-state', { enabled: false });
+    }
     broadcastParticipantsList();
   });
 

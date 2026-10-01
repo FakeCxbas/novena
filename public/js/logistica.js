@@ -215,9 +215,24 @@ async function fetchState() {
 // INICIALIZACIÓN DE SOCKET.IO
 // -------------------------------------------------------------
 
+// Fallback polling inteligente: Solo se activa si los WebSockets se desconectan
+let fallbackPollInterval = null;
+function startFallbackPolling() {
+  if (!fallbackPollInterval) {
+    fallbackPollInterval = setInterval(fetchState, 3500);
+  }
+}
+function stopFallbackPolling() {
+  if (fallbackPollInterval) {
+    clearInterval(fallbackPollInterval);
+    fallbackPollInterval = null;
+  }
+}
+
 function initSocket() {
   if (typeof io === 'undefined') {
     console.error('Socket.io library not loaded');
+    startFallbackPolling();
     return;
   }
 
@@ -229,8 +244,15 @@ function initSocket() {
   });
 
   state.socket.on('connect', () => {
+    stopFallbackPolling();
     const statusText = document.getElementById('connection-status-text');
     if (statusText) statusText.textContent = 'En Vivo';
+
+    const socketStatusEl = document.getElementById('telemetry-socket-status');
+    if (socketStatusEl) {
+      socketStatusEl.textContent = 'En Tiempo Real';
+      socketStatusEl.style.color = '#22c55e';
+    }
 
     // Auto-reclamar anfitrión si ya estaba desbloqueado
     const savedPin = localStorage.getItem('novena-host-pin');
@@ -244,8 +266,15 @@ function initSocket() {
   });
 
   state.socket.on('disconnect', () => {
+    startFallbackPolling();
     const statusText = document.getElementById('connection-status-text');
     if (statusText) statusText.textContent = 'Reconectando...';
+
+    const socketStatusEl = document.getElementById('telemetry-socket-status');
+    if (socketStatusEl) {
+      socketStatusEl.textContent = 'Reconectando (HTTP)';
+      socketStatusEl.style.color = '#f59e0b';
+    }
   });
 
   state.socket.on('state-update', (data) => {
@@ -404,48 +433,71 @@ window.prevAveMaria = function() {
   }
 };
 
+window.completeMystery = function() {
+  haptic(45);
+  window.setAveMaria(10);
+  showToast('10 Ave Marías completadas en este misterio', 'check');
+};
+
+window.resetBeads = function() {
+  haptic(30);
+  window.setAveMaria(0);
+  showToast('Contador de Ave Marías reiniciado a 0', 'refresh');
+};
+
+// Selector manual de Tipo de Misterio
+window.setMysteryType = function(type) {
+  haptic(35);
+  state.activeMysteryType = type === 'auto' ? null : type;
+  document.querySelectorAll('.mystery-pill-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mystery === type);
+  });
+  state.steps = buildSteps(state.currentDay, state.activeMysteryType);
+  broadcastStepUpdate();
+  showToast(`Misterios: ${type.toUpperCase()}`, 'rosary');
+};
+
 // -------------------------------------------------------------
-// MESA DE SONIDO: CONTROL DE MICRÓFONOS
+// MESA DE SONIDO: CONTROL DE MICRÓFONOS Y PRESETS
 // -------------------------------------------------------------
 
-window.masterUnmuteAll = function() {
-  haptic([50, 40, 50]);
+// Presets maestros de 1 toque (Orador solo, Coro general, Silencio total)
+window.applyAudioPreset = function(preset) {
+  haptic([45, 30, 45]);
   if (state.socket && state.socket.connected) {
-    state.socket.emit('set-all-listeners-audio', { enabled: true });
+    state.socket.emit('set-audio-preset', { preset });
   }
-  fetch('/api/audio/all', {
+  fetch('/api/audio/preset', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ enabled: true })
+    body: JSON.stringify({ preset })
   }).catch(() => {});
 
-  showToast('Se han abierto los micrófonos a todos', 'mic');
-
-  // Actualizar estado local inmediatamente
-  state.participants.forEach(p => {
-    if (!p.isHost) p.isAudioMuted = false;
-  });
+  if (preset === 'orador') {
+    showToast('Modo Orador: solo habla quien lee', 'speaker');
+    state.participants.forEach(p => {
+      p.isAudioMuted = (p.socketId !== state.speakerSocketId);
+    });
+  } else if (preset === 'coro') {
+    showToast('Modo Coro: micrófonos abiertos para responder', 'users');
+    state.participants.forEach(p => {
+      p.isAudioMuted = false;
+    });
+  } else if (preset === 'silencio') {
+    showToast('Silencio total activado para reflexión', 'mic-off');
+    state.participants.forEach(p => {
+      p.isAudioMuted = true;
+    });
+  }
   renderRoster();
 };
 
+window.masterUnmuteAll = function() {
+  window.applyAudioPreset('coro');
+};
+
 window.masterMuteAll = function() {
-  haptic([50, 40, 50]);
-  if (state.socket && state.socket.connected) {
-    state.socket.emit('set-all-listeners-audio', { enabled: false });
-  }
-  fetch('/api/audio/all', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ enabled: false })
-  }).catch(() => {});
-
-  showToast('Todos los oyentes han sido silenciados', 'mic-off');
-
-  // Actualizar estado local inmediatamente
-  state.participants.forEach(p => {
-    if (!p.isHost) p.isAudioMuted = true;
-  });
-  renderRoster();
+  window.applyAudioPreset('silencio');
 };
 
 window.toggleUserMic = function(targetSocketId, currentIsMuted) {
@@ -1039,6 +1091,93 @@ window.syncAllCameraMonitors = function() {
 };
 
 // -------------------------------------------------------------
+// HERRAMIENTAS DE LOGÍSTICA: CRONÓMETRO, WHATSAPP Y TELEMETRÍA
+// -------------------------------------------------------------
+
+let timerSeconds = 0;
+let timerRunning = true;
+let timerInterval = null;
+
+function initStopwatch() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (timerRunning) {
+      timerSeconds++;
+      updateStopwatchUI();
+    }
+  }, 1000);
+}
+
+function updateStopwatchUI() {
+  const el = document.getElementById('session-stopwatch');
+  if (!el) return;
+  const mins = Math.floor(timerSeconds / 60);
+  const secs = timerSeconds % 60;
+  el.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+window.toggleSessionTimer = function() {
+  haptic(25);
+  timerRunning = !timerRunning;
+  const btn = document.getElementById('btn-timer-toggle');
+  const badge = document.getElementById('timer-status-badge');
+  if (btn) btn.innerHTML = timerRunning ? `<i data-icon="refresh" data-size="14"></i> Pausar` : `<i data-icon="refresh" data-size="14"></i> Continuar`;
+  if (badge) badge.textContent = timerRunning ? 'En Curso' : 'Pausado';
+  replaceDomIcons();
+};
+
+window.resetSessionTimer = function() {
+  haptic(30);
+  timerSeconds = 0;
+  updateStopwatchUI();
+  showToast('Cronómetro reiniciado a 00:00', 'refresh');
+};
+
+window.shareWhatsApp = function() {
+  haptic(35);
+  const text = encodeURIComponent(`🕊️ Familia, los invitamos a unirse a la Novena por el Eterno Descanso de Mami Olguita.\n\nEntren a rezar con nosotros aquí:\n${window.location.origin}`);
+  window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+};
+
+window.copyRoomLink = function() {
+  haptic(40);
+  const url = window.location.origin;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('Enlace copiado al portapapeles', 'check');
+    }).catch(() => {
+      showToast(`Enlace: ${url}`);
+    });
+  } else {
+    showToast(`Enlace: ${url}`);
+  }
+};
+
+window.lockConsole = function() {
+  haptic([50, 50]);
+  localStorage.removeItem('novena-host-pin');
+  localStorage.removeItem('novena-is-host');
+  location.reload();
+};
+
+// Medición periódica de latencia (Ping en ms)
+async function measurePing() {
+  try {
+    const t0 = performance.now();
+    const res = await fetch('/api/ping?t=' + Date.now());
+    if (res.ok) {
+      const ping = Math.round(performance.now() - t0);
+      const el = document.getElementById('ping-ms-text');
+      const container = document.getElementById('telemetry-ping-val');
+      if (el) el.textContent = `${ping} ms`;
+      if (container) {
+        container.className = 'telemetry-stat-val ' + (ping < 120 ? 'latency-indicator-good' : ping < 300 ? 'latency-indicator-fair' : 'latency-indicator-poor');
+      }
+    }
+  } catch(e) {}
+}
+
+// -------------------------------------------------------------
 // ARRANQUE ROBUSTO
 // -------------------------------------------------------------
 
@@ -1052,14 +1191,16 @@ function startApp() {
   state.steps = buildSteps(state.currentDay, state.activeMysteryType);
   updateAllViews();
 
-  // 1. Carga inmediata por HTTP para que los familiares aparezcan al instante (0ms)
+  // 1. Carga inicial inmediata por HTTP (0ms)
   fetchState();
 
-  // 2. Intervalo de refresco constante por HTTP
-  setInterval(fetchState, 2500);
-
-  // 3. Conexión de sockets en tiempo real
+  // 2. Conexión de sockets en tiempo real (maneja sincronización instantánea)
   initSocket();
+
+  // 3. Iniciar cronómetro de sesión y telemetría de red
+  initStopwatch();
+  measurePing();
+  setInterval(measurePing, 12000);
 }
 
 if (document.readyState === 'loading') {

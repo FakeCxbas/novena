@@ -7,7 +7,12 @@
   <meta name="description" content="Novena y Santo Rosario por el eterno descanso de Mami Olguita. Rezo familiar en vivo con sincronización y videollamada.">
   <meta name="theme-color" content="#15110f">
   
-  <link rel="stylesheet" href="css/style.css?v=5.5">
+  <!-- Conexión anticipada a Google Fonts (cero bloqueo de renderizado) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css?v=5.6">
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="role-familia">
@@ -264,14 +269,30 @@
         </h4>
         <p class="logistics-section-sub">Prende o apaga micrófonos a todos o a cada persona individualmente:</p>
         
+        <!-- Presets rápidos de 1 toque -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin-bottom: 0.6rem;">
+          <button class="btn-audio-action" onclick="window.setAudioPreset('orador')" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.4); color: #7dd3fc; font-size: 0.73rem; padding: 0.5rem 0.2rem; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;">
+            <i data-icon="speaker" data-size="16"></i>
+            <span>Orador Solo</span>
+          </button>
+          <button class="btn-audio-action" onclick="window.setAudioPreset('coro')" style="background: rgba(34, 197, 94, 0.12); border-color: rgba(34, 197, 94, 0.4); color: #86efac; font-size: 0.73rem; padding: 0.5rem 0.2rem; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;">
+            <i data-icon="users" data-size="16"></i>
+            <span>Todos Coro</span>
+          </button>
+          <button class="btn-audio-action" onclick="window.setAudioPreset('silencio')" style="background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; font-size: 0.73rem; padding: 0.5rem 0.2rem; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;">
+            <i data-icon="mic-off" data-size="16"></i>
+            <span>Silencio</span>
+          </button>
+        </div>
+
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.8rem;">
           <button class="btn-audio-action mute" onclick="window.setAllListenersAudio(false)" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
             <i data-icon="mic-off" data-size="16"></i>
-            <span>Silenciar a Todos</span>
+            <span>Silenciar Todos</span>
           </button>
           <button class="btn-audio-action unmute" onclick="window.setAllListenersAudio(true)" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
             <i data-icon="mic" data-size="16"></i>
-            <span>Prender a Todos</span>
+            <span>Abrir Todos</span>
           </button>
         </div>
 
