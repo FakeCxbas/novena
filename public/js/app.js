@@ -533,6 +533,9 @@ window.selectEntryRole = function(role) {
   if (cardOrador) cardOrador.classList.toggle('active', role === 'orador');
   if (cardAnfitrion) cardAnfitrion.classList.toggle('active', role === 'anfitrion');
 
+  const radio = document.querySelector(`input[name="entry-role-radio"][value="${role}"]`);
+  if (radio) radio.checked = true;
+
   if (pinBox) {
     pinBox.style.display = (role === 'anfitrion') ? 'block' : 'none';
     if (role === 'anfitrion') {
@@ -1204,12 +1207,16 @@ window.enterRoomOneTouch = async function() {
   if (state.selectedEntryRole === 'anfitrion') {
     const pinInput = document.getElementById('entry-pin-input');
     const pin = pinInput ? pinInput.value.trim() : '';
-    if (pin !== '1234') {
-      alert('El PIN de Anfitrión es 1234');
-      return;
+    if (pin === '1234') {
+      state.isHost = true;
+      localStorage.setItem('novena-is-host', 'true');
+    } else {
+      // Si el PIN no es 1234, no bloquear con alert: entrar como familiar
+      state.isHost = false;
+      localStorage.removeItem('novena-is-host');
+      state.selectedEntryRole = 'familia';
+      showToast('PIN incorrecto o vacío (es 1234). Entraste como familiar.', 'users');
     }
-    state.isHost = true;
-    localStorage.setItem('novena-is-host', 'true');
   } else {
     // Si entra como familiar u orador, limpiar cualquier estado previo de host
     state.isHost = false;
@@ -1243,12 +1250,15 @@ window.enterRoomOneTouch = async function() {
       callState.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       callState.isVideoOff = true;
     } catch (audioErr) {
-      if (permGuide) permGuide.style.display = 'none';
-      openModal('permission-blocked-modal');
-      return;
+      console.warn('No se obtuvo acceso a micrófono. Entrando en Modo Oyente sin bloquear:', audioErr);
+      callState.localStream = null;
+      callState.isVideoOff = true;
+      callState.isAudioMuted = true;
+      showToast('Entraste como oyente para seguir las oraciones', 'book');
     }
   }
 
+  // NUNCA BLOQUEAR: Siempre ocultar overlays y entrar
   if (permGuide) permGuide.style.display = 'none';
   const gateOverlay = document.getElementById('welcome-gate-overlay');
   if (gateOverlay) gateOverlay.style.display = 'none';
@@ -1272,11 +1282,11 @@ window.enterRoomOneTouch = async function() {
     localVideo.play().catch(e => console.log('Local video play error', e));
 
     if (callState.isVideoOff) {
-      localAvatar.style.display = 'flex';
-      localVideo.style.display = 'none';
+      if (localAvatar) localAvatar.style.display = 'flex';
+      if (localVideo) localVideo.style.display = 'none';
     } else {
-      localAvatar.style.display = 'none';
-      localVideo.style.display = 'block';
+      if (localAvatar) localAvatar.style.display = 'none';
+      if (localVideo) localVideo.style.display = 'block';
     }
 
     // Monitorear actividad vocal propia para iluminar miniatura
@@ -1726,6 +1736,13 @@ function init() {
   if (savedName && nameField) {
     nameField.value = savedName;
   }
+
+  // Sincronizar radio buttons del rol de entrada
+  document.querySelectorAll('input[name="entry-role-radio"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      window.selectEntryRole(e.target.value);
+    });
+  });
 }
 
 function startApp() {

@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=6.0">
+  <link rel="stylesheet" href="css/style.css?v=6.1">
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="role-familia">
@@ -43,7 +43,7 @@
       <div class="entry-roles-container">
         <!-- Rol 1: Familia (Predeterminado) -->
         <label class="entry-role-card active" id="entry-card-familia" onclick="window.selectEntryRole('familia')">
-          <input type="radio" name="entry-role-radio" value="familia" checked>
+          <input type="radio" name="entry-role-radio" value="familia" onchange="window.selectEntryRole('familia')" checked>
           <div class="entry-role-content">
             <div class="entry-role-title"><i data-icon="users" data-size="16"></i> Familia / Oyente (Recomendado)</div>
             <div class="entry-role-desc">Solo rezo y respondo a coro. La pantalla cambia solita con el anfitrión.</div>
@@ -52,7 +52,7 @@
 
         <!-- Rol 2: Orador -->
         <label class="entry-role-card" id="entry-card-orador" onclick="window.selectEntryRole('orador')">
-          <input type="radio" name="entry-role-radio" value="orador">
+          <input type="radio" name="entry-role-radio" value="orador" onchange="window.selectEntryRole('orador')">
           <div class="entry-role-content">
             <div class="entry-role-title"><i data-icon="speaker" data-size="16"></i> Orador / Lector</div>
             <div class="entry-role-desc">Leeré las oraciones y el rosario en voz alta para todos.</div>
@@ -61,7 +61,7 @@
 
         <!-- Rol 3: Anfitrión -->
         <label class="entry-role-card" id="entry-card-anfitrion" onclick="window.selectEntryRole('anfitrion')">
-          <input type="radio" name="entry-role-radio" value="anfitrion">
+          <input type="radio" name="entry-role-radio" value="anfitrion" onchange="window.selectEntryRole('anfitrion')">
           <div class="entry-role-content">
             <div class="entry-role-title"><i data-icon="crown" data-size="16"></i> Anfitrión (Logística)</div>
             <div class="entry-role-desc">Paso las páginas, cambio de día y dirijo la reunión. (Requiere PIN)</div>
@@ -355,6 +355,6 @@
   <div id="toast-container" class="toast-container"></div>
 
   <script type="module" src="/js/icons.js"></script>
-  <script type="module" src="/js/app.js?v=6.0"></script>
+  <script type="module" src="/js/app.js?v=6.1"></script>
 </body>
 </html>
