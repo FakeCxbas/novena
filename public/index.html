@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Novena por el Eterno Descanso de Mami Olguita</title>
+  <meta name="description" content="Novena y Santo Rosario por el eterno descanso de Mami Olguita. Rezo familiar en vivo con sincronización y videollamada.">
+  <meta name="theme-color" content="#15110f">
+  
+  <link rel="stylesheet" href="css/style.css?v=5.5">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body class="role-familia">
+  <!-- PANTALLA DE ENTRADA CON SELECCIÓN DE ROL CLARA -->
+  <div class="welcome-gate-overlay" id="welcome-gate-overlay">
+    <div class="welcome-gate-card">
+      <div class="welcome-candle">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C12 2 8 6.5 8 10C8 12.2 9.8 14 12 14C14.2 14 16 12.2 16 10C16 6.5 12 2 12 2Z" fill="#F59E0B"/>
+          <path d="M12 5C12 5 10 7.5 10 9.5C10 10.6 10.9 11.5 12 11.5C13.1 11.5 14 10.6 14 9.5C14 7.5 12 5 12 5Z" fill="#FEF5E7"/>
+          <rect x="7" y="14" width="10" height="8" rx="2" fill="#DFB15B"/>
+        </svg>
+      </div>
+
+      <h1 class="welcome-title">Mami Olguita</h1>
+      <p class="welcome-subtitle">“Siempre vivirás en nuestros corazones”</p>
+
+      <div style="text-align: left; margin-bottom: 0.3rem;">
+        <label for="welcome-name-input" class="input-label-gold">Tu Nombre:</label>
+      </div>
+      <input type="text" id="welcome-name-input" class="welcome-name-field" placeholder="Ej. Tía Martha / Carlos" autocomplete="given-name">
+
+      <!-- Selector de Rol para evitar confusiones -->
+      <div style="text-align: left; margin-bottom: 0.4rem; margin-top: 0.4rem;">
+        <span class="input-label-gold">¿Cuál es tu papel hoy?</span>
+      </div>
+
+      <div class="entry-roles-container">
+        <!-- Rol 1: Familia (Predeterminado) -->
+        <label class="entry-role-card active" id="entry-card-familia" onclick="window.selectEntryRole('familia')">
+          <input type="radio" name="entry-role-radio" value="familia" checked>
+          <div class="entry-role-content">
+            <div class="entry-role-title"><i data-icon="users" data-size="16"></i> Familia / Oyente (Recomendado)</div>
+            <div class="entry-role-desc">Solo rezo y respondo a coro. La pantalla cambia solita con el anfitrión.</div>
+          </div>
+        </label>
+
+        <!-- Rol 2: Orador -->
+        <label class="entry-role-card" id="entry-card-orador" onclick="window.selectEntryRole('orador')">
+          <input type="radio" name="entry-role-radio" value="orador">
+          <div class="entry-role-content">
+            <div class="entry-role-title"><i data-icon="speaker" data-size="16"></i> Orador / Lector</div>
+            <div class="entry-role-desc">Leeré las oraciones y el rosario en voz alta para todos.</div>
+          </div>
+        </label>
+
+        <!-- Rol 3: Anfitrión -->
+        <label class="entry-role-card" id="entry-card-anfitrion" onclick="window.selectEntryRole('anfitrion')">
+          <input type="radio" name="entry-role-radio" value="anfitrion">
+          <div class="entry-role-content">
+            <div class="entry-role-title"><i data-icon="crown" data-size="16"></i> Anfitrión (Logística)</div>
+            <div class="entry-role-desc">Paso las páginas, cambio de día y dirijo la reunión. (Requiere PIN)</div>
+          </div>
+        </label>
+
+        <!-- Campo PIN si selecciona Anfitrión -->
+        <div id="entry-pin-box" style="display: none; margin-top: 0.6rem;">
+          <input type="password" id="entry-pin-input" class="welcome-name-field" style="letter-spacing: 0.25em; font-size: 1.25rem; margin-bottom: 0.6rem;" maxlength="6" placeholder="PIN (1234)" inputmode="numeric">
+          
+          <a href="/logistica" class="btn-enter-room" style="background: linear-gradient(135deg, #2b211a, #1a1411); border: 1.5px solid var(--gold-primary); text-decoration: none; display: flex; margin-bottom: 0.6rem; color: var(--gold-light); font-size: 0.88rem; align-items: center; justify-content: center; gap: 0.5rem;">
+            <i data-icon="smartphone" data-size="16"></i>
+            <span>Abrir App Mando de Logística para Celular</span>
+          </a>
+        </div>
+      </div>
+
+      <button class="btn-enter-room" onclick="window.enterRoomOneTouch()" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+        <i data-icon="candle" data-size="18"></i>
+        <span>Entrar a rezar con la familia</span>
+      </button>
+
+      <p style="font-family: var(--font-sans); font-size: 0.72rem; color: var(--text-muted); margin-top: 0.8rem; line-height: 1.35;">
+        Ajustaremos automáticamente tu micrófono y conexión para que todo fluya sin complicaciones.
+      </p>
+    </div>
+  </div>
+
+  <!-- GUÍA DE PERMISOS DE MICRÓFONO CON FLECHA ANIMADA -->
+  <div class="modal-overlay" id="permission-guide-overlay" style="display: none; z-index: 400; align-items: flex-start; padding-top: 1rem;">
+    <div style="background: var(--bg-surface); border: 2px solid var(--gold-primary); border-radius: var(--radius-lg); padding: 1.2rem; max-width: 360px; text-align: center; box-shadow: var(--shadow-warm); margin: 0 auto;">
+      <div style="margin-bottom: 0.6rem; animation: bounce 1.2s infinite ease-in-out; display: flex; justify-content: center;">
+        <i data-icon="arrow-up" data-size="44" data-color="#DFB15B" data-stroke="2.5"></i>
+      </div>
+      <h3 style="font-family: var(--font-serif); color: var(--gold-primary); font-size: 1.15rem; margin-bottom: 0.4rem;">
+        Permite tu micrófono
+      </h3>
+      <p style="font-family: var(--font-sans); font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+        Toca en <strong>"Permitir"</strong> arriba en tu pantalla para que tu familia pueda escucharte rezar.
+      </p>
+    </div>
+  </div>
+
+  <!-- GUÍA SI SE BLOQUEÓ EL PERMISO -->
+  <div class="modal-overlay" id="permission-blocked-modal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: var(--danger-color); display: flex; align-items: center; gap: 0.4rem;">
+          <i data-icon="alert-triangle" data-size="18"></i>
+          <span>Micrófono bloqueado</span>
+        </h3>
+        <button class="btn-header-icon" onclick="window.closeModal('permission-blocked-modal')"><i data-icon="x" data-size="16"></i></button>
+      </div>
+      <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: var(--radius-md); font-family: var(--font-sans); font-size: 0.88rem; line-height: 1.8; margin-bottom: 1.2rem;">
+        <div><strong>1.</strong> Toca el <strong>icono del candado</strong> <i data-icon="lock" data-size="14"></i> al lado de la dirección de la página.</div>
+        <div><strong>2.</strong> Activa el <strong>Micrófono</strong> en "Permitir".</div>
+        <div><strong>3.</strong> Toca el botón de abajo para recargar.</div>
+      </div>
+      <button class="btn-enter-room" onclick="location.reload()" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
+        <i data-icon="refresh" data-size="16"></i>
+        <span>Volver a intentar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- BARRA SUPERIOR SLIM (~42px) -->
+  <header class="top-nav">
+    <div class="brand-section">
+      <div class="candle-icon" style="width: 20px; height: 20px;">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C12 2 8 6.5 8 10C8 12.2 9.8 14 12 14C14.2 14 16 12.2 16 10C16 6.5 12 2 12 2Z" fill="#F59E0B"/>
+          <path d="M12 5C12 5 10 7.5 10 9.5C10 10.6 10.9 11.5 12 11.5C13.1 11.5 14 10.6 14 9.5C14 7.5 12 5 12 5Z" fill="#FEF5E7"/>
+          <rect x="7" y="14" width="10" height="8" rx="2" fill="#DFB15B"/>
+        </svg>
+      </div>
+      <span class="brand-title">Mami Olguita</span>
+    </div>
+
+    <!-- Indicador de Quién está Leyendo (Orador) -->
+    <div class="speaker-pill-status" id="speaker-pill-status">
+      <span class="live-dot"></span>
+      <span id="speaker-name-label">Esperando Orador</span>
+    </div>
+
+    <div class="nav-right-controls">
+      <!-- Cambiar vista de cámaras -->
+      <button class="btn-header-icon" id="btn-toggle-camera-layout" onclick="window.toggleCameraLayout()" title="Ver cámaras más grandes o compactas">
+        <i data-icon="video" data-size="16"></i>
+      </button>
+
+      <!-- Ajuste tamaño de letra -->
+      <button class="btn-header-icon" id="btn-font-size" onclick="window.cycleFontSize()" title="Tamaño de letra">A+</button>
+
+      <!-- Botón Logística (Si es host abre panel, si no, abre PIN) -->
+      <button class="btn-header-icon" id="btn-host-trigger" onclick="window.openHostModal()" title="Control de Anfitrión">
+        <i data-icon="crown" data-size="16"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- TIRA DE CÁMARAS VISIBLE (~76px) -->
+  <section class="family-cameras-strip-container" id="family-cameras-strip">
+    <!-- Mi miniatura -->
+    <div class="camera-mini-tile self" id="local-camera-tile">
+      <video id="local-video" autoplay muted playsinline webkit-playsinline></video>
+      <div class="camera-mini-avatar" id="local-avatar">Tú</div>
+      <div class="camera-mini-name" id="local-user-name">Tú</div>
+      <div class="tile-mic-indicator" id="local-tile-mic-badge" onclick="window.toggleAudio()">
+        <i data-icon="mic" data-size="12"></i>
+      </div>
+    </div>
+
+    <!-- Miniaturas de la familia -->
+    <div id="remote-cameras-container" style="display: contents;"></div>
+  </section>
+
+  <!-- CONTENIDO PRINCIPAL: LECTURA DE LA NOVENA (85% DE LA PANTALLA) -->
+  <main class="main-prayer-container">
+    <article class="prayer-card" id="prayer-card">
+      <div class="card-top-header">
+        <span class="day-badge-text" id="day-step-badge">Día 1 de la Novena</span>
+        <span style="font-family: var(--font-sans); font-size: 0.72rem; color: var(--gold-amber);" id="step-counter-text">Paso 1 de 17</span>
+      </div>
+
+      <h2 class="section-title" id="card-section-title">Cargando novena...</h2>
+
+      <div id="card-step-body">
+        <!-- Inyectado por app.js -->
+      </div>
+    </article>
+  </main>
+
+  <!-- BARRA INFERIOR FLOTANTE FIJA (~54px) -->
+  <footer class="bottom-floating-bar">
+    <div class="bottom-bar-inner">
+      <!-- MODO FAMILIA / OYENTES: Solo 1 botón para abrir/cerrar micrófono y cámara -->
+      <div class="family-listener-controls" id="family-listener-controls">
+        <button class="listener-mic-action listener-mic-open" id="btn-family-mic" onclick="window.toggleAudio()">
+          <span id="family-mic-icon"><i data-icon="mic" data-size="18"></i></span>
+          <span id="family-mic-text">Mi voz: ABIERTA (Respondiendo a coro)</span>
+        </button>
+
+        <button class="btn-cam-toggle" id="btn-family-cam" onclick="window.toggleVideo()" title="Prender / Apagar cámara">
+          <i data-icon="video" data-size="18"></i>
+        </button>
+      </div>
+
+      <!-- MODO ANFITRIÓN (LOGÍSTICA): Control de diapositivas y botón de herramientas -->
+      <div class="host-nav-controls" id="host-nav-controls">
+        <button class="btn-host-step prev" id="btn-prev" onclick="window.prevStep()" disabled>
+          <i data-icon="chevron-left" data-size="18"></i>
+          <span>Anterior</span>
+        </button>
+
+        <button class="btn-host-logistics" onclick="window.openModal('logistics-modal')" title="Panel de Logística">
+          <i data-icon="settings" data-size="15"></i>
+          <span>Logística</span>
+        </button>
+
+        <button class="btn-host-step next" id="btn-next" onclick="window.nextStep()">
+          <span>Siguiente</span>
+          <i data-icon="chevron-right" data-size="18"></i>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PANEL / DRAWER DE LOGÍSTICA (Control total del Anfitrión) -->
+  <div class="modal-overlay" id="logistics-modal" onclick="if(event.target === this) window.closeModal('logistics-modal')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display: flex; align-items: center; gap: 0.4rem;">
+          <i data-icon="settings" data-size="18"></i>
+          <span>Control de Logística</span>
+        </h3>
+        <button class="btn-header-icon" onclick="window.closeModal('logistics-modal')"><i data-icon="x" data-size="16"></i></button>
+      </div>
+
+      <!-- Acceso directo a la App Consola Móvil -->
+      <a href="/logistica" style="background: linear-gradient(135deg, rgba(223, 177, 91, 0.2), rgba(245, 158, 11, 0.3)); border: 1.5px solid var(--gold-primary); border-radius: var(--radius-md); padding: 0.75rem 1rem; color: var(--gold-light); text-decoration: none; display: flex; align-items: center; justify-content: space-between; font-family: var(--font-sans); font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+        <span style="display: flex; align-items: center; gap: 0.5rem;">
+          <i data-icon="smartphone" data-size="18"></i>
+          <span>Abrir App Mando de Logística para Celular</span>
+        </span>
+        <span style="color: var(--gold-amber);">Abrir →</span>
+      </a>
+
+      <!-- Sección 1: Designar Orador -->
+      <div class="logistics-card-section">
+        <h4 class="logistics-section-heading" style="display: flex; align-items: center; gap: 0.4rem;">
+          <i data-icon="speaker" data-size="16"></i>
+          <span>Designar Orador (Quién va a leer)</span>
+        </h4>
+        <p class="logistics-section-sub">Toca a la persona que leerá en voz alta para toda la familia:</p>
+        <div class="speaker-selection-grid" id="speaker-selection-list">
+          <!-- Rellenado con lista de conectados -->
+        </div>
+      </div>
+
+      <!-- Sección 2: Control de Micrófonos (Silenciar y Prender) -->
+      <div class="logistics-card-section">
+        <h4 class="logistics-section-heading" style="display: flex; align-items: center; gap: 0.4rem;">
+          <i data-icon="mic" data-size="16"></i>
+          <span>Control de Micrófonos</span>
+        </h4>
+        <p class="logistics-section-sub">Prende o apaga micrófonos a todos o a cada persona individualmente:</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.8rem;">
+          <button class="btn-audio-action mute" onclick="window.setAllListenersAudio(false)" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
+            <i data-icon="mic-off" data-size="16"></i>
+            <span>Silenciar a Todos</span>
+          </button>
+          <button class="btn-audio-action unmute" onclick="window.setAllListenersAudio(true)" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
+            <i data-icon="mic" data-size="16"></i>
+            <span>Prender a Todos</span>
+          </button>
+        </div>
+
+        <div style="font-size: 0.75rem; font-weight: 700; color: var(--gold-primary); text-transform: uppercase; margin-bottom: 0.4rem;">
+          Familiares Conectados (Control Individual):
+        </div>
+        <div class="family-members-mic-list" id="family-members-mic-list">
+          <!-- Lista con toggle de mic para cada persona -->
+        </div>
+      </div>
+
+      <!-- Sección 3: Selector de Día -->
+      <div class="logistics-card-section">
+        <h4 class="logistics-section-heading" style="display: flex; align-items: center; gap: 0.4rem;">
+          <i data-icon="calendar" data-size="16"></i>
+          <span>Cambiar Día de la Novena</span>
+        </h4>
+        <div class="logistics-days-grid" id="logistics-days-grid">
+          <!-- Días 1 al 9 -->
+        </div>
+      </div>
+
+      <!-- Sección 4: Saltar a oración -->
+      <div class="logistics-card-section">
+        <h4 class="logistics-section-heading" style="display: flex; align-items: center; gap: 0.4rem;">
+          <i data-icon="book" data-size="16"></i>
+          <span>Saltar a una Oración o Misterio</span>
+        </h4>
+        <div class="index-step-list" id="index-steps-list">
+          <!-- Lista de pasos -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CLAVE DEL ANFITRIÓN -->
+  <div class="modal-overlay" id="host-modal" onclick="if(event.target === this) window.closeModal('host-modal')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display: flex; align-items: center; gap: 0.4rem;">
+          <i data-icon="crown" data-size="18"></i>
+          <span>Acceso de Anfitrión</span>
+        </h3>
+        <button class="btn-header-icon" onclick="window.closeModal('host-modal')"><i data-icon="x" data-size="16"></i></button>
+      </div>
+      <p style="font-family: var(--font-sans); font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+        Ingresa el PIN de logística para tomar el control y pasar las páginas para toda la familia.
+      </p>
+      
+      <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+        <input type="password" id="host-pin-input" class="welcome-name-field" style="letter-spacing: 0.25em; font-size: 1.3rem; text-align: center;" maxlength="6" placeholder="••••" inputmode="numeric">
+        <button class="btn-enter-room" onclick="window.submitHostPin()">
+          Tomar Control de la Novena
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de Notificaciones -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script type="module" src="/js/icons.js"></script>
+  <script type="module" src="/js/app.js?v=5.6"></script>
+</body>
+</html>

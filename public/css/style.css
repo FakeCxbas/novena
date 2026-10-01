@@ -1,0 +1,1217 @@
+/* style.css - 100% Optimizado para Teléfono Celular y Roles */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+:root {
+  /* Paleta Conmemorativa Cálida */
+  --bg-primary: #15110f;
+  --bg-surface: #1e1815;
+  --bg-surface-elevated: #28211c;
+  --bg-surface-translucent: rgba(24, 19, 16, 0.96);
+  
+  --border-subtle: rgba(223, 177, 91, 0.2);
+  --border-strong: rgba(223, 177, 91, 0.45);
+  
+  --text-primary: #fdfaf6;
+  --text-secondary: #ded3c5;
+  --text-muted: #9e8e7c;
+  
+  /* Tonos Dorados Cálidos y Resplandor */
+  --gold-primary: #dfb15b;
+  --gold-light: #fef5e7;
+  --gold-amber: #e69a28;
+  --gold-glow: rgba(230, 154, 40, 0.35);
+  
+  --color-guia: #7dd3fc;
+  --bg-guia-badge: rgba(56, 189, 248, 0.12);
+  --border-guia: rgba(125, 211, 252, 0.35);
+  
+  --color-todos: #fed7aa;
+  --bg-todos-badge: rgba(230, 154, 40, 0.18);
+  --border-todos: rgba(230, 154, 40, 0.55);
+  
+  --success-color: #22c55e;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  
+  --font-serif: 'Cinzel', Georgia, serif;
+  --font-body: 'Lora', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  
+  --font-scale: 1;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  
+  --shadow-warm: 0 10px 30px -8px rgba(0, 0, 0, 0.7);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.icon-svg {
+  display: inline-block;
+  vertical-align: middle;
+  stroke-width: 2;
+  stroke: currentColor;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+  font-family: var(--font-body);
+  font-size: calc(1.02rem * var(--font-scale));
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================================
+   OVERLAY DE BIENVENIDA Y ELECCIÓN DE ROL
+   ======================================================== */
+.welcome-gate-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, #241c18, #100d0b);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(8px);
+  overflow-y: auto;
+}
+
+.welcome-gate-card {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.2rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-warm);
+}
+
+.welcome-candle {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 0.6rem auto;
+  animation: flicker 2.5s infinite ease-in-out;
+}
+
+@keyframes flicker {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(230, 154, 40, 0.5)); }
+  50% { transform: scale(1.05) rotate(1deg); filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.8)); }
+}
+
+.welcome-title {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  color: var(--gold-primary);
+  margin-bottom: 0.15rem;
+}
+
+.welcome-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.input-label-gold {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--gold-primary);
+  font-weight: 700;
+}
+
+.welcome-name-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--bg-surface-elevated);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  text-align: center;
+  margin-bottom: 0.8rem;
+  outline: none;
+}
+
+.welcome-name-field:focus {
+  border-color: var(--gold-amber);
+}
+
+/* Tarjetas de Selección de Rol */
+.entry-roles-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 1.1rem;
+  text-align: left;
+}
+
+.entry-role-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-elevated);
+  border: 1.5px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.entry-role-card.active {
+  border-color: var(--gold-primary);
+  background: rgba(223, 177, 91, 0.12);
+  box-shadow: 0 0 10px rgba(223, 177, 91, 0.15);
+}
+
+.entry-role-card input[type="radio"] {
+  margin-top: 0.2rem;
+  accent-color: var(--gold-amber);
+}
+
+.entry-role-content {
+  flex: 1;
+}
+
+.entry-role-title {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  margin-bottom: 0.15rem;
+}
+
+.entry-role-desc {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.btn-enter-room {
+  width: 100%;
+  padding: 0.9rem;
+  background: linear-gradient(135deg, var(--gold-amber), var(--gold-primary));
+  color: #140e08;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 800;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(230, 154, 40, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* ========================================================
+   BARRA SUPERIOR SLIM (~42px)
+   ======================================================== */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--bg-surface-translucent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.3rem 0.7rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 42px;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.brand-title {
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  text-transform: uppercase;
+}
+
+.speaker-pill-status {
+  background: rgba(223, 177, 91, 0.15);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  padding: 0.18rem 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+  animation: pulse 1.8s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.nav-right-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-header-icon {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.78rem;
+}
+
+/* ========================================================
+   TIRA HORIZONTAL DE CÁMARAS VISIBLE (~82px de alto)
+   ======================================================== */
+.family-cameras-strip-container {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.35rem 0.6rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: 82px;
+  transition: all 0.3s ease;
+  scrollbar-width: none;
+}
+
+.family-cameras-strip-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Modo galería expandida (si tocan el botón de cámara) */
+.family-cameras-strip-container.expanded-grid {
+  height: auto;
+  max-height: 48vh;
+  overflow-y: auto;
+  white-space: normal;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0.6rem;
+}
+
+.camera-mini-tile {
+  width: 82px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #100d0b;
+  border: 1.5px solid var(--border-subtle);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.expanded-grid .camera-mini-tile {
+  width: calc(50% - 0.4rem);
+  height: 120px;
+}
+
+.camera-mini-tile video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.camera-mini-tile.self video {
+  transform: scaleX(-1);
+}
+
+.camera-mini-avatar {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #2a201b, #18120f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--gold-light);
+}
+
+.camera-mini-tile.is-speaker {
+  border: 2px solid var(--gold-amber) !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.9) !important;
+  animation: speakerGlow 2s infinite ease-in-out;
+}
+
+.tile-mic-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-full);
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.tile-mic-indicator.muted {
+  background: rgba(239, 68, 68, 0.9);
+  border-color: #ef4444;
+}
+
+.speaker-badge-tag {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background: var(--gold-amber);
+  color: #111;
+  font-family: var(--font-sans);
+  font-size: 0.55rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 4px;
+  z-index: 5;
+}
+
+.camera-mini-name {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  background: rgba(0, 0, 0, 0.78);
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 1px 3px;
+  border-radius: 4px;
+}
+
+@keyframes speakerGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.7); }
+  50% { box-shadow: 0 0 16px rgba(245, 158, 11, 1); }
+}
+
+/* ========================================================
+   CONTENIDO PRINCIPAL: LECTURA DE LA NOVENA (85% Pantalla)
+   ======================================================== */
+.main-prayer-container {
+  flex: 1;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0.5rem 0.8rem 4.8rem 0.8rem;
+}
+
+.prayer-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem 1rem;
+  box-shadow: var(--shadow-warm);
+}
+
+/* Banner de orientación según el rol (ocultado por solicitud) */
+.role-cue-banner {
+  display: none !important;
+}
+
+.role-cue-banner.orador-cue {
+  background: rgba(223, 177, 91, 0.18);
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-light);
+  font-weight: 700;
+}
+
+.role-cue-banner.familia-cue {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid var(--border-guia);
+  color: var(--color-guia);
+}
+
+.role-cue-banner.anfitrion-cue {
+  background: rgba(230, 154, 40, 0.15);
+  border: 1px solid var(--gold-amber);
+  color: var(--gold-light);
+  font-weight: 700;
+}
+
+.card-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.day-badge-text {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gold-primary);
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  margin-bottom: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Cita Bíblica */
+.bible-quote-box {
+  background: linear-gradient(135deg, rgba(223, 177, 91, 0.12), rgba(230, 154, 40, 0.06));
+  border-left: 3px solid var(--gold-amber);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--gold-light);
+  line-height: 1.7;
+}
+
+.bible-ref {
+  display: block;
+  font-style: normal;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gold-amber);
+  margin-top: 0.4rem;
+  text-align: right;
+}
+
+/* Bloques de Diálogo (Guía vs Todos) */
+.dialogo-block {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.guia-part {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--gold-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.6rem 0.85rem;
+}
+
+.todos-part {
+  background: rgba(230, 154, 40, 0.15);
+  border: 1px solid rgba(230, 154, 40, 0.4);
+  border-left: 3.5px solid var(--gold-amber);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.9rem;
+}
+
+.voice-badge {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.voice-badge.guia {
+  color: var(--gold-primary);
+}
+
+.voice-badge.todos {
+  color: #fde047;
+}
+
+.voice-text {
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.todos-part .voice-text {
+  font-weight: 600;
+  color: var(--gold-light);
+}
+
+/* ========================================================
+   REZO INTELIGENTE POR ROLES:
+   - Espectadores: SOLO ven su parte a coro (todos-part).
+     La parte del orador en diálogos no se muestra para evitar confusiones.
+   - Orador (y Anfitrión): ven lo que el orador dice (guia-part) 
+     Y lo que los otros tienen que decir (todos-part).
+   ======================================================== */
+
+/* ESPECTADORES (cualquier persona que NO sea el orador ni el anfitrión):
+   En los bloques de diálogo, ocultar completamente la parte del orador */
+body:not(.is-speaker):not(.is-host) .dialogo-block .guia-part {
+  display: none !important;
+}
+
+/* El recuadro del espectador se muestra limpio y destacado */
+body:not(.is-speaker):not(.is-host) .dialogo-block .todos-part {
+  background: rgba(223, 177, 91, 0.20) !important;
+  border: 1.5px solid var(--gold-amber) !important;
+  border-left: 5px solid #DFB15B !important;
+  padding: 0.9rem 1.1rem !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+body:not(.is-speaker):not(.is-host) .dialogo-block .todos-part .voice-badge.todos {
+  color: #fef08a !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.03em;
+}
+
+body:not(.is-speaker):not(.is-host) .dialogo-block .todos-part .voice-text {
+  font-size: 1.18rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  line-height: 1.8 !important;
+}
+
+/* ORADOR (y Anfitrión):
+   Ve lo que ÉL dice (guia-part) Y lo que los otros dicen (todos-part) */
+body.is-speaker .dialogo-block .guia-part,
+body.is-host .dialogo-block .guia-part {
+  display: block !important;
+  background: rgba(223, 177, 91, 0.22) !important;
+  border: 1.5px solid var(--gold-amber) !important;
+  border-left: 5px solid #DFB15B !important;
+  padding: 0.9rem 1.1rem !important;
+  box-shadow: 0 4px 18px rgba(223, 177, 91, 0.18);
+}
+
+body.is-speaker .dialogo-block .guia-part .voice-badge.guia,
+body.is-host .dialogo-block .guia-part .voice-badge.guia {
+  color: #fef08a !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.03em;
+}
+
+body.is-speaker .dialogo-block .guia-part .voice-text,
+body.is-host .dialogo-block .guia-part .voice-text {
+  font-size: 1.18rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  line-height: 1.8 !important;
+}
+
+body.is-speaker .dialogo-block .todos-part,
+body.is-host .dialogo-block .todos-part {
+  display: block !important;
+  background: rgba(230, 154, 40, 0.12) !important;
+  border: 1px solid rgba(230, 154, 40, 0.4) !important;
+  border-left: 3.5px solid var(--gold-amber) !important;
+  padding: 0.75rem 0.95rem !important;
+}
+
+body.is-speaker .dialogo-block .todos-part .voice-badge.todos,
+body.is-host .dialogo-block .todos-part .voice-badge.todos {
+  color: #fde047 !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+}
+
+body.is-speaker .dialogo-block .todos-part .voice-text,
+body.is-host .dialogo-block .todos-part .voice-text {
+  font-size: 1.05rem !important;
+  color: var(--gold-light) !important;
+}
+
+/* Rosario Contador de 10 Ave Marías */
+.rosario-counter-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.rosario-counter-header {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+}
+
+.beads-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.bead-item {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bead-item.completed {
+  background: var(--gold-primary);
+  border-color: var(--gold-primary);
+  color: #16110a;
+}
+
+.bead-item.active {
+  background: var(--gold-amber);
+  border-color: #fff;
+  color: #fff;
+  transform: scale(1.15);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+}
+
+/* ========================================================
+   BARRA INFERIOR FLOTANTE SEGÚN EL ROL (~54px)
+   ======================================================== */
+.bottom-floating-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: var(--bg-surface-translucent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-subtle);
+  height: 56px;
+  padding: 0.35rem 0.8rem;
+  padding-bottom: max(0.35rem, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-bar-inner {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Vistas de control por Rol */
+body.role-familia .family-listener-controls {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+body.role-familia .host-nav-controls {
+  display: none !important;
+}
+
+body.is-host .family-listener-controls {
+  display: none !important;
+}
+
+body.is-host .host-nav-controls {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/* Botón principal de la Familia: Voz */
+.listener-mic-action {
+  flex: 1;
+  height: 42px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.listener-mic-open {
+  background: rgba(34, 197, 94, 0.22);
+  border-color: var(--success-color);
+  color: #bbf7d0;
+}
+
+.listener-mic-muted {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--danger-color);
+  color: #fca5a5;
+}
+
+.btn-cam-toggle {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Botones de navegación del Anfitrión */
+.host-nav-controls {
+  display: none;
+}
+
+.btn-host-step {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-host-step.next {
+  background: linear-gradient(135deg, var(--gold-amber), var(--gold-primary));
+  color: #140e08;
+  flex: 1;
+  justify-content: center;
+}
+
+.btn-host-step.prev {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.btn-host-logistics {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-primary);
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ========================================================
+   MODALES Y DRAWER DE LOGÍSTICA
+   ======================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-sheet {
+  background: var(--bg-surface);
+  border-top: 2px solid var(--border-strong);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  width: 100%;
+  max-width: 680px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 1.2rem;
+  transform: translateY(100%);
+  transition: transform 0.28s ease-out;
+}
+
+.modal-overlay.open .modal-sheet {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--gold-primary);
+}
+
+.logistics-card-section {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.logistics-section-heading {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.logistics-section-sub {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+/* Grilla de selección de orador */
+.speaker-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.45rem;
+}
+
+.btn-speaker-item {
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-speaker-item.active {
+  border-color: var(--gold-amber);
+  background: rgba(230, 154, 40, 0.25);
+  color: #fff;
+}
+
+/* Botones de acción de audio global */
+.btn-audio-action {
+  padding: 0.75rem 0.6rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-audio-action.mute {
+  background: rgba(239, 68, 68, 0.22);
+  border: 1.5px solid var(--danger-color);
+  color: #fca5a5;
+}
+
+.btn-audio-action.unmute {
+  background: rgba(34, 197, 94, 0.22);
+  border: 1.5px solid var(--success-color);
+  color: #86efac;
+}
+
+.family-members-mic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.4rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.family-member-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.7rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.family-member-name {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.family-member-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-member-mic {
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid transparent;
+}
+
+.btn-member-mic.active-voice {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: var(--success-color);
+  color: #86efac;
+}
+
+.btn-member-mic.muted-voice {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--danger-color);
+  color: #fca5a5;
+}
+
+/* Toast de Alertas */
+.toast-container {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+  width: 90%;
+  max-width: 380px;
+}
+
+.toast-message {
+  background: rgba(28, 22, 19, 0.95);
+  border: 1.5px solid var(--gold-primary);
+  color: var(--gold-light);
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  animation: toastIn 0.3s ease-out;
+  backdrop-filter: blur(8px);
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.logistics-days-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+}
+
+.logistics-day-btn {
+  padding: 0.6rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+}
+
+.logistics-day-btn.active {
+  background: linear-gradient(135deg, rgba(223, 177, 91, 0.3), rgba(230, 154, 40, 0.4));
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+}
+
+.index-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.index-step-item {
+  padding: 0.5rem 0.7rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.index-step-item.active {
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-light);
+  font-weight: 700;
+}
+
+/* Placa Final Homenaje */
+.tribute-box {
+  background: linear-gradient(145deg, #29201b, #191310);
+  border: 2px solid var(--gold-primary);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  box-shadow: 0 0 35px rgba(230, 154, 40, 0.2);
+  margin-top: 1rem;
+}
+
+.tribute-name {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  margin-bottom: 0.6rem;
+}
+
+.tribute-lines {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.9;
+  margin-bottom: 0.8rem;
+}
+
+.tribute-rip {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gold-amber);
+  margin-bottom: 0.5rem;
+}
+
+.tribute-footer {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}

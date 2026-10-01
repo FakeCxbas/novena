@@ -1,0 +1,22 @@
+{
+  "name": "novena-mami-olguita",
+  "version": "1.0.0",
+  "description": "Aplicación web interactiva y sincronizada para la Novena de Mami Olguita",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.4"
+  },
+  "keywords": [
+    "novena",
+    "sincronizada",
+    "mami-olguita"
+  ],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Mando de Logística — Novena Mami Olguita</title>
+  
+  <!-- Optimización App Móvil PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Logística Novena">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#120e0c">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/logistica.css?v=2.5">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+  <!-- PANTALLA DE BLOQUEO DE PIN PARA EL ANFITRIÓN -->
+  <div class="pin-gate-screen" id="pin-gate-screen">
+    <div class="pin-gate-card">
+      <div class="pin-gate-icon"><i data-icon="crown" data-size="44" data-color="#DFB15B"></i></div>
+      <h2 class="pin-gate-title">Mando de Logística</h2>
+      <p class="pin-gate-desc">
+        Consola maestra para pasar las diapositivas y controlar los micrófonos de la familia.
+      </p>
+      
+      <input type="password" id="console-pin-input" class="pin-input-field" maxlength="4" placeholder="••••" inputmode="numeric" onkeyup="if(event.key==='Enter') window.submitConsolePin()">
+      
+      <button class="btn-enter-pin" onclick="window.submitConsolePin()">
+        <i data-icon="unlock" data-size="18"></i> Entrar a la Consola
+      </button>
+
+      <a href="/" style="font-size: 0.82rem; color: var(--gold-amber); text-decoration: none; margin-top: 0.4rem; display: inline-flex; align-items: center; gap: 0.3rem;">
+        <i data-icon="chevron-left" data-size="14"></i> Ir a la pantalla de rezo familiar
+      </a>
+    </div>
+  </div>
+
+  <!-- APLICACIÓN PRINCIPAL DE CONTROL MÓVIL -->
+  <div class="app-container">
+
+    <!-- 1. HEADER FIJO CON TELEMETRÍA -->
+    <header class="logistics-header">
+      <div class="header-left">
+        <i data-icon="candle" data-size="24" data-color="#DFB15B"></i>
+        <div class="header-title-box">
+          <span class="header-badge">Control Maestro</span>
+          <span class="header-app-name">Mami Olguita</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="live-pill" id="connection-status-pill">
+          <span class="live-dot"></span>
+          <span id="connection-status-text">En Vivo</span>
+        </div>
+
+        <div class="header-count-pill" id="header-count-pill" onclick="window.switchTab('audio')" style="background: rgba(223, 177, 91, 0.15); border: 1px solid var(--border-subtle); border-radius: 999px; padding: 0.25rem 0.55rem; font-size: 0.72rem; font-weight: 700; color: var(--gold-light); cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+          <span id="header-user-count" style="display:inline-flex; align-items:center; gap:0.25rem;"><i data-icon="users" data-size="13"></i> 0 en línea</span>
+        </div>
+
+        <a href="/" class="btn-header-link" title="Ver cómo se ve en la pantalla de la familia">
+          <i data-icon="book" data-size="14"></i>
+          <span>Ver Rezo</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- 2. BARRA DE PESTAÑAS TÁCTILES -->
+    <nav class="nav-tab-bar">
+      <button class="tab-btn active" data-tab="rezo" onclick="window.switchTab('rezo')">
+        <span class="tab-icon"><i data-icon="book" data-size="18"></i></span>
+        <span>Diapositivas</span>
+      </button>
+      <button class="tab-btn" data-tab="audio" onclick="window.switchTab('audio')">
+        <span class="tab-icon"><i data-icon="mic" data-size="18"></i></span>
+        <span>Mics (<span id="tab-audio-count">0</span>)</span>
+      </button>
+      <button class="tab-btn" data-tab="video" onclick="window.switchTab('video')">
+        <span class="tab-icon"><i data-icon="video" data-size="18"></i></span>
+        <span>Cámaras</span>
+      </button>
+    </nav>
+
+    <!-- 3. ÁREA DE CONTENIDO PRINCIPAL -->
+    <main class="tab-content-area">
+
+      <!-- ================= PESTAÑA 1: CONTROL DE REZO ================= -->
+      <section class="tab-panel active" id="tab-panel-rezo">
+        
+        <!-- Tarjeta del Orador en Vivo -->
+        <div class="speaker-master-banner">
+          <div class="speaker-banner-info">
+            <div class="speaker-avatar-circle"><i data-icon="speaker" data-size="20"></i></div>
+            <div class="speaker-banner-text">
+              <span class="speaker-banner-label">Orador Designado</span>
+              <span class="speaker-banner-name" id="speaker-master-name">Esperando Orador</span>
+            </div>
+          </div>
+          <button class="btn-change-speaker" onclick="window.switchTab('audio')">
+            Cambiar
+          </button>
+        </div>
+
+        <!-- Barra rápida de familiares conectados en la sala -->
+        <div class="family-quick-bar" onclick="window.switchTab('audio')">
+          <div class="family-quick-info">
+            <i data-icon="users" data-size="22" data-color="#DFB15B"></i>
+            <div style="min-width: 0;">
+              <div style="font-size: 0.68rem; color: var(--gold-amber); font-weight: 800; text-transform: uppercase;">
+                Familiares Conectados: <span id="quick-family-count">0</span>
+              </div>
+              <div id="quick-family-names" style="font-size: 0.82rem; color: var(--text-primary); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
+                Cargando familiares...
+              </div>
+            </div>
+          </div>
+          <button class="btn-change-speaker" style="font-size: 0.72rem; padding: 0.35rem 0.55rem; white-space: nowrap; display:inline-flex; align-items:center; gap:0.25rem;">
+            <i data-icon="mic" data-size="13"></i> Mesa Mics
+          </button>
+        </div>
+
+        <!-- Tarjeta del Paso Actual en Pantalla -->
+        <div class="current-slide-card">
+          <div class="slide-header-meta">
+            <span class="slide-badge-day" id="slide-day-badge">Día 1 de la Novena</span>
+            <span class="slide-badge-index" id="slide-step-badge">Paso 1 de 17</span>
+          </div>
+
+          <h2 class="slide-title-text" id="slide-title-el">Señal de la Cruz</h2>
+
+          <div class="slide-role-guidance chorus-reads" id="slide-role-guidance">
+            <i data-icon="users" data-size="14"></i> Todos responden a coro
+          </div>
+
+          <div style="font-size: 0.72rem; color: var(--gold-amber); text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem;">
+            En pantalla de la familia:
+          </div>
+          <div class="slide-preview-box" id="slide-preview-text">
+            Cargando texto de la novena...
+          </div>
+
+          <div style="margin-top: 0.8rem; display: flex; justify-content: flex-end;">
+            <button class="btn-change-speaker" style="width: 100%; text-align: center; display:flex; align-items:center; justify-content:center; gap:0.4rem;" onclick="window.openJumpModal()">
+              <i data-icon="layers" data-size="15"></i> Saltar directamente a otra oración o misterio
+            </button>
+          </div>
+        </div>
+
+        <!-- Tarjeta Interactiva de Cuentas de Rosario (Misterios) -->
+        <div class="rosario-live-card" id="rosario-counter-container" style="display: none;">
+          <div class="rosario-card-title">
+            <span style="display:inline-flex; align-items:center; gap:0.35rem;"><i data-icon="rosary" data-size="16" data-color="#DFB15B"></i> Contador de Ave Marías</span>
+            <span id="ave-maria-count-label" style="color: var(--gold-amber);">0/10</span>
+          </div>
+
+          <div class="beads-grid-row" id="beads-grid-container">
+            <!-- 10 Cuentas -->
+          </div>
+
+          <div class="rosario-counter-actions">
+            <button class="btn-bead-action decrement" onclick="window.prevAveMaria()" style="display:flex; align-items:center; justify-content:center; gap:0.3rem;">
+              <i data-icon="minus" data-size="16"></i> Restar
+            </button>
+            <button class="btn-bead-action increment" onclick="window.nextAveMaria()" style="display:flex; align-items:center; justify-content:center; gap:0.3rem;">
+              <i data-icon="plus" data-size="16"></i> Contar Ave María
+            </button>
+          </div>
+        </div>
+
+        <!-- Selector Rápido de Días 1 al 9 -->
+        <div>
+          <div class="section-subtitle">
+            <span style="display:inline-flex; align-items:center; gap:0.35rem;"><i data-icon="calendar" data-size="15"></i> Cambiar Día de la Novena</span>
+            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">Toque para cambiar</span>
+          </div>
+          <div class="quick-days-strip" id="quick-days-strip" style="margin-top: 0.4rem;">
+            <!-- Días 1 al 9 inyectados dinámicamente -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= PESTAÑA 2: MESA DE AUDIO Y MICRÓFONOS ================= -->
+      <section class="tab-panel" id="tab-panel-audio">
+
+        <!-- Caja de Mandos Maestros de Audio -->
+        <div class="audio-master-box">
+          <div class="master-audio-title">
+            <span style="display:inline-flex; align-items:center; gap:0.4rem;"><i data-icon="sliders" data-size="17"></i> Control Maestro de Voces</span>
+          </div>
+
+          <div class="master-audio-grid">
+            <button class="btn-master-sound unmute-all" onclick="window.masterUnmuteAll()">
+              <i data-icon="mic" data-size="28"></i>
+              <span>PRENDER A TODOS</span>
+              <span class="btn-master-sound-sub">Para rezar en coro</span>
+            </button>
+
+            <button class="btn-master-sound mute-all" onclick="window.masterMuteAll()">
+              <i data-icon="mic-off" data-size="28"></i>
+              <span>SILENCIAR A TODOS</span>
+              <span class="btn-master-sound-sub">Para oír al orador</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista de Familiares en Línea -->
+        <div>
+          <div class="roster-header">
+            <div class="section-subtitle" style="margin: 0; display:inline-flex; align-items:center; gap:0.35rem;">
+              <i data-icon="users" data-size="16"></i> Familiares Conectados
+            </div>
+            <span class="roster-count-badge" id="roster-total-count">0 familiares</span>
+          </div>
+
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0.3rem 0 0.6rem 0;">
+            Controla el micrófono de cada persona o nómbrala como Orador para que lea:
+          </p>
+
+          <div class="roster-cards-container" id="roster-cards-container">
+            <!-- Rellenado por logistica.js -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= PESTAÑA 3: MONITOR DE CÁMARAS ================= -->
+      <section class="tab-panel" id="tab-panel-video">
+        
+        <div class="video-wall-header">
+          <div class="section-subtitle" style="margin: 0; display:inline-flex; align-items:center; gap:0.35rem;">
+            <i data-icon="video" data-size="16"></i> Cámaras de la Familia en Vivo
+          </div>
+          <span style="font-size: 0.72rem; color: var(--gold-amber);">WebRTC Activo</span>
+        </div>
+
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+          Monitorea las transmisiones de video de todos los familiares conectados:
+        </p>
+
+        <div class="video-wall-grid" id="video-wall-grid">
+          <!-- Miniaturas de video inyectadas por logistica.js -->
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- 4. BARRA INFERIOR FIJA: VOLANTE ERGONÓMICO DEL ANFITRIÓN -->
+    <footer class="logistics-bottom-deck">
+      <div class="deck-nav-row">
+        <button class="btn-big-nav prev" id="btn-nav-prev" onclick="window.prevStep()" disabled>
+          <i data-icon="chevron-left" data-size="20"></i>
+          <span>ANTERIOR</span>
+        </button>
+
+        <button class="btn-big-nav next" id="btn-nav-next" onclick="window.nextStep()">
+          <span>SIGUIENTE</span>
+          <i data-icon="chevron-right" data-size="20"></i>
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- MODAL PARA SALTO DIRECTO DE PASO -->
+  <div class="modal-overlay" id="jump-modal-overlay" onclick="if(event.target === this) window.closeJumpModal()">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display:inline-flex; align-items:center; gap:0.4rem;"><i data-icon="book" data-size="18"></i> Saltar a una Oración</h3>
+        <button class="btn-close-modal" onclick="window.closeJumpModal()"><i data-icon="x" data-size="18"></i></button>
+      </div>
+
+      <div class="jump-steps-scroll" id="jump-steps-container">
+        <!-- Inyectado por logistica.js -->
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/icons.js"></script>
+  <script type="module" src="/js/logistica.js?v=2.5"></script>
+</body>
+</html>

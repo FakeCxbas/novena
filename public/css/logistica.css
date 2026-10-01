@@ -1,0 +1,1089 @@
+/* logistica.css - Consola Móvil para el Director de Logística / Anfitrión */
+
+:root {
+  --bg-main: #120e0c;
+  --bg-surface: #1b1512;
+  --bg-card: #221a16;
+  --bg-card-highlight: #2c221d;
+  
+  --gold-primary: #dfb15b;
+  --gold-amber: #f59e0b;
+  --gold-light: #fef3c7;
+  --gold-subtle: rgba(223, 177, 91, 0.15);
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  
+  --border-subtle: rgba(223, 177, 91, 0.2);
+  --border-strong: rgba(223, 177, 91, 0.45);
+  
+  --success-color: #22c55e;
+  --success-bg: rgba(34, 197, 94, 0.18);
+  --danger-color: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.18);
+  
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-title: 'Cinzel', serif;
+  
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  position: fixed;
+  inset: 0;
+}
+
+.icon-svg {
+  display: inline-block;
+  vertical-align: middle;
+  stroke-width: 2;
+  stroke: currentColor;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* App Shell Layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  position: relative;
+  background: var(--bg-main);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+/* 1. Header Fijo con Estado de Conexión */
+.logistics-header {
+  padding-top: calc(var(--safe-top) + 0.5rem);
+  padding-bottom: 0.6rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background: rgba(27, 21, 18, 0.95);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-title-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gold-amber);
+}
+
+.header-app-name {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  line-height: 1.1;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.live-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #86efac;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--success-color);
+  box-shadow: 0 0 8px var(--success-color);
+  animation: pulseDot 1.8s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+
+.btn-header-link {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-decoration: none;
+}
+
+/* 2. Barra de Pestañas Principales */
+.nav-tab-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #17120f;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.35rem 0.6rem;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  border-radius: 8px;
+  padding: 0.5rem 0.2rem;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  transition: all 0.2s ease;
+}
+
+.tab-btn span.tab-icon {
+  font-size: 1.1rem;
+}
+
+.tab-btn.active {
+  background: var(--bg-card);
+  border-color: var(--border-strong);
+  color: var(--gold-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 3. Área de Contenido con Scroll */
+.tab-content-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.8rem 0.8rem calc(var(--safe-bottom) + 6.8rem) 0.8rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-panel {
+  display: none;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.tab-panel.active {
+  display: flex;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================================
+   PESTAÑA 1: CONTROL DE REZO Y DIAPOSITIVAS
+   ======================================================== */
+
+/* Tarjeta del Orador Designado */
+.speaker-master-banner {
+  background: linear-gradient(135deg, #2b211a, #1b1411);
+  border: 1.5px solid var(--gold-primary);
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 3px 12px rgba(223, 177, 91, 0.15);
+}
+
+.speaker-banner-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.speaker-avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gold-amber);
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+.speaker-banner-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.speaker-banner-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--gold-amber);
+  letter-spacing: 0.08em;
+}
+
+.speaker-banner-name {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.btn-change-speaker {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
+  color: var(--gold-light);
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Tarjeta del Paso Actual en Pantalla de la Familia */
+.current-slide-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.current-slide-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-primary), var(--gold-amber));
+}
+
+.slide-header-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.slide-badge-day {
+  background: var(--gold-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--gold-light);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.slide-badge-index {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gold-amber);
+}
+
+.slide-title-text {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  margin-bottom: 0.6rem;
+  line-height: 1.25;
+}
+
+.slide-role-guidance {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+}
+
+.slide-role-guidance.orador-reads {
+  background: rgba(223, 177, 91, 0.15);
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-light);
+}
+
+.slide-role-guidance.chorus-reads {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid #38bdf8;
+  color: #bae6fd;
+}
+
+.slide-preview-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px dashed rgba(223, 177, 91, 0.25);
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-height: 140px;
+  overflow-y: auto;
+  font-style: italic;
+}
+
+/* Contador de Rosario Integrado */
+.rosario-live-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--gold-amber);
+  border-radius: 14px;
+  padding: 0.8rem;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15);
+}
+
+.rosario-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--gold-light);
+}
+
+.beads-grid-row {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0.25rem;
+  margin-bottom: 0.7rem;
+}
+
+.bead-bubble {
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bead-bubble.completed {
+  background: rgba(223, 177, 91, 0.25);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+}
+
+.bead-bubble.current {
+  background: var(--gold-amber);
+  border-color: #fff;
+  color: #111;
+  box-shadow: 0 0 10px var(--gold-amber);
+  transform: scale(1.1);
+}
+
+.rosario-counter-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0.5rem;
+}
+
+.btn-bead-action {
+  padding: 0.6rem;
+  border-radius: 10px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.btn-bead-action.decrement {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.btn-bead-action.increment {
+  background: linear-gradient(135deg, rgba(223, 177, 91, 0.3), rgba(245, 158, 11, 0.4));
+  border: 1.5px solid var(--gold-primary);
+  color: var(--gold-light);
+}
+
+/* Selector Rápido de Días */
+.section-subtitle {
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--gold-primary);
+  letter-spacing: 0.08em;
+  margin-top: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quick-days-strip {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 0.25rem;
+  overflow-x: auto;
+}
+
+.day-badge-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+
+.day-badge-btn.active {
+  background: var(--gold-amber);
+  border-color: #fff;
+  color: #111;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+/* ========================================================
+   PESTAÑA 2: MESA DE AUDIO Y MICRÓFONOS (Audio Director)
+   ======================================================== */
+
+.audio-master-box {
+  background: linear-gradient(135deg, #241b16, #18120e);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+}
+
+.master-audio-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.master-audio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.btn-master-sound {
+  padding: 0.9rem 0.5rem;
+  border-radius: 12px;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 800;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.btn-master-sound:active {
+  transform: scale(0.96);
+}
+
+.btn-master-sound.unmute-all {
+  background: linear-gradient(135deg, #15803d, #16a34a);
+  color: #fff;
+  border: 1.5px solid #22c55e;
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.3);
+}
+
+.btn-master-sound.mute-all {
+  background: linear-gradient(135deg, #991b1b, #dc2626);
+  color: #fff;
+  border: 1.5px solid #ef4444;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.3);
+}
+
+.btn-master-sound-sub {
+  font-size: 0.68rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* Lista de Familiares en Vivo */
+.roster-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+}
+
+.roster-count-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gold-light);
+}
+
+.roster-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.participant-control-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 0.75rem 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  transition: border-color 0.2s;
+}
+
+.participant-control-card.is-speaking {
+  border-color: var(--success-color);
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.participant-control-card.is-speaker-role {
+  border-color: var(--gold-primary);
+  background: rgba(223, 177, 91, 0.08);
+}
+
+.participant-card-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.participant-avatar-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #2b211a;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--gold-light);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.participant-mic-status-indicator {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  border: 1.5px solid var(--bg-surface);
+}
+
+.participant-mic-status-indicator.open {
+  background: var(--success-color);
+  color: #fff;
+}
+
+.participant-mic-status-indicator.muted {
+  background: var(--danger-color);
+  color: #fff;
+}
+
+.participant-meta-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.participant-name-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.participant-role-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.participant-role-pill.speaker {
+  color: var(--gold-amber);
+}
+
+.participant-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.btn-toggle-mic {
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid transparent;
+}
+
+.btn-toggle-mic.is-open {
+  background: var(--success-bg);
+  border-color: var(--success-color);
+  color: #86efac;
+}
+
+.btn-toggle-mic.is-muted {
+  background: var(--danger-bg);
+  border-color: var(--danger-color);
+  color: #fca5a5;
+}
+
+.btn-assign-speaker {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--gold-light);
+  border-radius: 8px;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-assign-speaker.active {
+  background: var(--gold-amber);
+  color: #111;
+  border-color: var(--gold-primary);
+}
+
+/* ========================================================
+   PESTAÑA 3: MONITOR DE CÁMARAS EN VIVO (Video Wall)
+   ======================================================== */
+
+.video-wall-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+}
+
+.video-wall-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+
+.video-monitor-tile {
+  background: #0d0a08;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  aspect-ratio: 4 / 3;
+  position: relative;
+  overflow: hidden;
+}
+
+.video-monitor-tile video,
+.video-monitor-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: #000;
+}
+
+.video-monitor-tile video.is-playing,
+.video-monitor-element.is-playing {
+  opacity: 1;
+}
+
+.video-monitor-avatar {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  background: linear-gradient(135deg, #2b211a, #1b1512);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.video-monitor-name {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 2;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* 4. Barra Inferior Fija de Navegación Ergonómica (El Volante del Anfitrión) */
+.logistics-bottom-deck {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 520px;
+  margin: 0 auto;
+  background: rgba(22, 17, 14, 0.96);
+  border-top: 1.5px solid var(--border-strong);
+  padding-top: 0.6rem;
+  padding-bottom: calc(var(--safe-bottom) + 0.6rem);
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  backdrop-filter: blur(16px);
+  z-index: 200;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.deck-nav-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.btn-big-nav {
+  padding: 1rem 0.5rem;
+  border-radius: 14px;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  transition: transform 0.12s ease;
+}
+
+.btn-big-nav:active {
+  transform: scale(0.96);
+}
+
+.btn-big-nav:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-big-nav.prev {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.btn-big-nav.next {
+  background: linear-gradient(135deg, var(--gold-primary), var(--gold-amber));
+  color: #111;
+  border: 1.5px solid #fff;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.4);
+}
+
+/* Modal Selector de Paso Completo */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 300;
+}
+
+.modal-overlay.open {
+  display: flex;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-sheet {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-strong);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem;
+  gap: 0.8rem;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.6rem;
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--gold-light);
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.jump-steps-scroll {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-right: 0.2rem;
+}
+
+.jump-step-row {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.jump-step-row.active {
+  background: rgba(223, 177, 91, 0.18);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+  font-weight: 700;
+}
+
+/* Pantalla de Bloqueo PIN Inicial */
+.pin-gate-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #241b16, #0e0a08);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.pin-gate-card {
+  background: var(--bg-surface);
+  border: 2px solid var(--gold-primary);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.pin-gate-icon {
+  font-size: 2.8rem;
+}
+
+.pin-gate-title {
+  font-family: var(--font-title);
+  color: var(--gold-primary);
+  font-size: 1.35rem;
+  letter-spacing: 0.05em;
+}
+
+.pin-gate-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.pin-input-field {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1.5px solid var(--gold-primary);
+  border-radius: 12px;
+  padding: 0.9rem;
+  color: var(--gold-light);
+  font-size: 1.6rem;
+  letter-spacing: 0.4em;
+  text-align: center;
+  outline: none;
+}
+
+.btn-enter-pin {
+  background: linear-gradient(135deg, var(--gold-primary), var(--gold-amber));
+  color: #111;
+  border: none;
+  border-radius: 12px;
+  padding: 0.9rem;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+}
+
+/* Toast flotante */
+.toast-box {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(27, 21, 18, 0.95);
+  border: 1.5px solid var(--gold-primary);
+  color: var(--gold-light);
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 600;
+  animation: fadeIn 0.2s ease-out;
+  backdrop-filter: blur(8px);
+}
+
+/* Barra rápida de familiares en la pestaña de diapositivas */
+.family-quick-bar {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 0.55rem 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.family-quick-bar:active {
+  background: rgba(223, 177, 91, 0.12);
+}
+
+.family-quick-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
