@@ -1,6 +1,6 @@
 // logistica.js - Consola de Mando para el Anfitrión / Director de Logística
-import { NOVENA_DATA } from '/js/novena-data.js';
-import { icon, replaceDomIcons } from '/js/icons.js';
+import { NOVENA_DATA } from '/js/novena-data.js?v=6.3';
+import { icon, replaceDomIcons } from '/js/icons.js?v=6.3';
 
 // Estado local reactivo de la consola
 const state = {
@@ -60,9 +60,9 @@ function buildSteps(diaNum, mysteryType) {
     {
       id: 'acto-contricion',
       badge: 'Ritos Iniciales',
-      title: NOVENA_DATA.actoContricion.title,
+      title: NOVENA_DATA?.actoContricion?.title || 'Acto de Contrición',
       role: 'orador',
-      preview: NOVENA_DATA.actoContricion.paragraphs[0]
+      preview: NOVENA_DATA?.actoContricion?.paragraphs?.[0] || 'Señor mío Jesucristo, Dios y Hombre verdadero...'
     },
     {
       id: 'rosario-inicio',

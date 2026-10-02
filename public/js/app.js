@@ -1,6 +1,6 @@
 // app.js - Lógica interactiva con 3 Roles (Anfitrión, Orador, Familia), control total de micrófonos y cámaras activas
-import { NOVENA_DATA } from './novena-data.js';
-import { icon, replaceDomIcons } from './icons.js';
+import { NOVENA_DATA } from './novena-data.js?v=6.3';
+import { icon, replaceDomIcons } from './icons.js?v=6.3';
 
 // Estado de la aplicación
 const state = {
@@ -89,18 +89,21 @@ function buildStepsForDay(dayNumber) {
     {
       id: 'acto-contricion',
       badge: 'Inicio de la Novena',
-      title: NOVENA_DATA.actoContricion.title,
+      title: NOVENA_DATA?.actoContricion?.title || 'Acto de Contrición',
       render: () => `
         <div class="dialogo-block">
           <div class="guia-part">
             ${oradorBadge('Orador (Guía) lee:')}
             <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.75rem;">
-              ${NOVENA_DATA.actoContricion.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
+              ${(NOVENA_DATA?.actoContricion?.paragraphs || [
+                'Señor mío Jesucristo, Dios y Hombre verdadero, Creador, Padre y Redentor mío; por ser Vos quien sois, bondad infinita, y porque os amo sobre todas las cosas, me pesa de todo corazón haberos ofendido; también me pesa porque podéis castigarme con las penas del infierno.',
+                'Ayudado de vuestra divina gracia, propongo firmemente nunca más pecar, confesarme y cumplir la penitencia que me fuere impuesta.'
+              ]).map(p => `<p style="margin:0;">${p}</p>`).join('')}
             </div>
           </div>
           <div class="todos-part">
             ${todosBadge('Todos respondemos:')}
-            <div class="voice-text">${NOVENA_DATA.actoContricion.response}</div>
+            <div class="voice-text">${NOVENA_DATA?.actoContricion?.response || 'Amén.'}</div>
           </div>
         </div>
       `
