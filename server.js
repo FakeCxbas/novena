@@ -106,6 +106,7 @@ const novenaState = {
   hostName: null,
   speakerSocketId: null,
   speakerName: 'Esperando Orador',
+  isTributeProjecting: false,
   lastUpdate: Date.now(),
   sessionStartTime: Date.now()
 };
@@ -210,6 +211,24 @@ app.post('/api/verify-pin', (req, res) => {
   } else {
     res.status(401).json({ success: false, message: 'PIN incorrecto' });
   }
+});
+
+// HTTP Endpoints para Proyección de Despedida
+app.post('/api/tribute/start', (req, res) => {
+  novenaState.isTributeProjecting = true;
+  io.emit('tribute-projection-started', {
+    startedBy: req.body.userName || 'Logística',
+    intervalMs: req.body.intervalMs || 5500
+  });
+  console.log(`[Novena Tribute HTTP] Proyección iniciada por ${req.body.userName || 'Logística'}`);
+  res.json({ success: true, isTributeProjecting: true });
+});
+
+app.post('/api/tribute/stop', (req, res) => {
+  novenaState.isTributeProjecting = false;
+  io.emit('tribute-projection-stopped');
+  console.log(`[Novena Tribute HTTP] Proyección detenida`);
+  res.json({ success: true, isTributeProjecting: false });
 });
 
 // HTTP Endpoint para silenciar o abrir micrófonos de todos
@@ -494,6 +513,22 @@ io.on('connection', (socket) => {
       currentAveMaria: novenaState.currentAveMaria,
       hostName: novenaState.hostName
     });
+  });
+
+  // Proyección Conmemorativa de Despedida (Fotos a pantalla completa para toda la familia)
+  socket.on('start-tribute-projection', (data) => {
+    novenaState.isTributeProjecting = true;
+    console.log(`[Novena Tribute] Proyección de despedida iniciada por: ${socket.userName || socket.id}`);
+    io.emit('tribute-projection-started', {
+      startedBy: socket.userName || 'Logística',
+      intervalMs: (data && data.intervalMs) || 5500
+    });
+  });
+
+  socket.on('stop-tribute-projection', () => {
+    novenaState.isTributeProjecting = false;
+    console.log(`[Novena Tribute] Proyección de despedida detenida`);
+    io.emit('tribute-projection-stopped');
   });
 
   // WebRTC Videollamada Familiar

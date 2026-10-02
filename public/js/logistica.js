@@ -1224,6 +1224,32 @@ async function measurePing() {
 }
 
 // -------------------------------------------------------------
+// CONTROL DE PROYECCIÓN DE DESPEDIDA CONMEMORATIVA (46 FOTOGRAFÍAS)
+// -------------------------------------------------------------
+window.triggerTributeProjection = function(start) {
+  if (start) {
+    if (state.socket && state.socket.connected) {
+      state.socket.emit('start-tribute-projection', { intervalMs: 5500 });
+    } else {
+      fetch('/api/tribute/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userName: state.hostName || 'Logística', intervalMs: 5500 })
+      });
+    }
+  } else {
+    if (state.socket && state.socket.connected) {
+      state.socket.emit('stop-tribute-projection');
+    } else {
+      fetch('/api/tribute/stop', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+  }
+};
+
+// -------------------------------------------------------------
 // ARRANQUE ROBUSTO
 // -------------------------------------------------------------
 

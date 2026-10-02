@@ -605,32 +605,27 @@ function buildStepsForDay(dayNumber) {
           <div class="tribute-footer">${NOVENA_DATA.placaHomenaje.mensajeFinal}</div>
         </div>
 
-        <!-- Mosaico Conmemorativo de Fotografías de Mami Olguita -->
-        <div class="photo-mosaic-section">
-          <div class="photo-mosaic-title">
-            <span>🌸</span>
-            <span>Galería Conmemorativa de Recuerdos</span>
-            <span>🌸</span>
+        <!-- Proyección de Despedida (Solo controlable por Logística / Anfitrión) -->
+        <div class="host-tribute-projection-card">
+          <div class="host-projection-badge">🌸 CONTROL EXCLUSIVO DE LOGÍSTICA</div>
+          <div class="host-projection-title">Proyección de Despedida</div>
+          <div class="host-projection-desc">
+            Inicia el pase conmemorativo de 46 fotos a pantalla completa en los dispositivos de toda la familia, acompañado de música.
           </div>
-          <div class="photo-mosaic-subtitle">
-            Momentos inolvidables que perduran en el corazón de nuestra familia
-          </div>
-          <div class="photo-mosaic-grid">
-            ${Array.from({ length: 12 }).map((_, mIdx) => {
-              const pNum = mIdx + 1;
-              const pSrc = `/fotos-olguita/olguita-${String(pNum).padStart(2, '0')}.jpg`;
-              return `
-                <div class="mosaic-item" onclick="window.openLightbox(${pNum - 1})" title="Toca para ver foto ampliada">
-                  <img src="${pSrc}" alt="Mami Olguita recuerdo ${pNum}" loading="lazy">
-                </div>
-              `;
-            }).join('')}
-          </div>
-          <button class="btn-open-full-album" onclick="window.openPhotoAlbum()">
-            <span>🌸</span>
-            <span>Ver Álbum Conmemorativo Completo (46 Fotos)</span>
-            <span>📸</span>
+          <button class="btn-project-farewell" onclick="window.startTributeProjection()">
+            <span>🎬</span>
+            <span>Proyectar Despedida a la Familia</span>
           </button>
+        </div>
+
+        <div class="family-farewell-await-card">
+          <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🌸🕊️</div>
+          <div style="font-family: var(--font-serif); font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 0.35rem;">
+            Homenaje y Despedida
+          </div>
+          <div style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+            La logística iniciará en breve la proyección conmemorativa de fotos a pantalla completa en memoria de nuestra querida Mami Olguita.
+          </div>
         </div>
       `
     }
@@ -1061,6 +1056,15 @@ function initRealtimeSync() {
 
     state.socket.on('host-error', (err) => {
       alert(err.message || 'PIN erróneo');
+    });
+
+    // Eventos de Proyección Conmemorativa de Despedida
+    state.socket.on('tribute-projection-started', (data) => {
+      window.openTributeTheater((data && data.startIndex) || 0, (data && data.intervalMs) || 5500);
+    });
+
+    state.socket.on('tribute-projection-stopped', () => {
+      window.closeTributeTheater();
     });
   }
 }
@@ -1954,6 +1958,135 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ========================================================
+// TEATRO DE PROYECCIÓN DE DESPEDIDA (46 FOTOGRAFÍAS A PANTALLA COMPLETA)
+// ========================================================
+let theaterPhotoIndex = 0;
+let theaterInterval = null;
+const THEATER_TOTAL_PHOTOS = 46;
+const THEATER_QUOTES = [
+  "«Tu vida fue un regalo, tu amor una bendición y tu recuerdo será eterno.»",
+  "«Siempre en nuestros corazones, amada Mami Olguita.»",
+  "«Gracias por cada sonrisa, cada abrazo y tu amor incondicional.»",
+  "«Tu legado de fe, alegría y unión familiar vivirá por siempre en nosotros.»",
+  "«Descansa en la paz y el gozo del Señor, Madre y Abuelita querida.»",
+  "«Tu luz y tu ternura guiarán por siempre a nuestra familia.»"
+];
+
+function updateTheaterPhoto(idx) {
+  theaterPhotoIndex = ((idx % THEATER_TOTAL_PHOTOS) + THEATER_TOTAL_PHOTOS) % THEATER_TOTAL_PHOTOS;
+  const pNum = theaterPhotoIndex + 1;
+  const imgEl = document.getElementById('theater-img');
+  const counterLabel = document.getElementById('theater-counter-label');
+  const quoteEl = document.getElementById('theater-quote-text');
+
+  if (imgEl) {
+    imgEl.style.opacity = '0.3';
+    imgEl.style.transform = 'scale(0.98)';
+    imgEl.src = `/fotos-olguita/olguita-${String(pNum).padStart(2, '0')}.jpg`;
+    imgEl.onload = () => {
+      imgEl.style.opacity = '1';
+      imgEl.style.transform = 'scale(1)';
+    };
+  }
+
+  if (counterLabel) {
+    counterLabel.textContent = `Foto ${pNum} de ${THEATER_TOTAL_PHOTOS}`;
+  }
+
+  if (quoteEl) {
+    const qIdx = Math.floor(theaterPhotoIndex / 3) % THEATER_QUOTES.length;
+    quoteEl.textContent = THEATER_QUOTES[qIdx];
+  }
+}
+
+window.openTributeTheater = function(startIndex = 0, intervalMs = 5500) {
+  const overlay = document.getElementById('tribute-theater-overlay');
+  if (!overlay) return;
+
+  overlay.style.display = 'flex';
+  updateTheaterPhoto(startIndex);
+
+  // Control de finalizar proyección general: solo para el anfitrión
+  const stopBtn = document.getElementById('btn-theater-stop-host');
+  if (stopBtn) {
+    stopBtn.style.display = state.isHost ? 'inline-flex' : 'none';
+  }
+
+  // Reproducir audio si está disponible
+  const audio = document.getElementById('tribute-audio-player');
+  if (audio) {
+    try {
+      audio.currentTime = 0;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.log('[Tribute Audio] Audio en espera o archivo no cargado aún:', err);
+        });
+      }
+    } catch (e) {
+      console.log('[Tribute Audio] Error:', e);
+    }
+  }
+
+  if (theaterInterval) clearInterval(theaterInterval);
+  theaterInterval = setInterval(() => {
+    updateTheaterPhoto(theaterPhotoIndex + 1);
+  }, intervalMs);
+
+  replaceDomIcons();
+};
+
+window.closeTributeTheater = function() {
+  const overlay = document.getElementById('tribute-theater-overlay');
+  if (overlay) overlay.style.display = 'none';
+
+  if (theaterInterval) {
+    clearInterval(theaterInterval);
+    theaterInterval = null;
+  }
+
+  const audio = document.getElementById('tribute-audio-player');
+  if (audio) {
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+    } catch (e) {}
+  }
+};
+
+window.closeTheaterLocal = function() {
+  const overlay = document.getElementById('tribute-theater-overlay');
+  if (overlay) overlay.style.display = 'none';
+};
+
+window.startTributeProjection = function() {
+  if (state.socket && state.socket.connected) {
+    state.socket.emit('start-tribute-projection', { intervalMs: 5500 });
+  } else {
+    fetch('/api/tribute/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userName: state.isHost ? 'Anfitrión' : 'Logística', intervalMs: 5500 })
+    });
+  }
+  window.openTributeTheater(0, 5500);
+  showToast('Iniciando proyección de despedida para todos...', 'sparkles');
+};
+
+window.stopTributeProjection = function() {
+  if (state.socket && state.socket.connected) {
+    state.socket.emit('stop-tribute-projection');
+  } else {
+    fetch('/api/tribute/stop', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+  window.closeTributeTheater();
+  showToast('Proyección conmemorativa finalizada', 'check');
+};
+
 // Sincronización HTTP Dual-Channel Fallback
 async function syncFromHttpState() {
   try {
@@ -1979,6 +2112,12 @@ async function syncFromHttpState() {
       }
       if (data.speakerName && data.speakerSocketId !== state.speakerSocketId) {
         updateSpeakerUI(data.speakerSocketId, data.speakerName);
+      }
+      if (data.isTributeProjecting) {
+        const overlay = document.getElementById('tribute-theater-overlay');
+        if (!overlay || overlay.style.display === 'none') {
+          window.openTributeTheater(0, 5500);
+        }
       }
       if (changed) {
         renderCurrentStep();

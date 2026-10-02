@@ -421,6 +421,46 @@
         <div class="lightbox-subcaption">Usa las flechas o desliza para explorar las fotos de Mami Olguita</div>
       </div>
     </div>
+  <!-- TEATRO DE PROYECCIÓN DE DESPEDIDA A PANTALLA COMPLETA (46 FOTOGRAFÍAS SINCRONIZADAS) -->
+  <div class="tribute-theater-overlay" id="tribute-theater-overlay" style="display: none;">
+    <!-- Audio de acompañamiento para la música conmemorativa -->
+    <audio id="tribute-audio-player" loop preload="auto">
+      <source src="/audio/despedida.mp3" type="audio/mpeg">
+      <source src="/audio/despedida.m4a" type="audio/mp4">
+      <source src="/audio/despedida.ogg" type="audio/ogg">
+    </audio>
+
+    <div class="theater-top-bar">
+      <div class="theater-title-chip">
+        <span>🌸</span>
+        <span>Mami Olguita • Siempre en nuestros corazones</span>
+      </div>
+      <div class="theater-controls-right">
+        <span class="theater-counter-pill" id="theater-counter-label">Foto 1 de 46</span>
+        <!-- Botón para detener proyección general (para el host) -->
+        <button class="btn-theater-control host-stop-btn" id="btn-theater-stop-host" onclick="window.stopTributeProjection()" title="Finalizar proyección para todos">
+          <span>⏹️</span>
+          <span>Finalizar</span>
+        </button>
+        <!-- Botón minimizar para oyentes -->
+        <button class="btn-theater-control" onclick="window.closeTheaterLocal()" title="Cerrar vista">
+          <i data-icon="x" data-size="16"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="theater-stage" id="theater-stage">
+      <img src="/fotos-olguita/olguita-01.jpg" id="theater-img" class="theater-active-photo" alt="Mami Olguita">
+    </div>
+
+    <div class="theater-bottom-bar">
+      <div class="theater-quote-text" id="theater-quote-text">
+        «Tu vida fue un regalo, tu amor una bendición y tu recuerdo será eterno.»
+      </div>
+      <div class="theater-sub-quote">
+        🌸 Proyección conmemorativa en memoria de nuestra querida Mami Olguita
+      </div>
+    </div>
   </div>
 
   <!-- Toast de Notificaciones -->

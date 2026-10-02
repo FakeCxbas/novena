@@ -2000,3 +2000,250 @@ body.is-host .host-nav-controls {
   font-size: 0.76rem;
   color: var(--fucsia-light);
 }
+
+/* ========================================================
+   TEATRO DE PROYECCIÓN DE DESPEDIDA A PANTALLA COMPLETA
+   (Iniciado exclusivamente por el Anfitrión / Logística)
+   ======================================================== */
+.tribute-theater-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  background: radial-gradient(circle at 50% 50%, #1e0622, #08020a);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+  padding: 1rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: fadeInTheater 0.6s ease-out;
+}
+
+@keyframes fadeInTheater {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.theater-top-bar {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  padding: 0.4rem 0.6rem;
+}
+
+.theater-title-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(224, 33, 138, 0.25);
+  border: 1.5px solid var(--fucsia-primary);
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.95rem;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 0 16px var(--fucsia-glow);
+}
+
+.theater-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theater-counter-pill {
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-full);
+  padding: 0.3rem 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--fucsia-light);
+}
+
+.btn-theater-control {
+  background: rgba(224, 33, 138, 0.3);
+  border: 1.5px solid var(--fucsia-primary);
+  color: #ffffff;
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.85rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+}
+
+.btn-theater-control:hover, .btn-theater-control:active {
+  background: var(--fucsia-gradient);
+  transform: scale(1.05);
+}
+
+.btn-theater-control.host-stop-btn {
+  background: rgba(239, 68, 68, 0.35);
+  border-color: #ef4444;
+}
+
+.btn-theater-control.host-stop-btn:hover {
+  background: #ef4444;
+}
+
+.theater-stage {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  max-width: 950px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  overflow: hidden;
+}
+
+.theater-active-photo {
+  max-width: 95%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  border: 2.5px solid var(--fucsia-primary);
+  box-shadow: 0 0 50px var(--fucsia-glow-strong), 0 10px 40px rgba(0, 0, 0, 0.95);
+  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+  animation: photoBreathe 6.5s infinite alternate ease-in-out;
+}
+
+@keyframes photoBreathe {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.03); }
+}
+
+.theater-bottom-bar {
+  width: 100%;
+  max-width: 680px;
+  text-align: center;
+  z-index: 10;
+  padding: 0.75rem 1rem;
+  background: rgba(14, 4, 16, 0.75);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  margin-top: 0.4rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.theater-quote-text {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: #ffffff;
+  line-height: 1.5;
+  margin-bottom: 0.25rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.theater-sub-quote {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  color: var(--fucsia-light);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Tarjeta del botón de Logística en Despedida */
+.host-tribute-projection-card {
+  background: linear-gradient(145deg, rgba(224, 33, 138, 0.22), rgba(38, 14, 43, 0.85));
+  border: 2px solid var(--fucsia-primary);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem 1.2rem;
+  text-align: center;
+  margin-top: 1.3rem;
+  box-shadow: 0 0 35px var(--fucsia-glow);
+}
+
+.host-projection-badge {
+  display: inline-block;
+  background: rgba(224, 33, 138, 0.3);
+  color: var(--fucsia-light);
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 0.25rem 0.8rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.04em;
+}
+
+.host-projection-title {
+  font-family: var(--font-serif);
+  font-size: 1.28rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
+}
+
+.host-projection-desc {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 1.1rem;
+}
+
+.btn-project-farewell {
+  width: 100%;
+  padding: 0.95rem 1.2rem;
+  background: var(--fucsia-gradient);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 25px var(--fucsia-glow-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  letter-spacing: 0.02em;
+  transition: all 0.25s ease;
+}
+
+.btn-project-farewell:hover, .btn-project-farewell:active {
+  transform: translateY(-2px) scale(1.02);
+  background: var(--fucsia-gradient-hover);
+  box-shadow: 0 8px 30px rgba(255, 45, 155, 0.85);
+}
+
+.family-farewell-await-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(224, 33, 138, 0.35);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1rem;
+  text-align: center;
+  margin-top: 1.2rem;
+}
+
+body.is-host .host-tribute-projection-card {
+  display: block;
+}
+body:not(.is-host) .host-tribute-projection-card {
+  display: none !important;
+}
+
+body.is-host .family-farewell-await-card {
+  display: none !important;
+}
+body:not(.is-host) .family-farewell-await-card {
+  display: block;
+}
+
