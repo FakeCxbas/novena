@@ -136,7 +136,81 @@ function buildStepsForDay(dayNumber) {
       `
     },
 
-    // Paso 2: Santo Rosario - Ofrecimiento y Credo
+    // ----------------------------------------------------
+    // PARTE 3: LA NOVENA (DÍA CORRESPONDIENTE)
+    // ----------------------------------------------------
+    // Oración Inicial de todos los días
+    {
+      id: 'oracion-inicial',
+      badge: 'Novena — Oración de Todos los Días',
+      title: NOVENA_DATA.oracionInicial.title,
+      render: () => `
+        <div class="guia-part" style="margin-bottom: 1rem;">
+          ${oradorBadge('Orador (Guía) lee:')}
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
+            ${NOVENA_DATA.oracionInicial.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
+          </div>
+        </div>
+        <div class="todos-part">
+          ${todosBadge('Todos respondemos:')}
+          <div class="voice-text">Amén.</div>
+        </div>
+      `
+    },
+
+    // Lectura Bíblica y Meditación del Día
+    {
+      id: 'reflexion-dia',
+      badge: `Día ${dayData.dia} de la Novena`,
+      title: dayData.titulo,
+      render: () => `
+        <div class="bible-quote-box">
+          <p style="font-size: 1.25rem; font-style: italic; line-height: 1.7; margin: 0; color: #ffffff;">${dayData.cita}</p>
+          <span class="bible-ref" style="display: block; margin-top: 0.5rem; font-weight: 700; color: var(--gold-amber);">— ${dayData.referencia}</span>
+        </div>
+        <div class="guia-part" style="margin-top: 1.2rem;">
+          ${oradorBadge('Orador lee la Reflexión:')}
+          <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; margin: 0.4rem 0 0 0;">${dayData.reflexion}</p>
+        </div>
+      `
+    },
+
+    // Oración del Día
+    {
+      id: 'oracion-dia',
+      badge: `Día ${dayData.dia}`,
+      title: `Oración del Día ${dayData.dia}`,
+      render: () => `
+        <div class="guia-part" style="margin-bottom: 1rem;">
+          ${oradorBadge('Orador (Guía) lee:')}
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
+            ${dayData.oracion.map(p => `<p style="margin:0;">${p}</p>`).join('')}
+          </div>
+        </div>
+        <div class="todos-part">
+          ${todosBadge('Todos respondemos:')}
+          <div class="voice-text">Amén.</div>
+        </div>
+      `
+    },
+
+    // Mensaje para la Familia
+    {
+      id: 'mensaje-familia',
+      badge: `Día ${dayData.dia} • Mensaje Familiar`,
+      title: 'Mensaje para la Familia',
+      render: () => `
+        <div class="guia-part" style="border-left: 4px solid var(--gold-amber); padding: 1.1rem 1.25rem;">
+          ${oradorBadge('Orador lee para toda la familia:')}
+          <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; color: var(--gold-light); margin: 0.4rem 0 0 0;">${dayData.mensajeFamilia}</p>
+        </div>
+      `
+    },
+
+    // ----------------------------------------------------
+    // PARTE 4: EL SANTO ROSARIO
+    // ----------------------------------------------------
+    // Santo Rosario - Ofrecimiento y Credo
     {
       id: 'rosario-inicio',
       badge: 'El Santo Rosario',
@@ -166,7 +240,7 @@ function buildStepsForDay(dayNumber) {
       `
     },
 
-    // Pasos 3 al 7: Los 5 Misterios del día
+    // Los 5 Misterios del día
     ...mysteryObj.lista.map((mItem, index) => {
       const mTitulo = typeof mItem === 'string' ? mItem : mItem.titulo;
       const mMeditacion = typeof mItem === 'object' && mItem.meditacion ? mItem.meditacion : '';
@@ -296,7 +370,7 @@ function buildStepsForDay(dayNumber) {
       };
     }),
 
-    // Paso 8: Cuentas Finales después del Santo Rosario
+    // Cuentas Finales después del Santo Rosario
     {
       id: 'cuentas-finales',
       badge: 'Santo Rosario',
@@ -347,7 +421,7 @@ function buildStepsForDay(dayNumber) {
       `
     },
 
-    // Paso 9: La Salve
+    // La Salve
     {
       id: 'la-salve',
       badge: 'Santo Rosario',
@@ -369,7 +443,7 @@ function buildStepsForDay(dayNumber) {
       `
     },
 
-    // Paso 10: Las Letanías
+    // Las Letanías
     {
       id: 'letanias',
       badge: 'Santo Rosario',
@@ -391,63 +465,10 @@ function buildStepsForDay(dayNumber) {
       `
     },
 
-    // Parte 3: Conclusión del Rosario y Lectura de la Novena
-    // Paso 11: Oración Inicial de todos los días
-    {
-      id: 'oracion-inicial',
-      badge: 'Novena — Oración de Todos los Días',
-      title: NOVENA_DATA.oracionInicial.title,
-      render: () => `
-        <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Orador (Guía) lee:')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
-            ${NOVENA_DATA.oracionInicial.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
-          </div>
-        </div>
-        <div class="todos-part">
-          ${todosBadge('Todos respondemos:')}
-          <div class="voice-text">Amén.</div>
-        </div>
-      `
-    },
-
-    // Paso 12: Lectura Bíblica y Meditación del Día
-    {
-      id: 'reflexion-dia',
-      badge: `Día ${dayData.dia} de la Novena`,
-      title: dayData.titulo,
-      render: () => `
-        <div class="bible-quote-box">
-          <p style="font-size: 1.25rem; font-style: italic; line-height: 1.7; margin: 0; color: #ffffff;">${dayData.cita}</p>
-          <span class="bible-ref" style="display: block; margin-top: 0.5rem; font-weight: 700; color: var(--gold-amber);">— ${dayData.referencia}</span>
-        </div>
-        <div class="guia-part" style="margin-top: 1.2rem;">
-          ${oradorBadge('Orador lee la Reflexión:')}
-          <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; margin: 0.4rem 0 0 0;">${dayData.reflexion}</p>
-        </div>
-      `
-    },
-
-    // Paso 13: Oración del Día
-    {
-      id: 'oracion-dia',
-      badge: `Día ${dayData.dia}`,
-      title: `Oración del Día ${dayData.dia}`,
-      render: () => `
-        <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Orador (Guía) lee:')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
-            ${dayData.oracion.map(p => `<p style="margin:0;">${p}</p>`).join('')}
-          </div>
-        </div>
-        <div class="todos-part">
-          ${todosBadge('Todos respondemos:')}
-          <div class="voice-text">Amén.</div>
-        </div>
-      `
-    },
-
-    // Paso 14: Oración Final por Mami Olguita
+    // ----------------------------------------------------
+    // PARTE 5: ORACIONES FINALES Y DESPEDIDA
+    // ----------------------------------------------------
+    // Oración Final por Mami Olguita
     {
       id: 'oracion-final-olguita',
       badge: 'Oraciones Finales',
@@ -466,7 +487,7 @@ function buildStepsForDay(dayNumber) {
       `
     },
 
-    // Paso 15: Oración Final de la Familia
+    // Oración Final de la Familia
     {
       id: 'oracion-final-familia',
       badge: 'Oraciones Finales',
@@ -487,19 +508,6 @@ function buildStepsForDay(dayNumber) {
             ${todosBadge('Todos respondemos:')}
             <div class="voice-text">${NOVENA_DATA.oracionFinalFamilia.despedidaJaculatoria.todos}</div>
           </div>
-        </div>
-      `
-    },
-
-    // Paso 16: Mensaje para la Familia
-    {
-      id: 'mensaje-familia',
-      badge: `Día ${dayData.dia}`,
-      title: 'Mensaje para la Familia',
-      render: () => `
-        <div class="guia-part" style="border-left: 4px solid var(--gold-amber); padding: 1.1rem 1.25rem;">
-          ${oradorBadge('Orador lee para toda la familia:')}
-          <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; color: var(--gold-light); margin: 0.4rem 0 0 0;">${dayData.mensajeFamilia}</p>
         </div>
       `
     },

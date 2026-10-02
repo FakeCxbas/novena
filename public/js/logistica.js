@@ -91,6 +91,36 @@ function buildSteps(diaNum, mysteryType) {
       role: 'orador',
       preview: NOVENA_DATA?.actoContricion?.paragraphs?.[0] || 'Señor mío Jesucristo, Dios y Hombre verdadero...'
     },
+    // 3. Novena del Día
+    {
+      id: 'oracion-inicial',
+      badge: 'Novena',
+      title: NOVENA_DATA.oracionInicial.title,
+      role: 'orador',
+      preview: NOVENA_DATA.oracionInicial.paragraphs[0]
+    },
+    {
+      id: 'reflexion-dia',
+      badge: `Día ${dayData.dia}`,
+      title: dayData.titulo,
+      role: 'orador',
+      preview: dayData.reflexion.slice(0, 140) + '...'
+    },
+    {
+      id: 'oracion-dia',
+      badge: `Día ${dayData.dia}`,
+      title: `Oración del Día ${dayData.dia}`,
+      role: 'orador',
+      preview: dayData.oracion[0]
+    },
+    {
+      id: 'mensaje-familia',
+      badge: 'Unión Familiar',
+      title: 'Mensaje para la Familia',
+      role: 'orador',
+      preview: dayData.mensajeFamilia.slice(0, 140) + '...'
+    },
+    // 4. El Santo Rosario
     {
       id: 'rosario-inicio',
       badge: 'Santo Rosario',
@@ -98,7 +128,7 @@ function buildSteps(diaNum, mysteryType) {
       role: 'orador',
       preview: NOVENA_DATA.rosario.credo.guia.slice(0, 130) + '...'
     },
-    // Pasos 3 al 7: Los 5 misterios
+    // Los 5 misterios
     ...mysteryObj.lista.map((mItem, idx) => {
       const mTitulo = typeof mItem === 'string' ? mItem : mItem.titulo;
       const mMeditacion = typeof mItem === 'object' && mItem.meditacion ? mItem.meditacion : '';
@@ -131,27 +161,7 @@ function buildSteps(diaNum, mysteryType) {
       role: 'chorus',
       preview: 'Señor, ten piedad de ella... Santa María, ruega por ella...'
     },
-    {
-      id: 'oracion-inicial',
-      badge: 'Novena',
-      title: NOVENA_DATA.oracionInicial.title,
-      role: 'orador',
-      preview: NOVENA_DATA.oracionInicial.paragraphs[0]
-    },
-    {
-      id: 'reflexion-dia',
-      badge: `Día ${dayData.dia}`,
-      title: dayData.titulo,
-      role: 'orador',
-      preview: dayData.reflexion.slice(0, 140) + '...'
-    },
-    {
-      id: 'oracion-dia',
-      badge: `Día ${dayData.dia}`,
-      title: `Oración del Día ${dayData.dia}`,
-      role: 'orador',
-      preview: dayData.oracion[0]
-    },
+    // 5. Oraciones Finales y Despedida
     {
       id: 'oracion-final-olguita',
       badge: 'Oraciones Finales',
@@ -165,13 +175,6 @@ function buildSteps(diaNum, mysteryType) {
       title: NOVENA_DATA.oracionFinalFamilia.title,
       role: 'orador',
       preview: NOVENA_DATA.oracionFinalFamilia.paragraphs[0]
-    },
-    {
-      id: 'mensaje-familia',
-      badge: 'Unión Familiar',
-      title: 'Mensaje para la Familia',
-      role: 'orador',
-      preview: dayData.mensajeFamilia.slice(0, 140) + '...'
     },
     {
       id: 'despedida-homenaje',

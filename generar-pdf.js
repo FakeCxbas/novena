@@ -60,7 +60,7 @@ const htmlContent = `<!DOCTYPE html>
     .cover-header {
       text-align: center;
       padding-bottom: 6px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       border-bottom: 2px solid #8c6d37;
     }
 
@@ -92,7 +92,7 @@ const htmlContent = `<!DOCTYPE html>
       border: 1px solid #d4b886;
       border-radius: 6px;
       padding: 5px 12px;
-      margin: 5px auto 0 auto;
+      margin: 4px auto 0 auto;
       max-width: 480px;
       text-align: center;
     }
@@ -118,7 +118,7 @@ const htmlContent = `<!DOCTYPE html>
       color: #704f14;
       border-bottom: 1px solid #e0cdb2;
       padding-bottom: 2px;
-      margin: 10px 0 6px 0;
+      margin: 9px 0 5px 0;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
@@ -127,7 +127,7 @@ const htmlContent = `<!DOCTYPE html>
       font-size: 10pt;
       font-weight: 700;
       color: #444;
-      margin: 8px 0 3px 0;
+      margin: 7px 0 3px 0;
     }
 
     .prayer-card {
@@ -302,7 +302,7 @@ const htmlContent = `<!DOCTYPE html>
 </head>
 <body>
 
-  <!-- ================= PÁGINA 1: APERTURA Y CREDO ================= -->
+  <!-- ================= PÁGINA 1: APERTURA, ACTO CONTRICIÓN Y ORACIÓN INICIAL NOVENA ================= -->
   <div class="cover-header">
     <div class="cross-symbol">✝</div>
     <div class="subtitle">Novena por el Eterno Descanso de Nuestra Querida</div>
@@ -313,7 +313,7 @@ const htmlContent = `<!DOCTYPE html>
 
     <div class="day-banner">
       <h2>DÍA 3 • EL AMOR PERMANECE</h2>
-      <p>Santo Rosario de Misterios Dolorosos y Rezo Familiar • Viernes, 2 de Octubre</p>
+      <p>Rezo de la Novena y Santo Rosario • Viernes, 2 de Octubre</p>
     </div>
   </div>
 
@@ -343,7 +343,55 @@ const htmlContent = `<!DOCTYPE html>
     </div>
   </div>
 
-  <div class="section-title">3. El Santo Rosario (Misterios Dolorosos)</div>
+  <div class="section-title">3. Novena • Día Tercero: El Amor Permanece</div>
+  <div class="sub-section-title">🙏 Oración Inicial de todos los días</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Orador (Guía) lee:</span>
+    <div class="role-text-guia">
+      <p>Señor Dios, Padre misericordioso, nos reunimos como familia para recordar con amor a nuestra querida Mami Olguita, quien ha partido de este mundo.</p>
+      <p>Te damos gracias por el regalo de su vida, por todo el amor que nos entregó, por sus enseñanzas, sus palabras, sus cuidados y por tantos momentos que permanecerán para siempre en nuestra memoria.</p>
+      <p>Hoy ponemos su alma en tus manos y te pedimos que, por tu infinita misericordia, perdones sus faltas y la recibas en tu Reino, donde ya no existe el dolor, ni la tristeza, ni la enfermedad, sino la vida eterna junto a Ti.</p>
+      <p>Danos también fortaleza a quienes quedamos aquí. Consuela nuestros corazones y ayúdanos a aceptar tu voluntad con fe y esperanza.</p>
+      <p>Que esta novena sea una muestra de nuestro amor y gratitud por Mami Olguita.</p>
+    </div>
+    <span class="role-todos">Todos respondemos:</span>
+    <div class="role-text-todos">
+      Amén.
+    </div>
+  </div>
+
+  <!-- ================= PÁGINA 2: LECTURA, REFLEXIÓN Y OFRECIMIENTO DEL ROSARIO ================= -->
+  <div class="page-break"></div>
+
+  <div class="cita-biblica">
+    ${dia3Data.cita}
+    <div style="font-size: 8.2pt; color: #704f14; font-weight: 700; margin-top: 1px;">${dia3Data.referencia}</div>
+  </div>
+
+  <div class="sub-section-title">💡 Reflexión del Día 3</div>
+  <div class="prayer-card">
+    ${dia3Data.reflexion}
+  </div>
+
+  <div class="sub-section-title">🕊️ Oración del Día 3</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Orador (Guía) lee:</span>
+    <div class="role-text-guia">
+      ${dia3Data.oracion.map(p => `<p>${p}</p>`).join('')}
+    </div>
+    <span class="role-todos">Todos respondemos:</span>
+    <div class="role-text-todos">
+      Amén.
+    </div>
+  </div>
+
+  <div class="sub-section-title">🤍 Mensaje para la Familia</div>
+  <div class="meditacion-box" style="background: #faf7f0; border-left-color: #8c6d37; margin-bottom: 10px;">
+    <strong>Recordatorio para nuestro hogar:</strong><br>
+    ${dia3Data.mensajeFamilia}
+  </div>
+
+  <div class="section-title">4. El Santo Rosario (Misterios Dolorosos)</div>
   <div class="dialogue-box">
     <span class="role-guia">Orador (Ofrecimiento):</span>
     <div class="role-text-guia">
@@ -365,7 +413,7 @@ const htmlContent = `<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- ================= PÁGINA 2: MISTERIOS 1, 2 Y 3 ================= -->
+  <!-- ================= PÁGINA 3: MISTERIOS 1, 2 Y 3 ================= -->
   <div class="page-break"></div>
 
   <div class="prayer-card" style="margin-top: 4px;">
@@ -412,7 +460,7 @@ const htmlContent = `<!DOCTYPE html>
   </div>
   <p style="font-size: 8.3pt; color: #666; margin: 0 0 4px 4px;">(Se reza 1 Padre Nuestro, 10 Ave Marías, 1 Gloria y las 2 Jaculatorias por Mami Olguita).</p>
 
-  <!-- ================= PÁGINA 3: MISTERIOS 4 Y 5 + CIERRE ================= -->
+  <!-- ================= PÁGINA 4: MISTERIOS 4 Y 5 + CIERRE ================= -->
   <div class="page-break"></div>
 
   <!-- Misterio 4 -->
@@ -452,7 +500,7 @@ const htmlContent = `<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- ================= PÁGINA 4: LA SALVE Y LETANÍAS COMPLETAS ================= -->
+  <!-- ================= PÁGINA 5: LA SALVE Y LETANÍAS COMPLETAS ================= -->
   <div class="page-break"></div>
 
   <div class="section-title">🌹 La Salve</div>
@@ -523,55 +571,6 @@ const htmlContent = `<!DOCTYPE html>
     <div class="letania-item"><span class="letania-invocacion">Reina del Santísimo Rosario</span><span class="letania-resp">Ruega por nosotros</span></div>
     <div class="letania-item"><span class="letania-invocacion">Reina de la familia</span><span class="letania-resp">Ruega por nosotros</span></div>
     <div class="letania-item"><span class="letania-invocacion">Reina de la paz</span><span class="letania-resp">Ruega por nosotros</span></div>
-  </div>
-
-  <!-- ================= PÁGINA 5: LA NOVENA (DÍA 3) ================= -->
-  <div class="page-break"></div>
-
-  <div class="section-title">4. Novena • Día Tercero: El Amor Permanece</div>
-
-  <div class="sub-section-title">🙏 Oración Inicial de todos los días</div>
-  <div class="dialogue-box">
-    <span class="role-guia">Orador (Guía) lee:</span>
-    <div class="role-text-guia">
-      <p>Señor Dios, Padre misericordioso, nos reunimos como familia para recordar con amor a nuestra querida Mami Olguita, quien ha partido de este mundo.</p>
-      <p>Te damos gracias por el regalo de su vida, por todo el amor que nos entregó, por sus enseñanzas, sus palabras, sus cuidados y por tantos momentos que permanecerán para siempre en nuestra memoria.</p>
-      <p>Hoy ponemos su alma en tus manos y te pedimos que, por tu infinita misericordia, perdones sus faltas y la recibas en tu Reino, donde ya no existe el dolor, ni la tristeza, ni la enfermedad, sino la vida eterna junto a Ti.</p>
-      <p>Danos también fortaleza a quienes quedamos aquí. Consuela nuestros corazones y ayúdanos a aceptar tu voluntad con fe y esperanza.</p>
-      <p>Que esta novena sea una muestra de nuestro amor y gratitud por Mami Olguita.</p>
-    </div>
-    <span class="role-todos">Todos respondemos:</span>
-    <div class="role-text-todos">
-      Amén.
-    </div>
-  </div>
-
-  <div class="cita-biblica">
-    ${dia3Data.cita}
-    <div style="font-size: 8.2pt; color: #704f14; font-weight: 700; margin-top: 1px;">${dia3Data.referencia}</div>
-  </div>
-
-  <div class="sub-section-title">💡 Reflexión del Día 3</div>
-  <div class="prayer-card">
-    ${dia3Data.reflexion}
-  </div>
-
-  <div class="sub-section-title">🕊️ Oración del Día 3</div>
-  <div class="dialogue-box">
-    <span class="role-guia">Orador (Guía) lee:</span>
-    <div class="role-text-guia">
-      ${dia3Data.oracion.map(p => `<p>${p}</p>`).join('')}
-    </div>
-    <span class="role-todos">Todos respondemos:</span>
-    <div class="role-text-todos">
-      Amén.
-    </div>
-  </div>
-
-  <div class="sub-section-title">🤍 Mensaje para la Familia</div>
-  <div class="meditacion-box" style="background: #faf7f0; border-left-color: #8c6d37;">
-    <strong>Recordatorio para nuestro hogar:</strong><br>
-    ${dia3Data.mensajeFamilia}
   </div>
 
   <!-- ================= PÁGINA 6: ORACIONES FINALES, BENDICIÓN Y HOMENAJE ================= -->
@@ -651,4 +650,4 @@ const pdfRootPath = path.join(__dirname, 'Novena_Mami_Olguita_Dia_3.pdf');
 execSync(`chromium --headless --disable-gpu --no-sandbox --no-pdf-header-footer --print-to-pdf="${pdfOutputPath}" "${htmlPath}"`);
 fs.copyFileSync(pdfOutputPath, pdfRootPath);
 
-console.log('PDF final recompilado.');
+console.log('PDF con punto 3 y 4 intercambiados recompilado con éxito.');
