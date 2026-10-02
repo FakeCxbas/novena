@@ -2051,11 +2051,40 @@ window.closeTributeTheater = function() {
       audio.currentTime = 0;
     } catch (e) {}
   }
+  const btn = document.getElementById('btn-theater-audio-toggle');
+  if (btn) btn.innerHTML = '<i data-icon="volume-2" data-size="16"></i>';
+  replaceDomIcons();
+};
+
+window.toggleTributeAudio = function() {
+  const audio = document.getElementById('tribute-audio-player');
+  const btn = document.getElementById('btn-theater-audio-toggle');
+  if (!audio) return;
+  if (audio.paused) {
+    audio.play().then(() => {
+      if (btn) btn.innerHTML = '<i data-icon="volume-2" data-size="16"></i>';
+      replaceDomIcons();
+      showToast('Música instrumental activada', 'music');
+    }).catch(err => {
+      console.log('Error al reproducir audio:', err);
+    });
+  } else {
+    audio.pause();
+    if (btn) btn.innerHTML = '<i data-icon="volume-x" data-size="16"></i>';
+    replaceDomIcons();
+    showToast('Música silenciada', 'volume-x');
+  }
 };
 
 window.closeTheaterLocal = function() {
   const overlay = document.getElementById('tribute-theater-overlay');
   if (overlay) overlay.style.display = 'none';
+  const audio = document.getElementById('tribute-audio-player');
+  if (audio) {
+    try {
+      audio.pause();
+    } catch (e) {}
+  }
 };
 
 window.startTributeProjection = function() {
