@@ -213,22 +213,32 @@ export const NOVENA_DATA = {
         lista: [
           {
             titulo: "1. La Anunciación del Ángel a María",
+            cita: "«El ángel le dijo: “No temas, María, porque has hallado gracia delante de Dios. Concebirás en tu vientre y darás a luz un hijo, y llamarás su nombre Jesús”. María dijo: “He aquí la sierva del Señor; hágase en mí según tu palabra”.»",
+            referencia: "Lucas 1, 30-31.38",
             meditacion: "Agradecemos a Dios por el don sagrado de la vida de nuestra querida Mami Olguita y su fe sencilla y generosa."
           },
           {
             titulo: "2. La Visitación de María a su prima Santa Isabel",
+            cita: "«Y aconteció que cuando oyó Isabel la salutación de María, la criatura saltó en su vientre; e Isabel fue llena del Espíritu Santo, y exclamó a gran voz: “¡Bendita tú entre las mujeres, y bendito el fruto de tu vientre!”»",
+            referencia: "Lucas 1, 41-42",
             meditacion: "Recordamos el cariño y la generosidad con que Mami Olguita siempre estuvo atenta a servir, visitar y apoyar a su familia."
           },
           {
             titulo: "3. El Nacimiento de Jesús en Belén",
+            cita: "«Y aconteció que estando ellos allí, se cumplieron los días de su alumbramiento. Y dio a luz a su hijo primogénito, y lo envolvió en pañales, y lo acostó en un pesebre, porque no había lugar para ellos en el mesón.»",
+            referencia: "Lucas 2, 6-7",
             meditacion: "Pedimos que la ternura y el amor de Jesús acojan con calidez el alma de Mami Olguita en el descanso celestial."
           },
           {
             titulo: "4. La Presentación de Jesús en el Templo",
+            cita: "«Cuando se cumplieron los días de la purificación, según la ley de Moisés, lo llevaron a Jerusalén para presentarle al Señor. Simeón tomó al niño en sus brazos y bendijo a Dios, diciendo: “Ahora, Señor, despides a tu siervo en paz, porque han visto mis ojos tu salvación”.»",
+            referencia: "Lucas 2, 22.28-30",
             meditacion: "Ofrecemos con amor el alma de Mami Olguita a Dios Padre, reconociendo con gratitud todo el bien que dejó entre nosotros."
           },
           {
             titulo: "5. El Niño Jesús perdido y hallado en el Templo",
+            cita: "«Aconteció que tres días después le hallaron en el templo, sentado en medio de los doctores de la ley, oyéndoles y preguntándoles. Y él les dijo: “¿Por qué me buscabais? ¿No sabíais que en los negocios de mi Padre me es necesario estar?”»",
+            referencia: "Lucas 2, 46.49",
             meditacion: "Confiamos en que Mami Olguita ha llegado a la casa del Padre para gozar de su presencia y no separarse jamás de Él."
           }
         ]
@@ -239,22 +249,32 @@ export const NOVENA_DATA = {
         lista: [
           {
             titulo: "1. La Agonía de Jesús en el Huerto",
+            cita: "«Se apartó de ellos como a un tiro de piedra; y puesto de rodillas oró, diciendo: “Padre, si quieres, aparta de mí este cáliz; pero no se haga mi voluntad, sino la tuya”. Y sumido en agonía, oraba más intensamente; y era su sudor como grandes gotas de sangre que caían hasta la tierra.»",
+            referencia: "Lucas 22, 41-42.44",
             meditacion: "Unimos las fatigas y sufrimientos de la vida terrenal de Mami Olguita a la oración de Jesús, pidiendo paz infinita para su alma."
           },
           {
             titulo: "2. La Flagelación de Jesús",
+            cita: "«Pilato, queriendo complacer a la multitud, les soltó a Barrabás; y entregó a Jesús, después de haberlo azotado, para que fuera crucificado.»",
+            referencia: "Marcos 15, 15",
             meditacion: "Por los méritos del dolor de Cristo, suplicamos que perdone cualquier falta humana de Mami Olguita y purifique su espíritu."
           },
           {
             titulo: "3. La Coronación de Espinas",
+            cita: "«Los soldados trenzaron una corona de espinas y se la pusieron en la cabeza, y lo vistieron con un manto de púrpura; y acercándose a él, decían: “¡Salve, Rey de los judíos!”, y le daban bofetadas.»",
+            referencia: "Juan 19, 2-3",
             meditacion: "Pedimos que, a cambio de las pruebas de este mundo, el Señor corone a Mami Olguita con la corona de la vida eterna."
           },
           {
             titulo: "4. Jesús carga con la Cruz",
+            cita: "«Y cargando él mismo con su cruz, salió hacia el lugar llamado de la Calavera, que en hebreo se dice Gólgota.»",
+            referencia: "Juan 19, 17",
             meditacion: "Recordamos la entereza con que Mami Olguita afrontó los momentos difíciles de la vida, y pedimos que ahora descanse en los brazos de Dios."
           },
           {
             titulo: "5. La Crucifixión y Muerte de Jesús",
+            cita: "«Era ya cerca de la hora sexta, y hubo tinieblas sobre toda la tierra hasta la hora novena. Entonces Jesús, clamando a gran voz, dijo: “Padre, en tus manos encomiendo mi espíritu”. Y habiendo dicho esto, expiró.»",
+            referencia: "Lucas 23, 44-46",
             meditacion: "Por la entrega en la Cruz, confiamos en que Jesús acogió a Mami Olguita en el paraíso prometido a quienes creen en Él."
           }
         ]
@@ -265,22 +285,32 @@ export const NOVENA_DATA = {
         lista: [
           {
             titulo: "1. El Bautismo de Jesús en el Jordán",
+            cita: "«Y Jesús, después que fue bautizado, subió luego del agua; y he aquí los cielos le fueron abiertos, y vio al Espíritu de Dios que descendía como paloma y venía sobre él. Y hubo una voz de los cielos, que decía: “Este es mi Hijo amado, en quien tengo complacencia”.»",
+            referencia: "Mateo 3, 16-17",
             meditacion: "Así como Jesús descendió a las aguas, pedimos que el bautismo de nuestra querida Mami Olguita la lleve a la vida nueva y eterna."
           },
           {
             titulo: "2. La autorrevelación de Jesús en las Bodas de Caná",
+            cita: "«Su madre dijo a los que servían: “Hagan todo lo que él les diga”. Este principio de sus señales milagrosas hizo Jesús en Caná de Galilea, y manifestó su gloria; y sus discípulos creyeron en él.»",
+            referencia: "Juan 2, 5.11",
             meditacion: "Pedimos para que Mami Olguita sea invitada al banquete celestial en el Reino de los Cielos."
           },
           {
             titulo: "3. El Anuncio del Reino de Dios invitando a la conversión",
+            cita: "«Jesús vino a Galilea predicando el evangelio del reino de Dios, diciendo: “El tiempo se ha cumplido, y el reino de Dios se ha acercado; conviértanse y crean en la Buena Noticia”.»",
+            referencia: "Marcos 1, 14-15",
             meditacion: "Rogamos al Señor que haya tenido misericordia de sus debilidades humanas y la reciba en su Reino."
           },
           {
             titulo: "4. La Transfiguración de Jesús",
+            cita: "«Y se transfiguró delante de ellos, y resplandeció su rostro como el sol, y sus vestidos se volvieron blancos como la luz. Y una voz desde la nube decía: “Este es mi Hijo amado, en quien me complazco; escúchenlo”.»",
+            referencia: "Mateo 17, 2.5",
             meditacion: "Pedimos que el rostro de nuestra querida Mami Olguita sea transfigurado y brille con la luz divina en el cielo."
           },
           {
             titulo: "5. La Institución de la Eucaristía",
+            cita: "«Y tomó el pan y dio gracias, lo partió y se lo dio, diciendo: “Esto es mi cuerpo, que por ustedes es entregado; hagan esto en memoria de mí”. De igual manera tomó la copa, diciendo: “Esta copa es la nueva alianza en mi sangre, que por ustedes se derrama”.»",
+            referencia: "Lucas 22, 19-20",
             meditacion: "Damos gracias por el pan de vida que la sostuvo en la Tierra y pedimos que ahora goce de la plenitud de Dios."
           }
         ]
@@ -291,22 +321,32 @@ export const NOVENA_DATA = {
         lista: [
           {
             titulo: "1. La Resurrección de Jesús",
+            cita: "«El ángel dijo a las mujeres: “No teman ustedes; sé que buscan a Jesús, el crucificado. No está aquí, pues ha resucitado, como dijo. Vengan, vean el lugar donde fue puesto el Señor”.»",
+            referencia: "Mateo 28, 5-6",
             meditacion: "Con fe viva proclamamos que la muerte ha sido vencida y que Mami Olguita resucitará para la vida eterna junto al Señor."
           },
           {
             titulo: "2. La Ascensión de Jesús al Cielo",
+            cita: "«Y habiendo dicho estas cosas, viéndolo ellos, fue elevado, y una nube lo ocultó de sus ojos. Y dos varones con vestiduras blancas les dijeron: “Este mismo Jesús, que ha sido tomado de entre ustedes al cielo, vendrá del mismo modo que lo han visto ir al cielo”.»",
+            referencia: "Hechos 1, 9.11",
             meditacion: "Rogamos a Jesús que eleve el alma de nuestra querida Mami Olguita a su presencia santa y bienaventurada."
           },
           {
             titulo: "3. La Venida del Espíritu Santo",
+            cita: "«Cuando llegó el día de Pentecostés, estaban todos reunidos en un mismo lugar. De repente vino del cielo un ruido como de viento recio, y se les aparecieron lenguas como de fuego; y fueron todos llenos del Espíritu Santo.»",
+            referencia: "Hechos 2, 1-4",
             meditacion: "Invocamos al Espíritu Consolador sobre toda nuestra familia, para que llene de unión, consuelo y fortaleza nuestros corazones."
           },
           {
             titulo: "4. La Asunción de la Virgen María",
+            cita: "«“Porque ha mirado la humildad de su esclava; pues he aquí, desde ahora me llamarán bienaventurada todas las generaciones. Porque ha hecho en mí grandes cosas el Poderoso, y santo es su nombre.”»",
+            referencia: "Lucas 1, 48-49",
             meditacion: "Pedimos a la Virgen María que tome de la mano a Mami Olguita y la acompañe a la presencia gloriosa del Altísimo."
           },
           {
             titulo: "5. La Coronación de María como Reina del Cielo y de la Tierra",
+            cita: "«Apareció en el cielo una gran señal: una mujer vestida del sol, con la luna debajo de sus pies, y sobre su cabeza una corona de doce estrellas.»",
+            referencia: "Apocalipsis 12, 1",
             meditacion: "Pedimos que Mami Olguita participe del gozo de los santos y de la paz que Dios tiene reservada a sus hijos."
           }
         ]

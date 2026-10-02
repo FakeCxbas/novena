@@ -244,12 +244,21 @@ function buildStepsForDay(dayNumber) {
     ...mysteryObj.lista.map((mItem, index) => {
       const mTitulo = typeof mItem === 'string' ? mItem : mItem.titulo;
       const mMeditacion = typeof mItem === 'object' && mItem.meditacion ? mItem.meditacion : '';
+      const mCita = typeof mItem === 'object' && mItem.cita ? mItem.cita : '';
+      const mReferencia = typeof mItem === 'object' && mItem.referencia ? mItem.referencia : '';
 
       return {
         id: `misterio-${index + 1}`,
         badge: `${mysteryObj.nombre} (${index + 1}/5)`,
         title: `${index + 1}º Misterio: ${mTitulo}`,
         render: () => `
+          ${mCita ? `
+            <div class="bible-quote-box" style="margin-bottom: 0.9rem;">
+              <p style="font-size: 1.15rem; font-style: italic; line-height: 1.65; margin: 0; color: #ffffff;">${mCita}</p>
+              ${mReferencia ? `<span class="bible-ref" style="display: block; margin-top: 0.45rem; font-weight: 700; color: var(--gold-amber);">— ${mReferencia}</span>` : ''}
+            </div>
+          ` : ''}
+
           ${mMeditacion ? `
             <div class="meditacion-box">
               <div class="meditacion-title">

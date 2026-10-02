@@ -132,12 +132,14 @@ function buildSteps(diaNum, mysteryType) {
     ...mysteryObj.lista.map((mItem, idx) => {
       const mTitulo = typeof mItem === 'string' ? mItem : mItem.titulo;
       const mMeditacion = typeof mItem === 'object' && mItem.meditacion ? mItem.meditacion : '';
+      const mCita = typeof mItem === 'object' && mItem.cita ? mItem.cita : '';
+      const mRef = typeof mItem === 'object' && mItem.referencia ? ` (${mItem.referencia})` : '';
       return {
         id: `misterio-${idx + 1}`,
         badge: `${mysteryObj.nombre} (${idx + 1}/5)`,
         title: `${idx + 1}º Misterio: ${mTitulo}`,
         role: 'rosario',
-        preview: mMeditacion ? `Meditación: "${mMeditacion.slice(0, 75)}..." | 1 PN, 10 AM, Gloria y Jaculatorias.` : `Rezo del misterio: 1 Padre Nuestro, 10 Ave Marías y 1 Gloria al Padre.`
+        preview: mCita ? `📖 "${mCita.slice(0, 75)}..."${mRef} | 🕊️ "${mMeditacion.slice(0, 60)}..."` : (mMeditacion ? `Meditación: "${mMeditacion.slice(0, 75)}..." | 1 PN, 10 AM, Gloria y Jaculatorias.` : `Rezo del misterio: 1 Padre Nuestro, 10 Ave Marías y 1 Gloria al Padre.`)
       };
     }),
     {
