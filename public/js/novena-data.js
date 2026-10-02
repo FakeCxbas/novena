@@ -463,5 +463,17 @@ export const NOVENA_DATA = {
     guia: "Dale, Señor, el descanso eterno.",
     todos: "Y brille para ella la luz perpetua. Que Mami Olguita descanse en paz. Amén.",
     bendicion: "El Señor nos bendiga, nos guarde de todo mal y nos lleve a la vida eterna. En el nombre del Padre, del Hijo y del Espíritu Santo. Amén."
-  }
+  },
+
+  // ----------------------------------------------------
+  // COLECCIÓN CONMEMORATIVA DE FOTOGRAFÍAS DE MAMI OLGUITA
+  // ----------------------------------------------------
+  fotoRetratoPrincipal: "/fotos-olguita/olguita-01.jpg",
+  fotoAvatar: "/fotos-olguita/olguita-02.jpg",
+  fotosOlguita: Array.from({ length: 46 }, (_, i) => ({
+    id: i + 1,
+    url: `/fotos-olguita/olguita-${String(i + 1).padStart(2, '0')}.jpg`,
+    titulo: `Mami Olguita • Recuerdo #${i + 1}`,
+    descripcion: "Amor, fortaleza y bendición que viven eternamente en el corazón de nuestra familia."
+  }))
 };

@@ -1,6 +1,6 @@
 // app.js - Lógica interactiva con 3 Roles (Anfitrión, Orador, Familia), control total de micrófonos y cámaras activas
-import { NOVENA_DATA } from './novena-data.js?v=6.3';
-import { icon, replaceDomIcons } from './icons.js?v=6.3';
+import { NOVENA_DATA } from './novena-data.js?v=7.0';
+import { icon, replaceDomIcons } from './icons.js?v=7.0';
 
 // Cálculo automático del día de la Novena según fecha local (America/Guayaquil, UTC-5)
 // Día 1: 30 de Septiembre de 2026
@@ -163,16 +163,35 @@ function buildStepsForDay(dayNumber) {
       id: 'reflexion-dia',
       badge: `Día ${dayData.dia} de la Novena`,
       title: dayData.titulo,
-      render: () => `
-        <div class="bible-quote-box">
-          <p style="font-size: 1.25rem; font-style: italic; line-height: 1.7; margin: 0; color: #ffffff;">${dayData.cita}</p>
-          <span class="bible-ref" style="display: block; margin-top: 0.5rem; font-weight: 700; color: var(--gold-amber);">— ${dayData.referencia}</span>
-        </div>
-        <div class="guia-part" style="margin-top: 1.2rem;">
-          ${oradorBadge('Orador lee la Reflexión:')}
-          <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; margin: 0.4rem 0 0 0;">${dayData.reflexion}</p>
-        </div>
-      `
+      render: () => {
+        const dayPhotoNum = ((dayData.dia - 1) % 10) + 3; // olguita-03 a olguita-12
+        const dayPhotoSrc = `/fotos-olguita/olguita-${String(dayPhotoNum).padStart(2, '0')}.jpg`;
+        return `
+          <div class="bible-quote-box">
+            <p style="font-size: 1.25rem; font-style: italic; line-height: 1.7; margin: 0; color: #ffffff;">${dayData.cita}</p>
+            <span class="bible-ref" style="display: block; margin-top: 0.5rem; font-weight: 700; color: var(--gold-amber);">— ${dayData.referencia}</span>
+          </div>
+
+          <!-- Fotografía Conmemorativa de Mami Olguita -->
+          <div class="prayer-photo-card" onclick="window.openLightboxBySrc('${dayPhotoSrc}', 'Mami Olguita • Reflexión del Día ${dayData.dia}')" title="Toca para ver foto ampliada">
+            <div class="prayer-photo-img-wrap">
+              <img src="${dayPhotoSrc}" alt="Mami Olguita" class="prayer-photo-img" loading="lazy">
+              <div class="prayer-photo-overlay">
+                <span class="prayer-photo-badge">🌸 Mami Olguita en nuestra memoria</span>
+              </div>
+            </div>
+            <div class="prayer-photo-caption">
+              <span>«Tu sonrisa y tu amor maternal siguen iluminando a nuestra familia.»</span>
+              <span class="prayer-photo-zoom-hint">🔍 Toca para ampliar</span>
+            </div>
+          </div>
+
+          <div class="guia-part" style="margin-top: 1.2rem;">
+            ${oradorBadge('Orador lee la Reflexión:')}
+            <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; margin: 0.4rem 0 0 0;">${dayData.reflexion}</p>
+          </div>
+        `;
+      }
     },
 
     // Oración del Día
@@ -199,12 +218,30 @@ function buildStepsForDay(dayNumber) {
       id: 'mensaje-familia',
       badge: `Día ${dayData.dia} • Mensaje Familiar`,
       title: 'Mensaje para la Familia',
-      render: () => `
-        <div class="guia-part" style="border-left: 4px solid var(--gold-amber); padding: 1.1rem 1.25rem;">
-          ${oradorBadge('Orador lee para toda la familia:')}
-          <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; color: var(--gold-light); margin: 0.4rem 0 0 0;">${dayData.mensajeFamilia}</p>
-        </div>
-      `
+      render: () => {
+        const famPhotoNum = ((dayData.dia * 3) % 20) + 5; // e.g. olguita-08, olguita-11, etc.
+        const famPhotoSrc = `/fotos-olguita/olguita-${String(famPhotoNum).padStart(2, '0')}.jpg`;
+        return `
+          <div class="guia-part" style="border-left: 4px solid var(--fucsia-primary); padding: 1.1rem 1.25rem;">
+            ${oradorBadge('Orador lee para toda la familia:')}
+            <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; color: var(--gold-light); margin: 0.4rem 0 0 0;">${dayData.mensajeFamilia}</p>
+          </div>
+
+          <!-- Fotografía Familiar Conmemorativa -->
+          <div class="prayer-photo-card" onclick="window.openLightboxBySrc('${famPhotoSrc}', 'Familia de Mami Olguita • Día ${dayData.dia}')" title="Toca para ver foto ampliada">
+            <div class="prayer-photo-img-wrap">
+              <img src="${famPhotoSrc}" alt="Familia Mami Olguita" class="prayer-photo-img" loading="lazy">
+              <div class="prayer-photo-overlay">
+                <span class="prayer-photo-badge">💖 Familia Unida</span>
+              </div>
+            </div>
+            <div class="prayer-photo-caption">
+              <span>«El amor que sembraste entre nosotros permanece vivo por siempre.»</span>
+              <span class="prayer-photo-zoom-hint">🔍 Toca para ampliar</span>
+            </div>
+          </div>
+        `;
+      }
     },
 
     // ----------------------------------------------------
@@ -269,6 +306,16 @@ function buildStepsForDay(dayNumber) {
               </p>
             </div>
           ` : ''}
+
+          <!-- Recuerdo Conmemorativo de Mami Olguita -->
+          <div class="mystery-memory-chip" onclick="window.openLightboxBySrc('/fotos-olguita/olguita-${String(13 + index).padStart(2, '0')}.jpg', 'Recuerdo de Mami Olguita • ${mTitulo}')" title="Toca para ver foto ampliada">
+            <img src="/fotos-olguita/olguita-${String(13 + index).padStart(2, '0')}.jpg" alt="Mami Olguita" class="mystery-chip-thumb" loading="lazy">
+            <div class="mystery-chip-info">
+              <div class="mystery-chip-label">🌸 En memoria de su fe y devoción</div>
+              <div class="mystery-chip-quote">«Ofrecemos este misterio por el eterno descanso de Mami Olguita.»</div>
+            </div>
+            <span style="font-size: 0.85rem; color: var(--fucsia-light); margin-left: auto;">🔍</span>
+          </div>
 
           <!-- 1. Padre Nuestro -->
           <div class="prayer-section">
@@ -548,7 +595,7 @@ function buildStepsForDay(dayNumber) {
         <!-- Placa Conmemorativa -->
         <div class="tribute-box">
           <div class="candle-icon" style="margin: 0 auto 0.6rem auto; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;">
-            ${icon('candle', { size: 38, color: '#DFB15B' })}
+            ${icon('candle', { size: 38, color: '#FF75C3' })}
           </div>
           <div class="tribute-name">${NOVENA_DATA.placaHomenaje.nombre}</div>
           <div class="tribute-lines">
@@ -556,6 +603,34 @@ function buildStepsForDay(dayNumber) {
           </div>
           <div class="tribute-rip">${NOVENA_DATA.placaHomenaje.cierre}</div>
           <div class="tribute-footer">${NOVENA_DATA.placaHomenaje.mensajeFinal}</div>
+        </div>
+
+        <!-- Mosaico Conmemorativo de Fotografías de Mami Olguita -->
+        <div class="photo-mosaic-section">
+          <div class="photo-mosaic-title">
+            <span>🌸</span>
+            <span>Galería Conmemorativa de Recuerdos</span>
+            <span>🌸</span>
+          </div>
+          <div class="photo-mosaic-subtitle">
+            Momentos inolvidables que perduran en el corazón de nuestra familia
+          </div>
+          <div class="photo-mosaic-grid">
+            ${Array.from({ length: 12 }).map((_, mIdx) => {
+              const pNum = mIdx + 1;
+              const pSrc = `/fotos-olguita/olguita-${String(pNum).padStart(2, '0')}.jpg`;
+              return `
+                <div class="mosaic-item" onclick="window.openLightbox(${pNum - 1})" title="Toca para ver foto ampliada">
+                  <img src="${pSrc}" alt="Mami Olguita recuerdo ${pNum}" loading="lazy">
+                </div>
+              `;
+            }).join('')}
+          </div>
+          <button class="btn-open-full-album" onclick="window.openPhotoAlbum()">
+            <span>🌸</span>
+            <span>Ver Álbum Conmemorativo Completo (46 Fotos)</span>
+            <span>📸</span>
+          </button>
         </div>
       `
     }
@@ -1732,6 +1807,152 @@ window.closeModal = function(id) {
   const el = document.getElementById(id);
   if (el) el.classList.remove('open');
 };
+
+// ========================================================
+// SISTEMA DE ÁLBUM CONMEMORATIVO Y LIGHTBOX (46 FOTOGRAFÍAS)
+// ========================================================
+let currentLightboxIndex = 0;
+let slideshowTimer = null;
+let isSlideshowActive = false;
+
+window.openPhotoAlbum = function() {
+  const container = document.getElementById('album-grid-container');
+  if (container && (!container.children || container.children.length === 0)) {
+    const fotos = (NOVENA_DATA.fotosOlguita && NOVENA_DATA.fotosOlguita.length) 
+      ? NOVENA_DATA.fotosOlguita 
+      : Array.from({ length: 46 }, (_, i) => ({
+          id: i + 1,
+          url: `/fotos-olguita/olguita-${String(i + 1).padStart(2, '0')}.jpg`,
+          titulo: `Mami Olguita • Recuerdo #${i + 1}`
+        }));
+
+    container.innerHTML = fotos.map((foto, idx) => `
+      <div class="album-grid-item" onclick="window.openLightbox(${idx})" title="${foto.titulo}">
+        <img src="${foto.url}" alt="${foto.titulo}" loading="lazy">
+        <span class="album-item-num">#${idx + 1}</span>
+      </div>
+    `).join('');
+  }
+  window.openModal('album-modal');
+};
+
+window.openLightbox = function(index) {
+  const total = (NOVENA_DATA.fotosOlguita && NOVENA_DATA.fotosOlguita.length) ? NOVENA_DATA.fotosOlguita.length : 46;
+  if (index < 0) index = total - 1;
+  if (index >= total) index = 0;
+  currentLightboxIndex = index;
+
+  const foto = NOVENA_DATA.fotosOlguita && NOVENA_DATA.fotosOlguita[currentLightboxIndex]
+    ? NOVENA_DATA.fotosOlguita[currentLightboxIndex]
+    : {
+        url: `/fotos-olguita/olguita-${String(currentLightboxIndex + 1).padStart(2, '0')}.jpg`,
+        titulo: `Mami Olguita • Recuerdo #${currentLightboxIndex + 1}`
+      };
+
+  const overlay = document.getElementById('lightbox-modal');
+  const imgEl = document.getElementById('lightbox-img');
+  const counterLabel = document.getElementById('lightbox-counter-label');
+  const captionText = document.getElementById('lightbox-caption-text');
+
+  if (imgEl && foto) {
+    imgEl.style.opacity = '0.4';
+    imgEl.src = foto.url;
+    imgEl.alt = foto.titulo;
+    imgEl.onload = () => { imgEl.style.opacity = '1'; };
+  }
+  if (counterLabel) {
+    counterLabel.textContent = `Foto ${currentLightboxIndex + 1} de ${total}`;
+  }
+  if (captionText && foto) {
+    captionText.textContent = foto.titulo;
+  }
+
+  if (overlay) {
+    overlay.classList.add('open');
+  }
+  replaceDomIcons();
+};
+
+window.openLightboxBySrc = function(src, customCaption) {
+  const cleanSrc = src.split('?')[0];
+  let foundIdx = -1;
+  if (NOVENA_DATA.fotosOlguita) {
+    foundIdx = NOVENA_DATA.fotosOlguita.findIndex(f => f.url === cleanSrc);
+  }
+  if (foundIdx === -1) {
+    const match = cleanSrc.match(/olguita-(\d+)\.jpg/);
+    if (match) foundIdx = parseInt(match[1], 10) - 1;
+  }
+  const targetIdx = foundIdx >= 0 ? foundIdx : 0;
+  window.openLightbox(targetIdx);
+  if (customCaption) {
+    const captionText = document.getElementById('lightbox-caption-text');
+    if (captionText) captionText.textContent = customCaption;
+  }
+};
+
+window.closeLightbox = function() {
+  const overlay = document.getElementById('lightbox-modal');
+  if (overlay) overlay.classList.remove('open');
+  if (isSlideshowActive) {
+    window.toggleSlideshow();
+  }
+};
+
+window.nextLightbox = function() {
+  window.openLightbox(currentLightboxIndex + 1);
+};
+
+window.prevLightbox = function() {
+  window.openLightbox(currentLightboxIndex - 1);
+};
+
+window.toggleSlideshow = function() {
+  isSlideshowActive = !isSlideshowActive;
+  const iconSpan = document.getElementById('slideshow-icon');
+  const labelSpan = document.getElementById('slideshow-label');
+  const lightIcon = document.getElementById('lightbox-slideshow-icon');
+
+  if (isSlideshowActive) {
+    if (iconSpan) iconSpan.textContent = '⏸️';
+    if (labelSpan) labelSpan.textContent = 'Pausar Pase';
+    if (lightIcon) lightIcon.textContent = '⏸️';
+
+    const overlay = document.getElementById('lightbox-modal');
+    if (!overlay || !overlay.classList.contains('open')) {
+      window.openLightbox(currentLightboxIndex);
+    }
+
+    if (slideshowTimer) clearInterval(slideshowTimer);
+    slideshowTimer = setInterval(() => {
+      window.nextLightbox();
+    }, 4500);
+  } else {
+    if (slideshowTimer) {
+      clearInterval(slideshowTimer);
+      slideshowTimer = null;
+    }
+    if (iconSpan) iconSpan.textContent = '▶️';
+    if (labelSpan) labelSpan.textContent = 'Pase de Diapositivas';
+    if (lightIcon) lightIcon.textContent = '▶️';
+  }
+};
+
+// Navegación con teclado (Flechas y Escape)
+document.addEventListener('keydown', (e) => {
+  const lightbox = document.getElementById('lightbox-modal');
+  if (lightbox && lightbox.classList.contains('open')) {
+    if (e.key === 'ArrowRight') {
+      window.nextLightbox();
+    } else if (e.key === 'ArrowLeft') {
+      window.prevLightbox();
+    } else if (e.key === 'Escape') {
+      window.closeLightbox();
+    }
+  } else if (e.key === 'Escape') {
+    window.closeModal('album-modal');
+  }
+});
 
 // Sincronización HTTP Dual-Channel Fallback
 async function syncFromHttpState() {

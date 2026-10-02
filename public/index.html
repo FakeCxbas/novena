@@ -12,19 +12,29 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=6.3">
+  <link rel="stylesheet" href="css/style.css?v=7.0">
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="role-familia">
   <!-- PANTALLA DE ENTRADA CON SELECCIÓN DE ROL CLARA -->
   <div class="welcome-gate-overlay" id="welcome-gate-overlay">
     <div class="welcome-gate-card">
-      <div class="welcome-candle">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C12 2 8 6.5 8 10C8 12.2 9.8 14 12 14C14.2 14 16 12.2 16 10C16 6.5 12 2 12 2Z" fill="#F59E0B"/>
-          <path d="M12 5C12 5 10 7.5 10 9.5C10 10.6 10.9 11.5 12 11.5C13.1 11.5 14 10.6 14 9.5C14 7.5 12 5 12 5Z" fill="#FEF5E7"/>
-          <rect x="7" y="14" width="10" height="8" rx="2" fill="#DFB15B"/>
-        </svg>
+      <!-- Hero Retrato Mami Olguita con Halo Fucsia -->
+      <div class="memorial-portrait-hero">
+        <div class="portrait-halo-wrapper">
+          <div class="portrait-halo-glow"></div>
+          <img src="/fotos-olguita/olguita-01.jpg" alt="Mami Olguita" class="portrait-halo-img">
+          <div class="portrait-candle-badge" title="Luz perpetua para Mami Olguita">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+              <path d="M12 2C12 2 8 6.5 8 10C8 12.2 9.8 14 12 14C14.2 14 16 12.2 16 10C16 6.5 12 2 12 2Z" fill="#FF2D9B"/>
+              <path d="M12 5C12 5 10 7.5 10 9.5C10 10.6 10.9 11.5 12 11.5C13.1 11.5 14 10.6 14 9.5C14 7.5 12 5 12 5Z" fill="#FEF5E7"/>
+              <rect x="7" y="14" width="10" height="8" rx="2" fill="#E0218A"/>
+            </svg>
+          </div>
+        </div>
+        <div class="fucsia-tribute-chip">
+          🌸 Su color favorito: Fucsia • En memoria
+        </div>
       </div>
 
       <h1 class="welcome-title">Mami Olguita</h1>
@@ -130,14 +140,13 @@
   <!-- BARRA SUPERIOR SLIM (~42px) -->
   <header class="top-nav">
     <div class="brand-section">
-      <div class="candle-icon" style="width: 20px; height: 20px;">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C12 2 8 6.5 8 10C8 12.2 9.8 14 12 14C14.2 14 16 12.2 16 10C16 6.5 12 2 12 2Z" fill="#F59E0B"/>
-          <path d="M12 5C12 5 10 7.5 10 9.5C10 10.6 10.9 11.5 12 11.5C13.1 11.5 14 10.6 14 9.5C14 7.5 12 5 12 5Z" fill="#FEF5E7"/>
-          <rect x="7" y="14" width="10" height="8" rx="2" fill="#DFB15B"/>
-        </svg>
+      <div class="header-avatar-ring" onclick="window.openPhotoAlbum()" title="Ver Álbum de Mami Olguita (46 fotos)">
+        <img src="/fotos-olguita/olguita-02.jpg" alt="Mami Olguita" class="header-avatar-img">
       </div>
-      <span class="brand-title">Mami Olguita</span>
+      <div class="brand-text-col">
+        <span class="brand-title">Mami Olguita</span>
+        <span class="brand-sub-badge">🌸 46 Recuerdos</span>
+      </div>
     </div>
 
     <!-- Indicador de Quién está Leyendo (Orador) -->
@@ -147,6 +156,13 @@
     </div>
 
     <div class="nav-right-controls">
+      <!-- Botón Álbum de Fotos de Mami Olguita -->
+      <button class="btn-header-album" id="btn-header-album" onclick="window.openPhotoAlbum()" title="Ver Álbum de Recuerdos (46 fotos)">
+        <span class="album-icon">📸</span>
+        <span>Álbum</span>
+        <span class="album-badge">46</span>
+      </button>
+
       <!-- Cambiar vista de cámaras -->
       <button class="btn-header-icon" id="btn-toggle-camera-layout" onclick="window.toggleCameraLayout()" title="Ver cámaras más grandes o compactas">
         <i data-icon="video" data-size="16"></i>
@@ -350,10 +366,67 @@
     </div>
   </div>
 
+  <!-- MODAL: ÁLBUM COMPLETO DE FOTOS DE MAMI OLGUITA (46 FOTOS) -->
+  <div class="modal-overlay" id="album-modal" onclick="if(event.target === this) window.closeModal('album-modal')">
+    <div class="album-modal-sheet">
+      <div class="album-modal-header">
+        <h3 class="album-modal-title">
+          <span>🌸</span>
+          <span>Recuerdos de Mami Olguita</span>
+        </h3>
+        <button class="btn-header-icon" onclick="window.closeModal('album-modal')"><i data-icon="x" data-size="16"></i></button>
+      </div>
+
+      <div class="album-actions-bar">
+        <button class="btn-slideshow-toggle" id="btn-slideshow-toggle" onclick="window.toggleSlideshow()">
+          <span id="slideshow-icon">▶️</span>
+          <span id="slideshow-label">Pase de Diapositivas</span>
+        </button>
+        <span class="album-counter-pill">46 fotografías conmemorativas</span>
+      </div>
+
+      <div class="album-photos-grid-scroll" id="album-grid-container">
+        <!-- Rellenado dinámicamente con las 46 fotos -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: LIGHTBOX PANTALLA COMPLETA -->
+  <div class="lightbox-overlay" id="lightbox-modal" onclick="if(event.target === this) window.closeLightbox()">
+    <div class="lightbox-container">
+      <div class="lightbox-top-bar">
+        <span class="lightbox-counter" id="lightbox-counter-label">Foto 1 de 46</span>
+        <div style="display: flex; gap: 0.4rem; align-items: center;">
+          <button class="btn-header-icon" onclick="window.toggleSlideshow()" title="Pase automático" style="background: rgba(224, 33, 138, 0.3); border-color: var(--fucsia-primary);">
+            <span id="lightbox-slideshow-icon">▶️</span>
+          </button>
+          <button class="btn-header-icon" onclick="window.closeLightbox()" title="Cerrar"><i data-icon="x" data-size="16"></i></button>
+        </div>
+      </div>
+
+      <div class="lightbox-stage">
+        <button class="lightbox-nav-btn prev" onclick="event.stopPropagation(); window.prevLightbox()" title="Foto anterior">
+          <i data-icon="chevron-left" data-size="22"></i>
+        </button>
+        
+        <img src="/fotos-olguita/olguita-01.jpg" id="lightbox-img" class="lightbox-img" alt="Foto Mami Olguita">
+
+        <button class="lightbox-nav-btn next" onclick="event.stopPropagation(); window.nextLightbox()" title="Siguiente foto">
+          <i data-icon="chevron-right" data-size="22"></i>
+        </button>
+      </div>
+
+      <div class="lightbox-caption-bar">
+        <p class="lightbox-caption-text" id="lightbox-caption-text">Mami Olguita • Recuerdo en familia</p>
+        <div class="lightbox-subcaption">Usa las flechas o desliza para explorar las fotos de Mami Olguita</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast de Notificaciones -->
   <div id="toast-container" class="toast-container"></div>
 
-  <script type="module" src="/js/icons.js?v=6.3"></script>
-  <script type="module" src="/js/app.js?v=6.3"></script>
+  <script type="module" src="/js/icons.js?v=7.0"></script>
+  <script type="module" src="/js/app.js?v=7.0"></script>
 </body>
 </html>
