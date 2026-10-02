@@ -23,9 +23,9 @@
   --danger-color: #ef4444;
   --danger-bg: rgba(239, 68, 68, 0.18);
   
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-title: 'Cinzel', serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-title: 'Cormorant Garamond', serif;
   
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -1254,12 +1254,12 @@ html, body {
 }
 
 .stopwatch-digits {
-  font-family: 'Cinzel', monospace;
+  font-family: var(--font-sans), monospace;
+  font-variant-numeric: tabular-nums;
   font-size: 1.85rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--gold-amber);
   letter-spacing: 0.05em;
-  text-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
 }
 
 .stopwatch-actions {

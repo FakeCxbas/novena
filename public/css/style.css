@@ -1,64 +1,63 @@
-/* style.css - Rediseño Conmemorativo con Color Fucsia Predominante (Color favorito de Mami Olguita) */
-/* 100% Optimizado para Teléfono Celular, Audio/Video y Roles Familiares */
+/* style.css — Novena Familiar por el Eterno Descanso de Mami Olguita */
+/* Diseño Editorial Conmemorativo: Sobrio, Cálido, Humano y Elegante */
 
 :root {
-  /* Paleta Conmemorativa: Ciruela Imperial y Fucsia Vibrante */
-  --bg-primary: #0e0410;
-  --bg-surface: #19091c;
-  --bg-surface-elevated: #260e2b;
-  --bg-surface-translucent: rgba(25, 9, 28, 0.94);
-  
-  /* Tonos Fucsia Predominantes (Color favorito de Mami Olguita) */
-  --fucsia-primary: #e0218a;
-  --fucsia-vibrant: #ff2d9b;
-  --fucsia-light: #ff75c3;
-  --fucsia-soft: rgba(224, 33, 138, 0.15);
-  --fucsia-deep: #9d174d;
-  --fucsia-dark: #630537;
-  --fucsia-glow: rgba(224, 33, 138, 0.45);
-  --fucsia-glow-strong: rgba(255, 45, 155, 0.65);
-  --fucsia-gradient: linear-gradient(135deg, #ff2d9b 0%, #e0218a 52%, #9d174d 100%);
-  --fucsia-gradient-hover: linear-gradient(135deg, #ff4da9 0%, #f02594 52%, #b31b59 100%);
-  --fucsia-gradient-card: linear-gradient(145deg, rgba(224, 33, 138, 0.16), rgba(157, 23, 77, 0.25));
-  
-  --border-subtle: rgba(224, 33, 138, 0.25);
-  --border-strong: rgba(224, 33, 138, 0.55);
-  --border-fucsia-bright: rgba(255, 45, 155, 0.85);
-  
-  --text-primary: #fff8fc;
-  --text-secondary: #ebd5e5;
-  --text-muted: #b095a8;
-  
-  /* Tonos Dorados Cálidos para velitas y textos sagrados */
-  --gold-primary: #f5c056;
-  --gold-light: #fff8ed;
-  --gold-amber: #f59e0b;
-  --gold-glow: rgba(245, 192, 86, 0.35);
-  
-  --color-guia: #7dd3fc;
-  --bg-guia-badge: rgba(56, 189, 248, 0.14);
-  --border-guia: rgba(125, 211, 252, 0.4);
-  
-  --color-todos: #fed7aa;
-  --bg-todos-badge: rgba(224, 33, 138, 0.22);
-  --border-todos: rgba(224, 33, 138, 0.65);
-  
+  /* Fondo nocturno sereno: tono obsidiana con matiz ciruela terciopelo */
+  --bg-primary: #120e14;
+  --bg-surface: #19131d;
+  --bg-surface-elevated: #221a27;
+  --bg-surface-translucent: rgba(22, 17, 25, 0.94);
+
+  /* Fucsia Conmemorativo (Color favorito de Mami Olguita): tono rosa terciopelo elegante */
+  --fucsia-primary: #c03374;
+  --fucsia-vibrant: #d64287;
+  --fucsia-light: #ea7caa;
+  --fucsia-soft: #f2a8c9;
+  --fucsia-deep: #781947;
+  --fucsia-tint: rgba(192, 51, 116, 0.08);
+  --fucsia-border: rgba(192, 51, 116, 0.28);
+  --fucsia-border-subtle: rgba(192, 51, 116, 0.15);
+
+  --fucsia-btn: #b02a66;
+  --fucsia-btn-hover: #c43576;
+
+  /* Acentos Dorados Cálidos (Luz de velas y versículos sacros) */
+  --gold-primary: #dfb15b;
+  --gold-light: #fbf7ee;
+  --gold-amber: #d99a36;
+  --gold-tint: rgba(223, 177, 91, 0.07);
+  --gold-border: rgba(223, 177, 91, 0.22);
+
+  /* Textos: Legibilidad superior y descanso visual para toda la familia */
+  --text-primary: #faf6f9;
+  --text-secondary: #d4c5d2;
+  --text-muted: #9f8d9b;
+
+  --color-guia: #dfb15b;
+  --bg-guia-badge: rgba(223, 177, 91, 0.12);
+  --border-guia: rgba(223, 177, 91, 0.35);
+
+  --color-todos: #ea7caa;
+  --bg-todos-badge: rgba(192, 51, 116, 0.14);
+  --border-todos: rgba(192, 51, 116, 0.45);
+
   --success-color: #22c55e;
   --warning-color: #f59e0b;
   --danger-color: #ef4444;
-  
-  --font-serif: 'Cinzel', Georgia, serif;
+
+  /* Tipografías: Cormorant Garamond (Editorial Sacro) + Lora (Cuerpo) + Plus Jakarta Sans (UI) */
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Lora', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  
+
   --font-scale: 1;
   --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-full: 9999px;
-  
-  --shadow-warm: 0 10px 30px -8px rgba(0, 0, 0, 0.85);
-  --shadow-fucsia: 0 4px 25px rgba(224, 33, 138, 0.35);
+
+  --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.65), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-warm: 0 14px 40px -10px rgba(0, 0, 0, 0.7);
 }
 
 * {
@@ -73,13 +72,13 @@ html, body {
   min-height: 100vh;
   background-color: var(--bg-primary);
   background-image: 
-    radial-gradient(ellipse at 50% 0%, rgba(224, 33, 138, 0.16) 0%, transparent 65%),
-    radial-gradient(circle at 100% 100%, rgba(157, 23, 77, 0.12) 0%, transparent 50%);
+    radial-gradient(ellipse at 50% 0%, rgba(192, 51, 116, 0.08) 0%, transparent 70%),
+    radial-gradient(circle at 100% 100%, rgba(120, 25, 71, 0.06) 0%, transparent 60%);
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-body);
-  font-size: calc(1.02rem * var(--font-scale));
-  line-height: 1.7;
+  font-size: calc(1.04rem * var(--font-scale));
+  line-height: 1.8;
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
 }
@@ -101,31 +100,31 @@ body {
 }
 
 /* ========================================================
-   OVERLAY DE BIENVENIDA Y ELECCIÓN DE ROL
+   OVERLAY DE BIENVENIDA Y ACCESO FAMILIAR
    ======================================================== */
 .welcome-gate-overlay {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 50% 30%, #2b0d2f, #0d030f);
+  background: radial-gradient(circle at 50% 35%, #1d1421, #0c090e);
   z-index: 300;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  padding: 1.2rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   overflow-y: auto;
 }
 
 .welcome-gate-card {
   background: var(--bg-surface);
-  border: 1.5px solid var(--border-strong);
+  border: 1px solid var(--fucsia-border-subtle);
   border-radius: var(--radius-lg);
-  padding: 1.6rem 1.3rem;
-  max-width: 420px;
+  padding: 2rem 1.6rem;
+  max-width: 440px;
   width: 100%;
   text-align: center;
-  box-shadow: var(--shadow-warm), 0 0 35px rgba(224, 33, 138, 0.25);
+  box-shadow: var(--shadow-warm);
   position: relative;
   overflow: hidden;
 }
@@ -133,39 +132,31 @@ body {
 .welcome-gate-card::before {
   content: '';
   position: absolute;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 220px;
-  height: 120px;
-  background: radial-gradient(circle, rgba(255, 45, 155, 0.25) 0%, transparent 70%);
-  pointer-events: none;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--fucsia-primary), transparent);
 }
 
-/* Hero Retrato Mami Olguita */
+/* Retrato Conmemorativo Mami Olguita */
 .memorial-portrait-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 0.9rem;
+  margin-bottom: 1.1rem;
   position: relative;
 }
 
 .portrait-halo-wrapper {
   position: relative;
-  width: 104px;
-  height: 104px;
-  margin: 0 auto 0.65rem auto;
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 0.75rem auto;
 }
 
 .portrait-halo-glow {
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  background: var(--fucsia-gradient);
-  opacity: 0.75;
-  filter: blur(8px);
-  animation: haloPulse 3.2s infinite ease-in-out;
+  display: none;
 }
 
 .portrait-halo-img {
@@ -174,18 +165,18 @@ body {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #ff75c3;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+  border: 2.5px solid var(--gold-primary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   z-index: 2;
   display: block;
 }
 
 .portrait-candle-badge {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
-  background: #19091c;
-  border: 1.5px solid var(--fucsia-primary);
+  bottom: 0;
+  right: 0;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--gold-primary);
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -193,111 +184,99 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 3;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  animation: flicker 2.5s infinite ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
 }
 
-.fucsia-tribute-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(224, 33, 138, 0.18);
-  border: 1px solid rgba(255, 45, 155, 0.45);
-  color: #ff9fd3;
+.memorial-dedication-tag {
+  display: inline-block;
   font-family: var(--font-sans);
-  font-size: 0.74rem;
-  font-weight: 700;
-  padding: 0.25rem 0.8rem;
-  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  box-shadow: 0 2px 10px rgba(224, 33, 138, 0.2);
-}
-
-@keyframes haloPulse {
-  0%, 100% { opacity: 0.6; transform: scale(0.98); }
-  50% { opacity: 0.95; transform: scale(1.06); filter: blur(10px); }
-}
-
-@keyframes flicker {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(255, 45, 155, 0.6)); }
-  50% { transform: scale(1.08) rotate(1deg); filter: drop-shadow(0 0 14px rgba(255, 112, 190, 0.9)); }
+  color: var(--fucsia-light);
+  background: rgba(192, 51, 116, 0.08);
+  border: 1px solid var(--fucsia-border-subtle);
+  padding: 0.3rem 0.9rem;
+  border-radius: var(--radius-full);
 }
 
 .welcome-title {
   font-family: var(--font-serif);
-  font-size: 1.55rem;
-  font-weight: 800;
-  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
   letter-spacing: 0.02em;
-  text-shadow: 0 0 20px var(--fucsia-glow);
-  margin-bottom: 0.15rem;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
 }
 
 .welcome-subtitle {
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: 1.1rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--gold-primary);
+  line-height: 1.4;
+  margin-bottom: 1.3rem;
 }
 
 .input-label-gold {
   font-family: var(--font-sans);
   font-size: 0.8rem;
-  color: var(--fucsia-light);
-  font-weight: 700;
+  color: var(--text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .welcome-name-field {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.8rem 1rem;
   background: var(--bg-surface-elevated);
-  border: 1.5px solid var(--border-subtle);
+  border: 1px solid var(--fucsia-border-subtle);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 0.95rem;
   text-align: center;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.9rem;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .welcome-name-field:focus {
-  border-color: var(--fucsia-vibrant);
-  box-shadow: 0 0 12px var(--fucsia-glow);
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 2px rgba(223, 177, 91, 0.2);
 }
 
 /* Tarjetas de Selección de Rol */
 .entry-roles-container {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  margin-bottom: 1.1rem;
+  gap: 0.5rem;
+  margin-bottom: 1.3rem;
   text-align: left;
 }
 
 .entry-role-card {
   display: flex;
   align-items: flex-start;
-  gap: 0.6rem;
-  padding: 0.65rem 0.8rem;
+  gap: 0.65rem;
+  padding: 0.75rem 0.9rem;
   border-radius: var(--radius-md);
   background: var(--bg-surface-elevated);
-  border: 1.5px solid var(--border-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .entry-role-card.active {
   border-color: var(--fucsia-primary);
-  background: rgba(224, 33, 138, 0.15);
-  box-shadow: 0 0 14px var(--fucsia-glow);
+  background: var(--fucsia-tint);
 }
 
 .entry-role-card input[type="radio"] {
   margin-top: 0.2rem;
-  accent-color: var(--fucsia-vibrant);
+  accent-color: var(--fucsia-primary);
 }
 
 .entry-role-content {
@@ -306,10 +285,13 @@ body {
 
 .entry-role-title {
   font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 0.88rem;
+  font-weight: 600;
   color: #fff;
   margin-bottom: 0.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .entry-role-card.active .entry-role-title {
@@ -318,35 +300,35 @@ body {
 
 .entry-role-desc {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
-  line-height: 1.35;
+  line-height: 1.4;
 }
 
 .btn-enter-room {
   width: 100%;
-  padding: 0.92rem;
-  background: var(--fucsia-gradient);
+  padding: 0.95rem 1.2rem;
+  background: var(--fucsia-btn);
   color: #ffffff;
   font-family: var(--font-sans);
-  font-size: 1.02rem;
-  font-weight: 800;
-  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-md);
   cursor: pointer;
-  box-shadow: 0 4px 20px var(--fucsia-glow-strong);
+  box-shadow: 0 4px 16px rgba(176, 42, 102, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
   letter-spacing: 0.01em;
 }
 
 .btn-enter-room:hover, .btn-enter-room:active {
+  background: var(--fucsia-btn-hover);
   transform: translateY(-1px);
-  background: var(--fucsia-gradient-hover);
-  box-shadow: 0 6px 25px rgba(255, 45, 155, 0.75);
+  box-shadow: 0 6px 20px rgba(176, 42, 102, 0.45);
 }
 
 /* ========================================================
@@ -370,7 +352,7 @@ body {
 .brand-section {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.65rem;
 }
 
 .header-avatar-ring {
@@ -384,7 +366,7 @@ body {
 }
 
 .header-avatar-ring:hover {
-  transform: scale(1.08);
+  transform: scale(1.04);
 }
 
 .header-avatar-img {
@@ -392,102 +374,100 @@ body {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.8px solid var(--fucsia-primary);
-  box-shadow: 0 0 10px var(--fucsia-glow);
+  border: 1.5px solid var(--gold-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   display: block;
 }
 
 .brand-text-col {
   display: flex;
   flex-direction: column;
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
 .brand-title {
   font-family: var(--font-serif);
-  font-size: 0.88rem;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: 0.02em;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
 }
 
 .brand-sub-badge {
   font-family: var(--font-sans);
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: var(--fucsia-light);
-  letter-spacing: 0.02em;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--gold-primary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .speaker-pill-status {
-  background: rgba(224, 33, 138, 0.16);
-  border: 1px solid rgba(255, 45, 155, 0.45);
+  background: rgba(223, 177, 91, 0.08);
+  border: 1px solid var(--gold-border);
   border-radius: var(--radius-full);
-  padding: 0.2rem 0.65rem;
+  padding: 0.22rem 0.65rem;
   font-family: var(--font-sans);
   font-size: 0.72rem;
-  font-weight: 700;
-  color: #fff;
+  font-weight: 600;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  max-width: 155px;
+  gap: 0.4rem;
+  max-width: 160px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  box-shadow: 0 0 8px rgba(224, 33, 138, 0.25);
 }
 
 .live-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: var(--fucsia-vibrant);
-  box-shadow: 0 0 8px var(--fucsia-vibrant);
-  animation: pulse 1.8s infinite;
+  background-color: var(--gold-amber);
+  animation: gentlePulse 2.4s infinite ease-in-out;
   flex-shrink: 0;
 }
 
-@keyframes pulse {
+@keyframes gentlePulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 0.35; transform: scale(0.9); }
 }
 
 .nav-right-controls {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.45rem;
 }
 
 .btn-header-album {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  background: linear-gradient(135deg, rgba(224, 33, 138, 0.25), rgba(157, 23, 77, 0.4));
-  border: 1.5px solid var(--fucsia-primary);
-  color: #ffffff;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--fucsia-border);
+  color: var(--fucsia-soft);
   border-radius: var(--radius-full);
-  padding: 0.25rem 0.6rem;
+  padding: 0.25rem 0.65rem;
   font-family: var(--font-sans);
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(224, 33, 138, 0.3);
   transition: all 0.2s ease;
 }
 
 .btn-header-album:hover, .btn-header-album:active {
-  transform: scale(1.05);
-  background: var(--fucsia-gradient);
-  box-shadow: 0 0 14px var(--fucsia-glow-strong);
+  background: var(--fucsia-tint);
+  border-color: var(--fucsia-light);
+  color: #ffffff;
 }
 
 .album-badge {
-  background: #ffffff;
-  color: var(--fucsia-deep);
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 1px 5px;
+  background: rgba(192, 51, 116, 0.25);
+  color: var(--fucsia-soft);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 1px 6px;
   border-radius: var(--radius-full);
 }
 
@@ -507,9 +487,8 @@ body {
 }
 
 .btn-header-icon:hover {
-  border-color: var(--fucsia-primary);
-  color: #fff;
-  box-shadow: 0 0 8px var(--fucsia-glow);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
 }
 
 /* ========================================================
@@ -663,139 +642,104 @@ body {
 }
 
 /* ========================================================
-   CONTENIDO PRINCIPAL: LECTURA DE LA NOVENA (85% Pantalla)
+   CONTENIDO PRINCIPAL: LECTURA DE LA NOVENA
    ======================================================== */
 .main-prayer-container {
   flex: 1;
   width: 100%;
   max-width: 680px;
   margin: 0 auto;
-  padding: 0.5rem 0.8rem 4.8rem 0.8rem;
+  padding: 0.6rem 0.9rem 5rem 0.9rem;
 }
 
 .prayer-card {
   background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--fucsia-border-subtle);
   border-radius: var(--radius-lg);
-  padding: 1.2rem 1rem;
-  box-shadow: var(--shadow-warm);
-}
-
-/* Banner de orientación según el rol (ocultado por solicitud) */
-.role-cue-banner {
-  display: none !important;
-}
-
-.role-cue-banner.orador-cue {
-  background: rgba(223, 177, 91, 0.18);
-  border: 1px solid var(--gold-primary);
-  color: var(--gold-light);
-  font-weight: 700;
-}
-
-.role-cue-banner.familia-cue {
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid var(--border-guia);
-  color: var(--color-guia);
-}
-
-.role-cue-banner.anfitrion-cue {
-  background: rgba(230, 154, 40, 0.15);
-  border: 1px solid var(--gold-amber);
-  color: var(--gold-light);
-  font-weight: 700;
+  padding: 1.6rem 1.3rem;
+  box-shadow: var(--shadow-card);
 }
 
 .card-top-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.35rem;
-  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .day-badge-text {
   font-family: var(--font-sans);
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--fucsia-light);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.day-badge-text::before {
-  content: '🌸';
-  font-size: 0.8rem;
 }
 
 .section-title {
   font-family: var(--font-serif);
-  font-size: 1.3rem;
-  font-weight: 800;
+  font-size: 1.7rem;
+  font-weight: 600;
   color: #ffffff;
-  margin-bottom: 0.95rem;
-  line-height: 1.4;
-  text-shadow: 0 0 16px rgba(224, 33, 138, 0.3);
+  margin-bottom: 1.1rem;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
 }
 
-/* Cita Bíblica */
+/* Cita Bíblica (Estilo Editorial Clásico) */
 .bible-quote-box {
-  background: linear-gradient(135deg, rgba(224, 33, 138, 0.12), rgba(157, 23, 77, 0.08));
-  border-left: 3.5px solid var(--fucsia-primary);
+  background: rgba(223, 177, 91, 0.05);
+  border-left: 2.5px solid var(--gold-primary);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 0.85rem 1rem;
-  margin-bottom: 1rem;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1.05rem;
+  font-size: 1.22rem;
   color: var(--gold-light);
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 .bible-ref {
   display: block;
   font-style: normal;
   font-family: var(--font-sans);
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--gold-amber);
-  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--gold-primary);
+  margin-top: 0.5rem;
   text-align: right;
 }
 
-/* Bloques de Diálogo (Guía vs Todos) */
+/* ========================================================
+   DIÁLOGOS LITÚRGICOS: GUÍA Y TODOS (Claros y Espaciosos)
+   ======================================================== */
 .dialogo-block {
-  margin-bottom: 1rem;
+  margin-bottom: 1.3rem;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.65rem;
 }
 
-.guia-part {
-  background: rgba(255, 255, 255, 0.03);
-  border-left: 3px solid var(--gold-primary);
+/* Guía */
+.dialogo-block .guia-part, .guia-part {
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2.5px solid var(--gold-primary);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 0.6rem 0.85rem;
-}
-
-.todos-part {
-  background: rgba(224, 33, 138, 0.16);
-  border: 1px solid rgba(224, 33, 138, 0.4);
-  border-left: 3.5px solid var(--fucsia-primary);
-  border-radius: var(--radius-sm);
-  padding: 0.75rem 0.9rem;
+  padding: 0.85rem 1.05rem;
 }
 
 .voice-badge {
   display: block;
   font-family: var(--font-sans);
-  font-size: 0.74rem;
-  font-weight: 800;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 
 .voice-badge.guia {
@@ -803,165 +747,143 @@ body {
 }
 
 .voice-badge.todos {
-  color: #ff9fd3;
+  color: var(--fucsia-light);
 }
 
 .voice-text {
-  font-size: 1.05rem;
-  line-height: 1.75;
+  font-family: var(--font-body);
+  font-size: 1.08rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+}
+
+/* Todos responden a coro (Caja distinguida en tono rosa suave) */
+.dialogo-block .todos-part, .todos-part {
+  background: var(--fucsia-tint);
+  border: 1px solid var(--fucsia-border-subtle);
+  border-left: 3px solid var(--fucsia-primary);
+  border-radius: var(--radius-sm);
+  padding: 0.95rem 1.15rem;
 }
 
 .todos-part .voice-text {
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 500;
+  color: #fff8fc;
 }
 
-/* ========================================================
-   DIÁLOGOS CLAROS Y LEGIBLES PARA TODAS LAS EDADES
-   - Guía / Orador: Muestra la primera parte con claridad para seguir la lectura.
-   - Todos responden: Muestra la respuesta en caja fucsia destacada con letra grande y nítida.
-   ======================================================== */
-
-.dialogo-block {
-  margin-bottom: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-/* Parte que lee el Orador (Visible para TODOS) */
-.dialogo-block .guia-part {
-  display: block !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-  border-left: 4px solid var(--gold-primary) !important;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 0.85rem 1.1rem !important;
-  box-shadow: none !important;
-}
-
-.dialogo-block .guia-part .voice-badge.guia {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  color: #fde047 !important;
-  font-size: 0.85rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  margin-bottom: 0.3rem;
-}
-
-.dialogo-block .guia-part .voice-text {
-  font-size: 1.18rem !important;
-  line-height: 1.8 !important;
-  color: #f3f4f6 !important;
-  font-weight: 500 !important;
-}
-
-/* Parte que responde la Familia a Coro (Destacada en fucsia amoroso) */
-.dialogo-block .todos-part {
-  display: block !important;
-  background: rgba(224, 33, 138, 0.18) !important;
-  border: 1.5px solid rgba(224, 33, 138, 0.45) !important;
-  border-left: 5px solid var(--fucsia-primary) !important;
-  border-radius: var(--radius-sm);
-  padding: 0.95rem 1.15rem !important;
-  box-shadow: 0 4px 18px rgba(224, 33, 138, 0.2);
-}
-
-.dialogo-block .todos-part .voice-badge.todos {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  color: #ff9fd3 !important;
-  font-size: 0.88rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  margin-bottom: 0.35rem;
-}
-
-.dialogo-block .todos-part .voice-text {
-  font-size: 1.22rem !important;
-  font-weight: 700 !important;
-  color: #ffffff !important;
-  line-height: 1.8 !important;
-}
-
-/* Si el usuario actual es el Orador designado */
+/* Orador designado */
 body.is-speaker .dialogo-block .guia-part {
-  background: rgba(224, 33, 138, 0.22) !important;
-  border: 1.5px solid var(--fucsia-primary) !important;
-  border-left: 5px solid var(--fucsia-vibrant) !important;
-  box-shadow: 0 4px 18px rgba(224, 33, 138, 0.3) !important;
+  background: rgba(223, 177, 91, 0.08);
+  border-left-color: var(--gold-amber);
 }
 
-/* Ocultar botones de conteo de Ave Marías a personas que solo son oyentes */
-body:not(.is-speaker):not(.is-host) .beads-control-btns {
-  display: none !important;
-}
-
-/* Subtítulo claro de sección de rezo */
+/* Subtítulo litúrgico de sección */
 .prayer-subheading {
   font-family: var(--font-serif);
-  font-size: 1.22rem;
+  font-size: 1.35rem;
   color: #ffffff;
-  margin: 1.4rem 0 0.65rem 0;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid rgba(224, 33, 138, 0.28);
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-weight: 700;
+  margin: 1.4rem 0 0.75rem 0;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-weight: 600;
   letter-spacing: 0.01em;
 }
 
-/* Recuadro digno de meditación por Mami Olguita */
+/* Meditación */
 .meditacion-box {
-  background: rgba(224, 33, 138, 0.1);
-  border-left: 4px solid var(--fucsia-primary);
+  background: rgba(192, 51, 116, 0.06);
+  border-left: 2.5px solid var(--fucsia-primary);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   padding: 0.95rem 1.15rem;
   margin-bottom: 1.25rem;
 }
 
 .meditacion-box .meditacion-title {
-  font-size: 0.85rem;
-  font-weight: 800;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 700;
   color: var(--fucsia-light);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
   margin-bottom: 0.35rem;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
 }
 
 .meditacion-box .meditacion-text {
-  font-size: 1.16rem;
+  font-family: var(--font-serif);
+  font-size: 1.18rem;
   color: #fff;
   font-style: italic;
   margin: 0;
   line-height: 1.7;
 }
 
-/* Rosario Contador de 10 Ave Marías */
+/* Fotografía y Chip de Recuerdo en Misterios */
+.mystery-memory-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--fucsia-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mystery-memory-chip:hover {
+  background: var(--fucsia-tint);
+  border-color: var(--fucsia-border);
+}
+
+.mystery-chip-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--fucsia-primary);
+  flex-shrink: 0;
+}
+
+.mystery-chip-label {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fucsia-light);
+  margin-bottom: 0.15rem;
+}
+
+.mystery-chip-quote {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+/* Rosario Contador de Ave Marías */
 .rosario-counter-card {
   background: var(--bg-surface-elevated);
-  border: 1.5px solid var(--border-subtle);
+  border: 1px solid var(--fucsia-border-subtle);
   border-radius: var(--radius-md);
-  padding: 0.95rem 1rem;
-  margin: 1rem 0 1.2rem 0;
+  padding: 1rem 1.1rem;
+  margin: 1rem 0 1.25rem 0;
   text-align: center;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 16px rgba(224, 33, 138, 0.15);
 }
 
 .rosario-counter-header {
   font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
   margin-bottom: 0.75rem;
+}
+
+.rosario-counter-header strong, .rosario-counter-header span {
+  color: var(--gold-primary);
 }
 
 .beads-row {
@@ -976,15 +898,15 @@ body:not(.is-speaker):not(.is-host) .beads-control-btns {
   width: 32px;
   height: 32px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1.5px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-sans);
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: #d1d5db;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -992,15 +914,36 @@ body:not(.is-speaker):not(.is-host) .beads-control-btns {
 .bead-item.completed {
   background: var(--gold-primary);
   border-color: var(--gold-primary);
-  color: #16110a;
+  color: #120e14;
 }
 
 .bead-item.active {
-  background: var(--fucsia-vibrant);
-  border-color: #fff;
+  background: var(--fucsia-primary);
+  border-color: var(--fucsia-light);
   color: #fff;
-  transform: scale(1.22);
-  box-shadow: 0 0 16px var(--fucsia-glow-strong);
+  transform: scale(1.15);
+}
+
+/* Ocultar botones de conteo de Ave Marías a personas que solo son oyentes */
+body:not(.is-speaker):not(.is-host) .beads-control-btns {
+  display: none !important;
+}
+
+.memorial-dedication-title {
+  font-family: var(--font-serif);
+  font-size: 2.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.2rem;
+}
+
+.memorial-dedication-jaculatoria {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--gold-primary);
+  line-height: 1.5;
 }
 
 /* ========================================================
@@ -1119,37 +1062,51 @@ body.is-host .host-nav-controls {
 }
 
 .btn-host-step.next {
-  background: var(--fucsia-gradient);
+  background: var(--fucsia-btn);
   color: #ffffff;
   flex: 1;
   justify-content: center;
-  box-shadow: 0 4px 14px var(--fucsia-glow);
+  box-shadow: 0 4px 14px rgba(176, 42, 102, 0.35);
+  transition: all 0.2s ease;
 }
 
 .btn-host-step.next:hover {
-  background: var(--fucsia-gradient-hover);
+  background: var(--fucsia-btn-hover);
+  transform: translateY(-1px);
 }
 
 .btn-host-step.prev {
   background: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.btn-host-step.prev:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
 }
 
 .btn-host-logistics {
   background: var(--bg-surface-elevated);
-  border: 1.5px solid var(--fucsia-primary);
+  border: 1px solid var(--fucsia-border);
   color: var(--fucsia-light);
   padding: 0.75rem 0.9rem;
   border-radius: var(--radius-md);
   font-family: var(--font-sans);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.4rem;
   cursor: pointer;
   flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.btn-host-logistics:hover {
+  background: var(--fucsia-tint);
+  border-color: var(--fucsia-light);
 }
 
 /* ========================================================
@@ -1436,13 +1393,13 @@ body.is-host .host-nav-controls {
 
 /* Placa Final Homenaje Conmemorativa (Fucsia & Oro Sagrado) */
 .tribute-box {
-  background: linear-gradient(145deg, #240c29, #130416);
-  border: 2px solid var(--fucsia-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--gold-border);
   border-radius: var(--radius-lg);
-  padding: 1.6rem 1.1rem;
+  padding: 1.8rem 1.3rem;
   text-align: center;
-  box-shadow: 0 0 35px var(--fucsia-glow), 0 8px 30px rgba(0, 0, 0, 0.6);
-  margin-top: 1.2rem;
+  box-shadow: var(--shadow-warm);
+  margin-top: 1.4rem;
   position: relative;
   overflow: hidden;
 }
@@ -1450,47 +1407,44 @@ body.is-host .host-nav-controls {
 .tribute-box::before {
   content: '';
   position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 180px;
-  height: 90px;
-  background: radial-gradient(circle, rgba(255, 45, 155, 0.3) 0%, transparent 70%);
-  pointer-events: none;
+  top: 0;
+  left: 25%;
+  right: 25%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
 }
 
 .tribute-name {
   font-family: var(--font-serif);
-  font-size: 1.65rem;
-  font-weight: 800;
-  color: #ffffff;
-  text-shadow: 0 0 15px var(--fucsia-glow);
+  font-size: 1.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
   margin-bottom: 0.6rem;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 
 .tribute-lines {
   font-family: var(--font-body);
-  font-size: 1.08rem;
+  font-size: 1.05rem;
   font-style: italic;
-  color: var(--text-primary);
-  line-height: 1.9;
+  color: var(--text-secondary);
+  line-height: 1.85;
   margin-bottom: 0.85rem;
 }
 
 .tribute-rip {
   font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--fucsia-light);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gold-primary);
   margin-bottom: 0.5rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
 
 .tribute-footer {
   font-family: var(--font-sans);
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -1504,17 +1458,17 @@ body.is-host .host-nav-controls {
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--bg-surface-elevated);
-  border: 1.5px solid var(--border-strong);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(224, 33, 138, 0.2);
-  margin: 1.1rem 0;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+  margin: 1.2rem 0;
   cursor: pointer;
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .prayer-photo-card:hover, .prayer-photo-card:active {
   transform: translateY(-2px);
-  border-color: var(--fucsia-primary);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 25px var(--fucsia-glow-strong);
+  border-color: var(--gold-primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
 .prayer-photo-img-wrap {
@@ -1591,27 +1545,27 @@ body.is-host .host-nav-controls {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: linear-gradient(135deg, rgba(224, 33, 138, 0.14), rgba(38, 14, 43, 0.7));
-  border: 1.5px solid rgba(224, 33, 138, 0.35);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 0.55rem 0.75rem;
+  padding: 0.55rem 0.8rem;
   margin-bottom: 0.95rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .mystery-memory-chip:hover {
-  border-color: var(--fucsia-primary);
-  box-shadow: 0 0 14px var(--fucsia-glow);
+  border-color: var(--fucsia-border);
+  background: var(--fucsia-tint);
   transform: translateY(-1px);
 }
 
 .mystery-chip-thumb {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
   object-fit: cover;
-  border: 1.5px solid var(--fucsia-primary);
+  border: 1px solid var(--gold-primary);
   flex-shrink: 0;
 }
 
@@ -1622,18 +1576,18 @@ body.is-host .host-nav-controls {
 
 .mystery-chip-label {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: var(--fucsia-light);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--gold-primary);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
   margin-bottom: 0.15rem;
 }
 
 .mystery-chip-quote {
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--text-primary);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
   font-style: italic;
   white-space: nowrap;
   overflow: hidden;
@@ -1644,23 +1598,22 @@ body.is-host .host-nav-controls {
    MOSAICO CONMEMORATIVO DE 12 FOTOS (PASO FINAL)
    ======================================================== */
 .photo-mosaic-section {
-  margin: 1.6rem 0 1.2rem 0;
-  padding-top: 1.2rem;
+  margin: 1.8rem 0 1.2rem 0;
+  padding-top: 1.4rem;
   border-top: 1px solid var(--border-subtle);
 }
 
 .photo-mosaic-title {
   font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #ffffff;
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: var(--text-primary);
   text-align: center;
   margin-bottom: 0.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  text-shadow: 0 0 14px var(--fucsia-glow);
+  gap: 0.5rem;
 }
 
 .photo-mosaic-subtitle {
@@ -1668,38 +1621,38 @@ body.is-host .host-nav-controls {
   font-size: 0.82rem;
   color: var(--text-secondary);
   text-align: center;
-  margin-bottom: 0.95rem;
+  margin-bottom: 1.1rem;
 }
 
 .photo-mosaic-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.45rem;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
 }
 
 @media (min-width: 550px) {
   .photo-mosaic-grid {
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.6rem;
+    gap: 0.65rem;
   }
 }
 
 .mosaic-item {
   position: relative;
   aspect-ratio: 1;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  border: 1.5px solid rgba(224, 33, 138, 0.35);
-  background: #110413;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
   cursor: pointer;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .mosaic-item:hover, .mosaic-item:active {
-  transform: scale(1.05);
-  border-color: var(--fucsia-vibrant);
-  box-shadow: 0 0 14px var(--fucsia-glow);
+  transform: translateY(-2px);
+  border-color: var(--gold-primary);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
   z-index: 2;
 }
 
@@ -1712,16 +1665,15 @@ body.is-host .host-nav-controls {
 
 .btn-open-full-album {
   width: 100%;
-  padding: 0.9rem 1.1rem;
-  background: var(--fucsia-gradient);
-  color: #ffffff;
-  border: none;
+  padding: 0.85rem 1.1rem;
+  background: var(--bg-surface-elevated);
+  color: var(--fucsia-soft);
+  border: 1px solid var(--fucsia-border);
   border-radius: var(--radius-md);
   font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 800;
+  font-size: 0.92rem;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 20px var(--fucsia-glow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1730,9 +1682,10 @@ body.is-host .host-nav-controls {
 }
 
 .btn-open-full-album:hover, .btn-open-full-album:active {
-  transform: translateY(-2px);
-  background: var(--fucsia-gradient-hover);
-  box-shadow: 0 6px 25px var(--fucsia-glow-strong);
+  background: var(--fucsia-tint);
+  border-color: var(--fucsia-light);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 /* ========================================================
@@ -1740,40 +1693,40 @@ body.is-host .host-nav-controls {
    ======================================================== */
 .album-modal-sheet {
   background: var(--bg-surface);
-  border: 2px solid var(--fucsia-primary);
+  border: 1px solid var(--gold-border);
   border-radius: var(--radius-lg);
   max-width: 680px;
   width: 95%;
   max-height: 88vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 35px var(--fucsia-glow);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
   overflow: hidden;
   position: relative;
 }
 
 .album-modal-header {
   padding: 0.9rem 1.1rem;
-  border-bottom: 1.5px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, rgba(224, 33, 138, 0.2), rgba(26, 10, 29, 0.95));
+  background: var(--bg-surface-elevated);
 }
 
 .album-modal-title {
   font-family: var(--font-serif);
-  font-size: 1.15rem;
-  color: #ffffff;
+  font-size: 1.25rem;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  font-weight: 700;
+  gap: 0.5rem;
+  font-weight: 600;
 }
 
 .album-actions-bar {
   padding: 0.65rem 1rem;
-  background: var(--bg-surface-elevated);
+  background: var(--bg-surface);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1786,33 +1739,33 @@ body.is-host .host-nav-controls {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background: var(--fucsia-gradient);
+  background: var(--fucsia-btn);
   color: #ffffff;
   border: none;
   border-radius: var(--radius-full);
-  padding: 0.35rem 0.9rem;
+  padding: 0.35rem 0.85rem;
   font-family: var(--font-sans);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 10px var(--fucsia-glow);
+  box-shadow: 0 2px 8px rgba(176, 42, 102, 0.3);
   transition: all 0.2s ease;
 }
 
 .btn-slideshow-toggle:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 15px var(--fucsia-glow-strong);
+  background: var(--fucsia-btn-hover);
+  transform: translateY(-1px);
 }
 
 .album-counter-pill {
   font-family: var(--font-sans);
   font-size: 0.78rem;
-  color: var(--fucsia-light);
-  font-weight: 700;
-  background: rgba(224, 33, 138, 0.15);
-  padding: 0.25rem 0.6rem;
+  color: var(--gold-primary);
+  font-weight: 600;
+  background: rgba(223, 177, 91, 0.08);
+  padding: 0.25rem 0.65rem;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(224, 33, 138, 0.35);
+  border: 1px solid var(--gold-border);
 }
 
 .album-photos-grid-scroll {
@@ -1839,18 +1792,18 @@ body.is-host .host-nav-controls {
 .album-grid-item {
   position: relative;
   aspect-ratio: 1;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  border: 1.5px solid rgba(224, 33, 138, 0.3);
+  border: 1px solid var(--border-subtle);
   background: #000000;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .album-grid-item:hover, .album-grid-item:active {
-  transform: scale(1.04);
-  border-color: var(--fucsia-vibrant);
-  box-shadow: 0 0 14px var(--fucsia-glow);
+  transform: translateY(-2px);
+  border-color: var(--gold-primary);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
 }
 
 .album-grid-item img {
@@ -1864,11 +1817,11 @@ body.is-host .host-nav-controls {
   position: absolute;
   bottom: 4px;
   right: 4px;
-  background: rgba(14, 4, 16, 0.85);
-  color: #ffffff;
+  background: rgba(14, 10, 16, 0.85);
+  color: var(--gold-light);
   font-family: var(--font-sans);
   font-size: 0.65rem;
-  font-weight: 800;
+  font-weight: 600;
   padding: 1px 6px;
   border-radius: 4px;
   border: 1px solid rgba(224, 33, 138, 0.4);
@@ -1939,8 +1892,8 @@ body.is-host .host-nav-controls {
   max-height: 70vh;
   object-fit: contain;
   border-radius: var(--radius-md);
-  border: 2px solid var(--fucsia-primary);
-  box-shadow: 0 0 40px var(--fucsia-glow-strong);
+  border: 1.5px solid var(--gold-primary);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9);
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
@@ -1948,9 +1901,9 @@ body.is-host .host-nav-controls {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(25, 9, 28, 0.88);
-  border: 1.5px solid var(--fucsia-primary);
-  color: #ffffff;
+  background: rgba(22, 16, 25, 0.9);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -1958,14 +1911,16 @@ body.is-host .host-nav-controls {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
   transition: all 0.2s ease;
   z-index: 10;
 }
 
 .lightbox-nav-btn:hover {
-  background: var(--fucsia-gradient);
-  transform: translateY(-50%) scale(1.1);
+  background: var(--bg-surface-elevated);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+  transform: translateY(-50%) scale(1.05);
 }
 
 .lightbox-nav-btn.prev {
@@ -2009,20 +1964,20 @@ body.is-host .host-nav-controls {
   position: fixed;
   inset: 0;
   z-index: 2500;
-  background: radial-gradient(circle at 50% 50%, #1e0622, #08020a);
+  background: radial-gradient(circle at 50% 40%, #16101c, #070509);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  padding: 1rem;
+  padding: 1.2rem;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  animation: fadeInTheater 0.6s ease-out;
+  animation: fadeInTheater 0.5s ease-out;
 }
 
 @keyframes fadeInTheater {
-  from { opacity: 0; transform: scale(0.97); }
+  from { opacity: 0; transform: scale(0.98); }
   to { opacity: 1; transform: scale(1); }
 }
 
@@ -2040,15 +1995,15 @@ body.is-host .host-nav-controls {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  background: rgba(224, 33, 138, 0.25);
-  border: 1.5px solid var(--fucsia-primary);
+  background: rgba(22, 16, 25, 0.85);
+  border: 1px solid var(--gold-border);
   border-radius: var(--radius-full);
   padding: 0.35rem 0.95rem;
-  color: #ffffff;
+  color: var(--gold-light);
   font-family: var(--font-sans);
-  font-size: 0.82rem;
-  font-weight: 700;
-  box-shadow: 0 0 16px var(--fucsia-glow);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .theater-controls-right {
@@ -2058,45 +2013,47 @@ body.is-host .host-nav-controls {
 }
 
 .theater-counter-pill {
-  background: rgba(0, 0, 0, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
   padding: 0.3rem 0.75rem;
   font-family: var(--font-sans);
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: var(--fucsia-light);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gold-primary);
 }
 
 .btn-theater-control {
-  background: rgba(224, 33, 138, 0.3);
-  border: 1.5px solid var(--fucsia-primary);
-  color: #ffffff;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--fucsia-border);
+  color: var(--fucsia-soft);
   border-radius: var(--radius-full);
   padding: 0.35rem 0.85rem;
   font-family: var(--font-sans);
   font-size: 0.8rem;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  gap: 0.4rem;
   transition: all 0.2s ease;
 }
 
 .btn-theater-control:hover, .btn-theater-control:active {
-  background: var(--fucsia-gradient);
-  transform: scale(1.05);
+  background: var(--fucsia-tint);
+  border-color: var(--fucsia-light);
+  color: #ffffff;
 }
 
 .btn-theater-control.host-stop-btn {
-  background: rgba(239, 68, 68, 0.35);
-  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
 }
 
 .btn-theater-control.host-stop-btn:hover {
-  background: #ef4444;
+  background: rgba(239, 68, 68, 0.3);
+  color: #ffffff;
 }
 
 .theater-stage {
@@ -2113,18 +2070,18 @@ body.is-host .host-nav-controls {
 
 .theater-active-photo {
   max-width: 95%;
-  max-height: 70vh;
+  max-height: 72vh;
   object-fit: contain;
-  border-radius: var(--radius-lg);
-  border: 2.5px solid var(--fucsia-primary);
-  box-shadow: 0 0 50px var(--fucsia-glow-strong), 0 10px 40px rgba(0, 0, 0, 0.95);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--gold-primary);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9);
   transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
-  animation: photoBreathe 6.5s infinite alternate ease-in-out;
+  animation: photoBreathe 7s infinite alternate ease-in-out;
 }
 
 @keyframes photoBreathe {
   0% { transform: scale(1); }
-  100% { transform: scale(1.03); }
+  100% { transform: scale(1.025); }
 }
 
 .theater-bottom-bar {
@@ -2132,105 +2089,106 @@ body.is-host .host-nav-controls {
   max-width: 680px;
   text-align: center;
   z-index: 10;
-  padding: 0.75rem 1rem;
-  background: rgba(14, 4, 16, 0.75);
+  padding: 0.85rem 1.2rem;
+  background: rgba(20, 15, 23, 0.85);
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
   margin-top: 0.4rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
 .theater-quote-text {
-  font-family: var(--font-body);
-  font-size: 1.15rem;
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
   font-style: italic;
-  color: #ffffff;
-  line-height: 1.5;
+  color: var(--text-primary);
+  line-height: 1.45;
   margin-bottom: 0.25rem;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 .theater-sub-quote {
   font-family: var(--font-sans);
-  font-size: 0.76rem;
-  color: var(--fucsia-light);
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-size: 0.74rem;
+  color: var(--gold-primary);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 /* Tarjeta del botón de Logística en Despedida */
 .host-tribute-projection-card {
-  background: linear-gradient(145deg, rgba(224, 33, 138, 0.22), rgba(38, 14, 43, 0.85));
-  border: 2px solid var(--fucsia-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--gold-border);
   border-radius: var(--radius-lg);
-  padding: 1.4rem 1.2rem;
+  padding: 1.6rem 1.3rem;
   text-align: center;
-  margin-top: 1.3rem;
-  box-shadow: 0 0 35px var(--fucsia-glow);
+  margin-top: 1.5rem;
+  box-shadow: var(--shadow-card);
 }
 
 .host-projection-badge {
   display: inline-block;
-  background: rgba(224, 33, 138, 0.3);
-  color: var(--fucsia-light);
+  background: rgba(223, 177, 91, 0.1);
+  color: var(--gold-primary);
   font-family: var(--font-sans);
-  font-size: 0.74rem;
-  font-weight: 800;
+  font-size: 0.72rem;
+  font-weight: 600;
   padding: 0.25rem 0.8rem;
   border-radius: var(--radius-full);
   margin-bottom: 0.6rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .host-projection-title {
   font-family: var(--font-serif);
-  font-size: 1.28rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin-bottom: 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
 }
 
 .host-projection-desc {
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
   color: var(--text-secondary);
-  line-height: 1.55;
-  margin-bottom: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
 }
 
 .btn-project-farewell {
   width: 100%;
-  padding: 0.95rem 1.2rem;
-  background: var(--fucsia-gradient);
+  padding: 0.9rem 1.2rem;
+  background: var(--fucsia-btn);
   color: #ffffff;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-md);
   font-family: var(--font-sans);
-  font-size: 1.05rem;
-  font-weight: 800;
+  font-size: 0.98rem;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 6px 25px var(--fucsia-glow-strong);
+  box-shadow: 0 4px 16px rgba(176, 42, 102, 0.35);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  letter-spacing: 0.02em;
-  transition: all 0.25s ease;
+  letter-spacing: 0.01em;
+  transition: all 0.2s ease;
 }
 
 .btn-project-farewell:hover, .btn-project-farewell:active {
-  transform: translateY(-2px) scale(1.02);
-  background: var(--fucsia-gradient-hover);
-  box-shadow: 0 8px 30px rgba(255, 45, 155, 0.85);
+  background: var(--fucsia-btn-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(176, 42, 102, 0.45);
 }
 
 .family-farewell-await-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px dashed rgba(224, 33, 138, 0.35);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--gold-border);
   border-radius: var(--radius-md);
-  padding: 1.1rem 1rem;
+  padding: 1.2rem 1rem;
   text-align: center;
-  margin-top: 1.2rem;
+  margin-top: 1.4rem;
 }
 
 body.is-host .host-tribute-projection-card {

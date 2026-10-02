@@ -7,10 +7,10 @@
   <meta name="description" content="Novena y Santo Rosario por el eterno descanso de Mami Olguita. Rezo familiar en vivo con sincronización y videollamada.">
   <meta name="theme-color" content="#15110f">
   
-  <!-- Conexión anticipada a Google Fonts (cero bloqueo de renderizado) -->
+  <!-- Conexión anticipada a Google Fonts (Cormorant Garamond, Lora, Plus Jakarta Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css?v=7.0">
   <script src="/socket.io/socket.io.js"></script>
@@ -19,21 +19,21 @@
   <!-- PANTALLA DE ENTRADA CON SELECCIÓN DE ROL CLARA -->
   <div class="welcome-gate-overlay" id="welcome-gate-overlay">
     <div class="welcome-gate-card">
-      <!-- Hero Retrato Mami Olguita con Halo Fucsia -->
+      <!-- Retrato Conmemorativo Mami Olguita -->
       <div class="memorial-portrait-hero">
         <div class="portrait-halo-wrapper">
           <div class="portrait-halo-glow"></div>
           <img src="/fotos-olguita/olguita-01.jpg" alt="Mami Olguita" class="portrait-halo-img">
           <div class="portrait-candle-badge" title="Luz perpetua para Mami Olguita">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-              <path d="M12 2C12 2 8 6.5 8 10C8 12.2 9.8 14 12 14C14.2 14 16 12.2 16 10C16 6.5 12 2 12 2Z" fill="#FF2D9B"/>
-              <path d="M12 5C12 5 10 7.5 10 9.5C10 10.6 10.9 11.5 12 11.5C13.1 11.5 14 10.6 14 9.5C14 7.5 12 5 12 5Z" fill="#FEF5E7"/>
-              <rect x="7" y="14" width="10" height="8" rx="2" fill="#E0218A"/>
+              <path d="M12 2C12 2 8 6.5 8 10C8 12.2 9.8 14 12 14C14.2 14 16 12.2 16 10C16 6.5 12 2 12 2Z" fill="#F5C056"/>
+              <path d="M12 5C12 5 10 7.5 10 9.5C10 10.6 10.9 11.5 12 11.5C13.1 11.5 14 10.6 14 9.5C14 7.5 12 5 12 5Z" fill="#FFFDF8"/>
+              <rect x="7" y="14" width="10" height="8" rx="2" fill="#C03374"/>
             </svg>
           </div>
         </div>
-        <div class="fucsia-tribute-chip">
-          🌸 Su color favorito: Fucsia • En memoria
+        <div class="memorial-dedication-tag">
+          En memoria de nuestra querida Mami Olguita
         </div>
       </div>
 
@@ -145,22 +145,21 @@
       </div>
       <div class="brand-text-col">
         <span class="brand-title">Mami Olguita</span>
-        <span class="brand-sub-badge">🌸 46 Recuerdos</span>
+        <span class="brand-sub-badge">Novena Familiar</span>
       </div>
     </div>
 
     <!-- Indicador de Quién está Leyendo (Orador) -->
     <div class="speaker-pill-status" id="speaker-pill-status">
       <span class="live-dot"></span>
-      <span id="speaker-name-label">🕊️ Oración Familiar</span>
+      <span id="speaker-name-label">Oración en Vivo</span>
     </div>
 
     <div class="nav-right-controls">
       <!-- Botón Álbum de Fotos de Mami Olguita -->
-      <button class="btn-header-album" id="btn-header-album" onclick="window.openPhotoAlbum()" title="Ver Álbum de Recuerdos (46 fotos)">
-        <span class="album-icon">📸</span>
-        <span>Álbum</span>
-        <span class="album-badge">46</span>
+      <button class="btn-header-album" id="btn-header-album" onclick="window.openPhotoAlbum()" title="Ver Álbum Conmemorativo (46 fotos)">
+        <i data-icon="book" data-size="14"></i>
+        <span>Recuerdos</span>
       </button>
 
       <!-- Cambiar vista de cámaras -->
@@ -432,14 +431,12 @@
 
     <div class="theater-top-bar">
       <div class="theater-title-chip">
-        <span>🌸</span>
         <span>Mami Olguita • Siempre en nuestros corazones</span>
       </div>
       <div class="theater-controls-right">
         <span class="theater-counter-pill" id="theater-counter-label">Foto 1 de 46</span>
         <!-- Botón para detener proyección general (para el host) -->
         <button class="btn-theater-control host-stop-btn" id="btn-theater-stop-host" onclick="window.stopTributeProjection()" title="Finalizar proyección para todos">
-          <span>⏹️</span>
           <span>Finalizar</span>
         </button>
         <!-- Botón minimizar para oyentes -->
@@ -458,7 +455,7 @@
         «Tu vida fue un regalo, tu amor una bendición y tu recuerdo será eterno.»
       </div>
       <div class="theater-sub-quote">
-        🌸 Proyección conmemorativa en memoria de nuestra querida Mami Olguita
+        En memoria de nuestra querida Mami Olguita
       </div>
     </div>
   </div>

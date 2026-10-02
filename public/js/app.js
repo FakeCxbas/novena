@@ -75,8 +75,8 @@ function buildStepsForDay(dayNumber) {
   const mysteryType = state.activeMysteryType || getAutoMysteryType();
   const mysteryObj = NOVENA_DATA.rosario.misterios[mysteryType];
 
-  const oradorBadge = (label = 'Orador (Guía)') => `<span class="voice-badge guia" style="display:inline-flex; align-items:center; gap:0.35rem;">🎙️ ${label}</span>`;
-  const todosBadge = (label = 'Todos respondemos juntos:') => `<span class="voice-badge todos" style="display:inline-flex; align-items:center; gap:0.35rem;">👥 ${label}</span>`;
+  const oradorBadge = (label = 'Guía') => `<span class="voice-badge guia">${label}</span>`;
+  const todosBadge = (label = 'Todos') => `<span class="voice-badge todos">${label}</span>`;
 
   return [
     // Paso 0: Portada & Apertura
@@ -85,27 +85,27 @@ function buildStepsForDay(dayNumber) {
       badge: 'Inicio de la Novena',
       title: 'Por la Señal de la Santa Cruz',
       render: () => `
-        <div style="text-align: center; margin-bottom: 1.2rem;">
-          <div class="candle-icon" style="margin: 0 auto 0.5rem auto; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
-            ${icon('candle', { size: 42, color: '#DFB15B' })}
+        <div style="text-align: center; margin-bottom: 1.4rem;">
+          <div class="candle-icon" style="margin: 0 auto 0.5rem auto; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;">
+            ${icon('candle', { size: 38, color: '#DFB15B' })}
           </div>
-          <h2 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--gold-primary); margin-bottom: 0.3rem;">MAMI OLGUITA</h2>
-          <div style="font-family: var(--font-body); font-style: italic; font-size: 1.08rem; color: var(--gold-light);">
+          <h2 class="memorial-dedication-title">Mami Olguita</h2>
+          <div class="memorial-dedication-jaculatoria">
             ${NOVENA_DATA.info.jaculatoria}
           </div>
         </div>
 
         <div class="prayer-subheading">
-          ✝️ Rito Inicial
+          Rito Inicial
         </div>
 
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador (Guía)')}
+            ${oradorBadge('Guía')}
             <div class="voice-text">Por la señal de la Santa Cruz, de nuestros enemigos líbranos Señor, Dios nuestro. En el nombre del Padre, del Hijo y del Espíritu Santo.</div>
           </div>
           <div class="todos-part">
-            ${todosBadge()}
+            ${todosBadge('Todos')}
             <div class="voice-text">Amén.</div>
           </div>
         </div>
@@ -120,7 +120,7 @@ function buildStepsForDay(dayNumber) {
       render: () => `
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador (Guía) lee:')}
+            ${oradorBadge('Guía')}
             <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.75rem;">
               ${(NOVENA_DATA?.actoContricion?.paragraphs || [
                 'Señor mío Jesucristo, Dios y Hombre verdadero, Creador, Padre y Redentor mío; por ser Vos quien sois, bondad infinita, y porque os amo sobre todas las cosas, me pesa de todo corazón haberos ofendido; también me pesa porque podéis castigarme con las penas del infierno.',
@@ -129,7 +129,7 @@ function buildStepsForDay(dayNumber) {
             </div>
           </div>
           <div class="todos-part">
-            ${todosBadge('Todos respondemos:')}
+            ${todosBadge('Todos')}
             <div class="voice-text">${NOVENA_DATA?.actoContricion?.response || 'Amén.'}</div>
           </div>
         </div>
@@ -142,17 +142,17 @@ function buildStepsForDay(dayNumber) {
     // Oración Inicial de todos los días
     {
       id: 'oracion-inicial',
-      badge: 'Novena — Oración de Todos los Días',
+      badge: 'Oración de Todos los Días',
       title: NOVENA_DATA.oracionInicial.title,
       render: () => `
         <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Orador (Guía) lee:')}
+          ${oradorBadge('Guía')}
           <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
             ${NOVENA_DATA.oracionInicial.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
         <div class="todos-part">
-          ${todosBadge('Todos respondemos:')}
+          ${todosBadge('Todos')}
           <div class="voice-text">Amén.</div>
         </div>
       `
@@ -161,7 +161,7 @@ function buildStepsForDay(dayNumber) {
     // Lectura Bíblica y Meditación del Día
     {
       id: 'reflexion-dia',
-      badge: `Día ${dayData.dia} de la Novena`,
+      badge: `Día ${dayData.dia}`,
       title: dayData.titulo,
       render: () => {
         const dayPhotoNum = ((dayData.dia - 1) % 10) + 3; // olguita-03 a olguita-12
@@ -177,17 +177,16 @@ function buildStepsForDay(dayNumber) {
             <div class="prayer-photo-img-wrap">
               <img src="${dayPhotoSrc}" alt="Mami Olguita" class="prayer-photo-img" loading="lazy">
               <div class="prayer-photo-overlay">
-                <span class="prayer-photo-badge">🌸 Mami Olguita en nuestra memoria</span>
+                <span class="prayer-photo-badge">En memoria de Mami Olguita</span>
               </div>
             </div>
             <div class="prayer-photo-caption">
               <span>«Tu sonrisa y tu amor maternal siguen iluminando a nuestra familia.»</span>
-              <span class="prayer-photo-zoom-hint">🔍 Toca para ampliar</span>
             </div>
           </div>
 
           <div class="guia-part" style="margin-top: 1.2rem;">
-            ${oradorBadge('Orador lee la Reflexión:')}
+            ${oradorBadge('Reflexión')}
             <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; margin: 0.4rem 0 0 0;">${dayData.reflexion}</p>
           </div>
         `;
@@ -201,13 +200,13 @@ function buildStepsForDay(dayNumber) {
       title: `Oración del Día ${dayData.dia}`,
       render: () => `
         <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Orador (Guía) lee:')}
+          ${oradorBadge('Guía')}
           <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
             ${dayData.oracion.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
         <div class="todos-part">
-          ${todosBadge('Todos respondemos:')}
+          ${todosBadge('Todos')}
           <div class="voice-text">Amén.</div>
         </div>
       `
@@ -216,14 +215,14 @@ function buildStepsForDay(dayNumber) {
     // Mensaje para la Familia
     {
       id: 'mensaje-familia',
-      badge: `Día ${dayData.dia} • Mensaje Familiar`,
+      badge: `Día ${dayData.dia} • Mensaje`,
       title: 'Mensaje para la Familia',
       render: () => {
         const famPhotoNum = ((dayData.dia * 3) % 20) + 5; // e.g. olguita-08, olguita-11, etc.
         const famPhotoSrc = `/fotos-olguita/olguita-${String(famPhotoNum).padStart(2, '0')}.jpg`;
         return `
-          <div class="guia-part" style="border-left: 4px solid var(--fucsia-primary); padding: 1.1rem 1.25rem;">
-            ${oradorBadge('Orador lee para toda la familia:')}
+          <div class="guia-part" style="border-left: 3px solid var(--fucsia-primary); padding: 1.1rem 1.25rem;">
+            ${oradorBadge('Mensaje')}
             <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; color: var(--gold-light); margin: 0.4rem 0 0 0;">${dayData.mensajeFamilia}</p>
           </div>
 
@@ -232,12 +231,11 @@ function buildStepsForDay(dayNumber) {
             <div class="prayer-photo-img-wrap">
               <img src="${famPhotoSrc}" alt="Familia Mami Olguita" class="prayer-photo-img" loading="lazy">
               <div class="prayer-photo-overlay">
-                <span class="prayer-photo-badge">💖 Familia Unida</span>
+                <span class="prayer-photo-badge">Recuerdo Familiar</span>
               </div>
             </div>
             <div class="prayer-photo-caption">
               <span>«El amor que sembraste entre nosotros permanece vivo por siempre.»</span>
-              <span class="prayer-photo-zoom-hint">🔍 Toca para ampliar</span>
             </div>
           </div>
         `;
@@ -250,27 +248,27 @@ function buildStepsForDay(dayNumber) {
     // Santo Rosario - Ofrecimiento y Credo
     {
       id: 'rosario-inicio',
-      badge: 'El Santo Rosario',
+      badge: 'Santo Rosario',
       title: 'Ofrecimiento y Credo de los Apóstoles',
       render: () => `
         <div class="guia-part" style="margin-bottom: 1.2rem;">
-          ${oradorBadge('Orador (Ofrecimiento del Rosario):')}
+          ${oradorBadge('Ofrecimiento del Rosario')}
           <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.35rem;">
             ${NOVENA_DATA.rosario.oracionInicial.text.map(t => `<p style="margin:0;">${t}</p>`).join('')}
           </div>
         </div>
 
         <div class="prayer-subheading">
-          📖 Credo de los Apóstoles
+          Credo de los Apóstoles
         </div>
 
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador (Guía)')}
+            ${oradorBadge('Guía')}
             <div class="voice-text">${NOVENA_DATA.rosario.credo.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge('Todos respondemos:')}
+            ${todosBadge('Todos')}
             <div class="voice-text">${NOVENA_DATA.rosario.credo.todos}</div>
           </div>
         </div>
@@ -299,7 +297,7 @@ function buildStepsForDay(dayNumber) {
           ${mMeditacion ? `
             <div class="meditacion-box">
               <div class="meditacion-title">
-                🕊️ Meditación por Mami Olguita:
+                Meditación por Mami Olguita
               </div>
               <p class="meditacion-text">
                 "${mMeditacion}"
@@ -311,24 +309,23 @@ function buildStepsForDay(dayNumber) {
           <div class="mystery-memory-chip" onclick="window.openLightboxBySrc('/fotos-olguita/olguita-${String(13 + index).padStart(2, '0')}.jpg', 'Recuerdo de Mami Olguita • ${mTitulo}')" title="Toca para ver foto ampliada">
             <img src="/fotos-olguita/olguita-${String(13 + index).padStart(2, '0')}.jpg" alt="Mami Olguita" class="mystery-chip-thumb" loading="lazy">
             <div class="mystery-chip-info">
-              <div class="mystery-chip-label">🌸 En memoria de su fe y devoción</div>
+              <div class="mystery-chip-label">En memoria de su fe y devoción</div>
               <div class="mystery-chip-quote">«Ofrecemos este misterio por el eterno descanso de Mami Olguita.»</div>
             </div>
-            <span style="font-size: 0.85rem; color: var(--fucsia-light); margin-left: auto;">🔍</span>
           </div>
 
           <!-- 1. Padre Nuestro -->
           <div class="prayer-section">
             <div class="prayer-subheading">
-              📖 1. Padre Nuestro
+              Padre Nuestro
             </div>
             <div class="dialogo-block">
               <div class="guia-part">
-                ${oradorBadge('Orador (Guía)')}
+                ${oradorBadge('Guía')}
                 <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.guia}</div>
               </div>
               <div class="todos-part">
-                ${todosBadge('Todos respondemos juntos:')}
+                ${todosBadge('Todos')}
                 <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.todos}</div>
               </div>
             </div>
@@ -337,13 +334,13 @@ function buildStepsForDay(dayNumber) {
           <!-- 2. Diez Ave Marías -->
           <div class="prayer-section">
             <div class="prayer-subheading">
-              📿 2. Diez Ave Marías
+              Diez Avemarías
             </div>
 
             <!-- Rosario Contador de 10 Ave Marías -->
             <div class="rosario-counter-card">
-              <div class="rosario-counter-header" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:1rem; font-weight:700; color:var(--gold-light);">
-                📿 Ave Marías: (<span id="bead-count-label">${state.currentAveMaria}</span> de 10 rezadas)
+              <div class="rosario-counter-header" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.95rem; font-weight:600; color:var(--gold-light);">
+                Avemarías rezadas: (<span id="bead-count-label">${state.currentAveMaria}</span> de 10)
               </div>
               <div class="beads-row" id="beads-container">
                 ${Array.from({ length: 10 }).map((_, bIdx) => `
@@ -354,8 +351,8 @@ function buildStepsForDay(dayNumber) {
                 `).join('')}
               </div>
               <div class="beads-control-btns" style="margin-top: 0.65rem; display: flex; justify-content: center; gap: 0.5rem;">
-                <button class="btn-speaker-item" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;" onclick="window.nextAveMaria()">
-                  ${icon('plus', { size: 14 })} Siguiente Ave María
+                <button class="btn-speaker-item" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;" onclick="window.nextAveMaria()">
+                  ${icon('plus', { size: 14 })} Contar Ave María
                 </button>
                 <button class="btn-speaker-item" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; opacity: 0.8;" onclick="window.setAveMaria(0)">
                   ${icon('refresh', { size: 14 })} Reiniciar cuentas
@@ -365,11 +362,11 @@ function buildStepsForDay(dayNumber) {
 
             <div class="dialogo-block">
               <div class="guia-part">
-                ${oradorBadge('Orador (Guía)')}
+                ${oradorBadge('Guía')}
                 <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.guia}</div>
               </div>
               <div class="todos-part">
-                ${todosBadge('Todos respondemos juntos:')}
+                ${todosBadge('Todos')}
                 <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
               </div>
             </div>
@@ -378,15 +375,15 @@ function buildStepsForDay(dayNumber) {
           <!-- 3. Gloria al Padre -->
           <div class="prayer-section">
             <div class="prayer-subheading">
-              ✨ 3. Gloria al Padre
+              Gloria al Padre
             </div>
             <div class="dialogo-block">
               <div class="guia-part">
-                ${oradorBadge('Orador (Guía)')}
+                ${oradorBadge('Guía')}
                 <div class="voice-text">${NOVENA_DATA.rosario.gloria.guia}</div>
               </div>
               <div class="todos-part">
-                ${todosBadge('Todos respondemos juntos:')}
+                ${todosBadge('Todos')}
                 <div class="voice-text">${NOVENA_DATA.rosario.gloria.todos}</div>
               </div>
             </div>
@@ -395,17 +392,17 @@ function buildStepsForDay(dayNumber) {
           <!-- 4. Jaculatorias por Mami Olguita -->
           <div class="prayer-section">
             <div class="prayer-subheading">
-              🌹 4. Jaculatorias por Mami Olguita
+              Jaculatorias por Mami Olguita
             </div>
             
             <!-- 1. Sangre Preciosa -->
             <div class="dialogo-block">
               <div class="guia-part">
-                ${oradorBadge('Orador (Guía)')}
+                ${oradorBadge('Guía')}
                 <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.preciosa.guia}</div>
               </div>
               <div class="todos-part">
-                ${todosBadge('Todos respondemos:')}
+                ${todosBadge('Todos')}
                 <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.preciosa.todos}</div>
               </div>
             </div>
@@ -413,11 +410,11 @@ function buildStepsForDay(dayNumber) {
             <!-- 2. Descanso Eterno -->
             <div class="dialogo-block">
               <div class="guia-part">
-                ${oradorBadge('Orador (Guía)')}
+                ${oradorBadge('Guía')}
                 <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.descanso.guia}</div>
               </div>
               <div class="todos-part">
-                ${todosBadge('Todos respondemos:')}
+                ${todosBadge('Todos')}
                 <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.descanso.todos}</div>
               </div>
             </div>
@@ -438,39 +435,39 @@ function buildStepsForDay(dayNumber) {
           </p>
         </div>
 
-        <div class="prayer-subheading">📖 1. Padre Nuestro</div>
+        <div class="prayer-subheading">I. Padre Nuestro</div>
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador (Guía)')}
+            ${oradorBadge('Guía')}
             <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge('Todos respondemos juntos:')}
+            ${todosBadge('Todos')}
             <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.todos}</div>
           </div>
         </div>
 
-        <div class="prayer-subheading">📿 2. Tres Ave Marías</div>
+        <div class="prayer-subheading">II. Tres Avemarías</div>
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador (Guía)')}
+            ${oradorBadge('Guía')}
             <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge('Todos respondemos juntos:')}
+            ${todosBadge('Todos')}
             <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
           </div>
         </div>
-        <p style="font-size: 0.9rem; color: var(--gold-amber); font-style: italic; text-align: center; margin: 0.2rem 0 1rem 0;">(Se reza tres veces por el aumento de la Fe, Esperanza y Caridad)</p>
+        <p style="font-size: 0.9rem; color: var(--gold-amber); font-style: italic; text-align: center; margin: 0.2rem 0 1rem 0;">(Por el aumento de la Fe, Esperanza y Caridad)</p>
 
-        <div class="prayer-subheading">✨ 3. Gloria al Padre</div>
+        <div class="prayer-subheading">III. Gloria al Padre</div>
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador (Guía)')}
+            ${oradorBadge('Guía')}
             <div class="voice-text">${NOVENA_DATA.rosario.gloria.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge('Todos respondemos juntos:')}
+            ${todosBadge('Todos')}
             <div class="voice-text">${NOVENA_DATA.rosario.gloria.todos}</div>
           </div>
         </div>
@@ -484,15 +481,15 @@ function buildStepsForDay(dayNumber) {
       title: 'La Salve a la Santísima Virgen',
       render: () => `
         <div class="prayer-subheading">
-          🌹 Salve Regina
+          Salve Regina
         </div>
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador (Guía) comienza:')}
+            ${oradorBadge('Guía')}
             <div class="voice-text">${NOVENA_DATA.rosario.salve.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge('Todos continuamos:')}
+            ${todosBadge('Todos')}
             <div class="voice-text">${NOVENA_DATA.rosario.salve.todos}</div>
           </div>
         </div>
@@ -505,16 +502,16 @@ function buildStepsForDay(dayNumber) {
       badge: 'Santo Rosario',
       title: 'Letanías a la Santísima Virgen María',
       render: () => `
-        <div style="background: rgba(223, 177, 91, 0.1); border-left: 4px solid var(--gold-primary); padding: 0.85rem 1.1rem; border-radius: 0 6px 6px 0; margin-bottom: 1rem;">
-          <p style="font-size: 1.05rem; color: #ffffff; margin: 0; font-weight: 600;">
-            🎙️ El Orador menciona cada título — 👥 Todos respondemos: <strong style="color: #fde047;">"Ruega por ella"</strong> (o "Ten piedad de ella"):
+        <div style="background: rgba(223, 177, 91, 0.08); border-left: 3px solid var(--gold-primary); padding: 0.85rem 1.1rem; border-radius: 0 8px 8px 0; margin-bottom: 1rem;">
+          <p style="font-size: 1.02rem; color: #ffffff; margin: 0; font-weight: 500;">
+            El Guía menciona cada título — Respondemos todos a una sola voz: <strong style="color: var(--gold-primary);">"Ruega por ella"</strong>
           </p>
         </div>
         <div style="display: flex; flex-direction: column; gap: 0.45rem; max-height: 480px; overflow-y: auto; padding-right: 0.35rem;">
           ${NOVENA_DATA.rosario.letanias.map(item => `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0.85rem; border-radius: 6px; background: rgba(255,255,255,0.04); border-bottom: 1px solid var(--border-subtle); font-size: 1.05rem;">
-              <span style="color: #ffffff; font-family: var(--font-body); font-weight: 500;">${item.guia || item.invocacion}</span>
-              <span style="color: #fde047; font-weight: 700; font-family: var(--font-sans); font-size: 1rem; letter-spacing: 0.02em;">${item.todos || item.respuesta}</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.9rem; border-radius: 8px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border-subtle); font-size: 1.05rem;">
+              <span style="color: #ffffff; font-family: var(--font-body); font-weight: 400;">${item.guia || item.invocacion}</span>
+              <span style="color: var(--gold-primary); font-weight: 600; font-family: var(--font-sans); font-size: 0.95rem; letter-spacing: 0.02em;">${item.todos || item.respuesta}</span>
             </div>
           `).join('')}
         </div>
@@ -531,13 +528,13 @@ function buildStepsForDay(dayNumber) {
       title: NOVENA_DATA.oracionFinalOlguita.title,
       render: () => `
         <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Orador (Guía) lee:')}
+          ${oradorBadge('Guía')}
           <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
             ${NOVENA_DATA.oracionFinalOlguita.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
         <div class="todos-part">
-          ${todosBadge('Todos respondemos:')}
+          ${todosBadge('Todos')}
           <div class="voice-text">${NOVENA_DATA.oracionFinalOlguita.response}</div>
         </div>
       `
@@ -550,18 +547,18 @@ function buildStepsForDay(dayNumber) {
       title: NOVENA_DATA.oracionFinalFamilia.title,
       render: () => `
         <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Orador (Guía) lee:')}
+          ${oradorBadge('Guía')}
           <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
             ${NOVENA_DATA.oracionFinalFamilia.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
         <div class="dialogo-block">
           <div class="guia-part">
-            ${oradorBadge('Orador (Guía)')}
+            ${oradorBadge('Guía')}
             <div class="voice-text">${NOVENA_DATA.oracionFinalFamilia.despedidaJaculatoria.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge('Todos respondemos:')}
+            ${todosBadge('Todos')}
             <div class="voice-text">${NOVENA_DATA.oracionFinalFamilia.despedidaJaculatoria.todos}</div>
           </div>
         </div>
@@ -575,27 +572,27 @@ function buildStepsForDay(dayNumber) {
       title: 'Despedida, Bendición y Homenaje',
       render: () => `
         <div class="prayer-subheading">
-          🕊️ Bendición Final
+          Bendición Final
         </div>
         <div class="dialogo-block" style="margin-bottom: 1.2rem;">
           <div class="guia-part">
-            ${oradorBadge('Orador (Guía)')}
+            ${oradorBadge('Guía')}
             <div class="voice-text">${NOVENA_DATA.despedidaFinal.guia}</div>
           </div>
           <div class="todos-part">
-            ${todosBadge('Todos respondemos:')}
+            ${todosBadge('Todos')}
             <div class="voice-text">${NOVENA_DATA.despedidaFinal.todos}</div>
           </div>
         </div>
 
-        <div style="text-align: center; margin: 1.2rem 0; font-family: var(--font-serif); color: var(--gold-primary); font-weight: 700; font-size: 1.18rem; line-height: 1.6;">
+        <div style="text-align: center; margin: 1.2rem 0; font-family: var(--font-serif); color: var(--gold-primary); font-weight: 600; font-size: 1.25rem; line-height: 1.6;">
           ${NOVENA_DATA.despedidaFinal.bendicion}
         </div>
 
         <!-- Placa Conmemorativa -->
         <div class="tribute-box">
-          <div class="candle-icon" style="margin: 0 auto 0.6rem auto; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;">
-            ${icon('candle', { size: 38, color: '#FF75C3' })}
+          <div class="candle-icon" style="margin: 0 auto 0.6rem auto; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+            ${icon('candle', { size: 36, color: '#DFB15B' })}
           </div>
           <div class="tribute-name">${NOVENA_DATA.placaHomenaje.nombre}</div>
           <div class="tribute-lines">
@@ -607,24 +604,25 @@ function buildStepsForDay(dayNumber) {
 
         <!-- Proyección de Despedida (Solo controlable por Logística / Anfitrión) -->
         <div class="host-tribute-projection-card">
-          <div class="host-projection-badge">🌸 CONTROL EXCLUSIVO DE LOGÍSTICA</div>
-          <div class="host-projection-title">Proyección de Despedida</div>
+          <div class="host-projection-badge">Control de Logística</div>
+          <div class="host-projection-title">Proyección Conmemorativa de Despedida</div>
           <div class="host-projection-desc">
-            Inicia el pase conmemorativo de 46 fotos a pantalla completa en los dispositivos de toda la familia, acompañado de música.
+            Inicia el pase de 46 fotografías conmemorativas a pantalla completa en los teléfonos de toda la familia, acompañado de música.
           </div>
           <button class="btn-project-farewell" onclick="window.startTributeProjection()">
-            <span>🎬</span>
             <span>Proyectar Despedida a la Familia</span>
           </button>
         </div>
 
         <div class="family-farewell-await-card">
-          <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🌸🕊️</div>
-          <div style="font-family: var(--font-serif); font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 0.35rem;">
+          <div style="margin: 0 auto 0.5rem auto; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+            ${icon('candle', { size: 30, color: '#DFB15B' })}
+          </div>
+          <div style="font-family: var(--font-serif); font-size: 1.22rem; font-weight: 600; color: #ffffff; margin-bottom: 0.35rem;">
             Homenaje y Despedida
           </div>
-          <div style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
-            La logística iniciará en breve la proyección conmemorativa de fotos a pantalla completa en memoria de nuestra querida Mami Olguita.
+          <div style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+            En breve, la logística iniciará la proyección conmemorativa de fotos a pantalla completa en memoria de nuestra querida Mami Olguita.
           </div>
         </div>
       `
