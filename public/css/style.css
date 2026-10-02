@@ -643,13 +643,20 @@ body {
 
 /* ========================================================
    CONTENIDO PRINCIPAL: LECTURA DE LA NOVENA
+   (OPTIMIZADO PARA PANTALLA GRANDE / DISPOSICIÓN HORIZONTAL TV)
    ======================================================== */
 .main-prayer-container {
   flex: 1;
   width: 100%;
   max-width: 680px;
   margin: 0 auto;
-  padding: 0.6rem 0.9rem 5rem 0.9rem;
+  padding: 0.6rem 0.9rem 5.5rem 0.9rem;
+  transition: all 0.3s ease;
+}
+
+/* Columna lateral memorial para TV y pantallas horizontales */
+.tv-memorial-sidebar {
+  display: none;
 }
 
 .prayer-card {
@@ -676,6 +683,17 @@ body {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--fucsia-light);
+}
+
+.step-progress-pill {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--gold-primary);
+  background: rgba(223, 177, 91, 0.08);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-full);
+  padding: 0.2rem 0.65rem;
 }
 
 .section-title {
@@ -2203,5 +2221,288 @@ body.is-host .family-farewell-await-card {
 }
 body:not(.is-host) .family-farewell-await-card {
   display: block;
+}
+
+/* ========================================================
+   DISPOSICIÓN HORIZONTAL / MODO PANTALLA GRANDE (TV)
+   Diseñado especialmente para proyectar en Smart TV 16:9
+   ======================================================== */
+.btn-tv-fullscreen {
+  background: rgba(223, 177, 91, 0.1);
+  border: 1px solid var(--gold-border);
+  color: var(--gold-primary);
+}
+
+.btn-tv-fullscreen:hover {
+  background: rgba(223, 177, 91, 0.22);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+}
+
+@media (min-width: 700px), (orientation: landscape) {
+  .main-prayer-container {
+    max-width: 1400px;
+    width: 96%;
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 1.8rem;
+    align-items: start;
+    padding: 1.2rem 1.4rem 6rem 1.4rem;
+  }
+
+  .tv-memorial-sidebar {
+    display: block;
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+  }
+
+  .tv-sidebar-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 1.3rem;
+    text-align: center;
+    box-shadow: var(--shadow-warm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tv-sidebar-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+  }
+
+  .tv-portrait-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 2px solid var(--gold-primary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    margin-bottom: 1.1rem;
+    background: #000000;
+  }
+
+  .tv-portrait-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.4s ease;
+  }
+
+  .tv-candle-badge {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(20, 15, 23, 0.92);
+    border: 1.5px solid var(--gold-primary);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8);
+    z-index: 2;
+  }
+
+  .tv-sidebar-name {
+    font-family: var(--font-serif);
+    font-size: 1.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.01em;
+  }
+
+  .tv-sidebar-quote {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--gold-primary);
+    margin-bottom: 0.85rem;
+  }
+
+  .tv-sidebar-day-badge {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--fucsia-light);
+    background: rgba(192, 51, 116, 0.1);
+    border: 1px solid var(--fucsia-border);
+    border-radius: var(--radius-full);
+    padding: 0.25rem 0.85rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .tv-sidebar-speaker {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-family: var(--font-sans);
+    font-size: 0.84rem;
+  }
+
+  .tv-speaker-title {
+    color: var(--text-muted);
+  }
+
+  .tv-speaker-val {
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+
+  .tv-rosary-widget {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-md);
+    padding: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .tv-rosary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gold-primary);
+    margin-bottom: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tv-rosary-dots {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    justify-items: center;
+  }
+
+  .tv-rosary-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+  }
+
+  .tv-rosary-dot.completed {
+    background: var(--gold-primary);
+    border-color: var(--gold-primary);
+    color: #111111;
+  }
+
+  .tv-rosary-dot.active {
+    border-color: var(--fucsia-light);
+    background: var(--fucsia-btn);
+    color: #ffffff;
+    transform: scale(1.15);
+  }
+
+  .tv-remote-hint {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    padding: 0.45rem 0.2rem 0 0.2rem;
+    border-top: 1px solid var(--border-subtle);
+    line-height: 1.45;
+  }
+
+  .tv-remote-hint strong {
+    color: var(--gold-primary);
+  }
+
+  /* Escalado de la lectura sagrada en pantalla grande */
+  .prayer-card {
+    padding: 2.2rem 2.6rem;
+  }
+
+  .section-title {
+    font-size: 2.25rem;
+    line-height: 1.32;
+    margin-bottom: 1.35rem;
+  }
+
+  .voice-text {
+    font-size: 1.25rem;
+    line-height: 1.88;
+  }
+
+  .dialogo-block .guia-part, .dialogo-block .todos-part {
+    padding: 1.1rem 1.45rem;
+  }
+
+  .bible-quote-box {
+    font-size: 1.35rem;
+    line-height: 1.85;
+    padding: 1.25rem 1.65rem;
+  }
+
+  .day-badge-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Escalado extra para pantallas gigantes / Smart TV 1080p y 4K */
+@media (min-width: 1400px) {
+  .main-prayer-container {
+    max-width: 1680px;
+    grid-template-columns: 420px minmax(0, 1fr);
+    gap: 3rem;
+    padding: 1.8rem 2.2rem 7rem 2.2rem;
+  }
+
+  .section-title {
+    font-size: 2.7rem;
+  }
+
+  .voice-text {
+    font-size: 1.4rem;
+    line-height: 1.95;
+  }
+
+  .bible-quote-box {
+    font-size: 1.5rem;
+    line-height: 1.92;
+    padding: 1.45rem 1.9rem;
+  }
+
+  .dialogo-block .guia-part, .dialogo-block .todos-part {
+    padding: 1.3rem 1.8rem;
+  }
+
+  .theater-quote-text {
+    font-size: 2.2rem;
+  }
+
+  .theater-active-photo {
+    max-height: 75vh;
+  }
 }
 

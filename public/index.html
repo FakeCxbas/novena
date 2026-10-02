@@ -155,7 +155,12 @@
       <span id="speaker-name-label">Oración en Vivo</span>
     </div>
 
-    <div class="nav-right-controls">
+      <!-- Botón Modo TV / Pantalla Completa -->
+      <button class="btn-header-album btn-tv-fullscreen" id="btn-fullscreen-tv" onclick="window.toggleFullScreen()" title="Modo Pantalla Completa (Ideal para TV)">
+        <i data-icon="maximize" data-size="14"></i>
+        <span class="btn-tv-label">Modo TV</span>
+      </button>
+
       <!-- Botón Álbum de Fotos de Mami Olguita -->
       <button class="btn-header-album" id="btn-header-album" onclick="window.openPhotoAlbum()" title="Ver Álbum Conmemorativo (46 fotos)">
         <i data-icon="book" data-size="14"></i>
@@ -193,11 +198,58 @@
     <div id="remote-cameras-container" style="display: contents;"></div>
   </section>
 
-  <!-- CONTENIDO PRINCIPAL: LECTURA DE LA NOVENA (85% DE LA PANTALLA) -->
-  <main class="main-prayer-container">
+  <!-- CONTENIDO PRINCIPAL: LECTURA DE LA NOVENA (DISPOSICIÓN HORIZONTAL PARA TV Y PANTALLAS GRANDES) -->
+  <main class="main-prayer-container" id="main-prayer-container">
+    
+    <!-- COLUMNA LATERAL EN PANTALLA HORIZONTAL / TV: RETRATO, VELA Y DETALLES -->
+    <aside class="tv-memorial-sidebar" id="tv-memorial-sidebar">
+      <div class="tv-sidebar-card">
+        <!-- Foto destacada (Retrato de Mami Olguita o foto del paso/misterio) -->
+        <div class="tv-portrait-container">
+          <img src="/olguita.jpg" alt="Mami Olguita" class="tv-portrait-img" id="tv-sidebar-img">
+          <div class="tv-candle-badge" title="Luz perpetua en su memoria">
+            <svg class="tv-candle-svg" width="22" height="26" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C10.5 4 8 7 8 10C8 12.2 9.8 14 12 14C14.2 14 16 12.2 16 10C16 7 13.5 4 12 2Z" fill="#F59E0B" />
+              <path d="M12 5C11.2 6.5 10 8.5 10 10.5C10 11.6 10.9 12.5 12 12.5C13.1 12.5 14 11.6 14 10.5C14 8.5 12.8 6.5 12 5Z" fill="#FEF08A" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="tv-sidebar-info">
+          <h3 class="tv-sidebar-name">Mami Olguita</h3>
+          <p class="tv-sidebar-quote">«Siempre en nuestros corazones»</p>
+          <div class="tv-sidebar-day-badge" id="tv-sidebar-day">Día 3 • Novena Familiar</div>
+        </div>
+
+        <!-- Indicador de Guía / Orador en la TV -->
+        <div class="tv-sidebar-speaker">
+          <span class="tv-speaker-title">Voz Guía:</span>
+          <span class="tv-speaker-val" id="tv-sidebar-speaker-name">Sebastián</span>
+        </div>
+
+        <!-- Contador grande de Ave Marías en la TV si estamos en un misterio -->
+        <div class="tv-rosary-widget" id="tv-rosary-widget" style="display: none;">
+          <div class="tv-rosary-header">
+            <span>Cuentas del Rosario</span>
+            <span id="tv-rosary-count" class="tv-rosary-count">0 / 10</span>
+          </div>
+          <div class="tv-rosary-dots" id="tv-rosary-dots">
+            <!-- 10 bolitas doradas sincronizadas -->
+          </div>
+        </div>
+
+        <!-- Teclas de atajo para TV / Control Remoto -->
+        <div class="tv-remote-hint">
+          <span>Usa <strong>←</strong> / <strong>→</strong> o <strong>Espacio</strong> para pasar página</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- COLUMNA PRINCIPAL: SANTUARIO LITÚRGICO DE LECTURA -->
     <article class="prayer-card" id="prayer-card">
       <div class="card-top-header">
         <span class="day-badge-text" id="day-step-badge">Día 1 de la Novena</span>
+        <span class="step-progress-pill" id="step-progress-indicator">Paso 1 de 18</span>
       </div>
 
       <h2 class="section-title" id="card-section-title">Cargando novena...</h2>

@@ -688,6 +688,29 @@ function updateBeadsUI(count) {
       b.classList.toggle('active', idx === count - 1);
     }
   }
+
+  // Sincronizar widget TV de cuentas
+  const tvCount = document.getElementById('tv-rosary-count');
+  if (tvCount) tvCount.textContent = `${count} / 10`;
+
+  const tvDots = document.getElementById('tv-rosary-dots');
+  if (tvDots) {
+    if (tvDots.children.length !== 10) {
+      tvDots.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'tv-rosary-dot';
+        dot.textContent = i;
+        tvDots.appendChild(dot);
+      }
+    }
+    const dotItems = tvDots.children;
+    for (let idx = 0; idx < dotItems.length; idx++) {
+      const d = dotItems[idx];
+      d.classList.toggle('completed', idx < count);
+      d.classList.toggle('active', idx === count - 1);
+    }
+  }
 }
 
 function renderCurrentStep(force = false) {
@@ -708,6 +731,41 @@ function renderCurrentStep(force = false) {
 
   if (badgeEl) badgeEl.textContent = `Día ${state.currentDay} • ${currentStep.badge}`;
   if (titleEl) titleEl.textContent = currentStep.title;
+
+  // Sincronizar componentes del modo TV en pantalla grande
+  const tvSidebarImg = document.getElementById('tv-sidebar-img');
+  const tvSidebarDay = document.getElementById('tv-sidebar-day');
+  const tvProgress = document.getElementById('step-progress-indicator');
+  const tvRosaryWidget = document.getElementById('tv-rosary-widget');
+  const tvSpeakerName = document.getElementById('tv-sidebar-speaker-name');
+
+  if (tvSidebarDay && badgeEl) tvSidebarDay.textContent = badgeEl.textContent;
+  if (tvProgress) tvProgress.textContent = `Paso ${state.currentStepIndex + 1} de ${totalSteps}`;
+  if (tvSpeakerName) tvSpeakerName.textContent = state.speakerName || 'Oración Comunitaria';
+
+  // Si estamos en un paso con foto (ej. misterios o fotos intermedias), mostrarla en grande a la izquierda en la TV
+  if (tvSidebarImg) {
+    if (state.currentStepIndex >= 7 && state.currentStepIndex <= 11) {
+      const mysteryPhotoIdx = ((state.currentStepIndex - 7) % 5) + 1;
+      tvSidebarImg.src = `/fotos-olguita/olguita-0${mysteryPhotoIdx}.jpg`;
+    } else if (state.currentStepIndex === 2) {
+      tvSidebarImg.src = '/fotos-olguita/olguita-02.jpg';
+    } else if (state.currentStepIndex === 4) {
+      tvSidebarImg.src = '/fotos-olguita/olguita-03.jpg';
+    } else if (state.currentStepIndex === 14) {
+      tvSidebarImg.src = '/fotos-olguita/olguita-04.jpg';
+    } else if (state.currentStepIndex === 16 || state.currentStepIndex === 17) {
+      tvSidebarImg.src = '/fotos-olguita/olguita-05.jpg';
+    } else {
+      tvSidebarImg.src = '/olguita.jpg';
+    }
+  }
+
+  // Si estamos en un misterio del rosario (pasos 7 al 11), encender el widget TV de cuentas
+  const isMysteryStep = state.currentStepIndex >= 7 && state.currentStepIndex <= 11;
+  if (tvRosaryWidget) {
+    tvRosaryWidget.style.display = isMysteryStep ? 'block' : 'none';
+  }
 
   // Solo reinyectar contenido HTML si el paso cambió o se fuerza la recarga
   if (force || lastRenderedKey !== currentKey) {
@@ -2177,6 +2235,52 @@ function init() {
     });
   });
 }
+
+// ========================================================
+// CONTROL REMOTO / PANTALLA COMPLETA PARA SMART TV
+// ========================================================
+window.toggleFullScreen = function() {
+  if (!document.fullscreenElement) {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().then(() => {
+        showToast('Modo Pantalla Completa TV activado', 'maximize');
+      }).catch(err => {
+        console.log('Error intentando entrar en pantalla completa:', err);
+      });
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen().then(() => {
+        showToast('Saliendo de Pantalla Completa', 'minimize');
+      }).catch(() => {});
+    }
+  }
+};
+
+document.addEventListener('fullscreenchange', () => {
+  const btn = document.getElementById('btn-fullscreen-tv');
+  if (btn) {
+    const isFull = !!document.fullscreenElement;
+    btn.innerHTML = `<i data-icon="${isFull ? 'minimize' : 'maximize'}" data-size="14"></i> <span class="btn-tv-label">${isFull ? 'Salir TV' : 'Modo TV'}</span>`;
+    replaceDomIcons(btn);
+  }
+});
+
+// Navegación con teclado inalámbrico o mando de TV (Flechas y Espacio)
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+    e.preventDefault();
+    window.nextStep();
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault();
+    window.prevStep();
+  } else if (e.key === 'f' || e.key === 'F') {
+    e.preventDefault();
+    window.toggleFullScreen();
+  }
+});
 
 function startApp() {
   init();
