@@ -1,0 +1,654 @@
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
+const dia3Data = {
+  dia: 3,
+  titulo: "DÍA 3 — EL AMOR PERMANECE",
+  cita: "“El amor nunca deja de ser.”",
+  referencia: "1 Corintios 13,8",
+  reflexion: "Hay personas que, aunque ya no estén físicamente con nosotros, permanecen para siempre en nuestro corazón. El amor que Mami Olguita dio a su familia no termina con su partida.",
+  oracion: [
+    "Señor, gracias por el amor que Mami Olguita entregó durante su vida.",
+    "Gracias por cada abrazo, cada palabra, cada consejo, cada preocupación y cada gesto de cariño que tuvo con nuestra familia.",
+    "Recibe todo el bien que hizo y concédele la recompensa de la vida eterna.",
+    "Que nosotros sepamos continuar el amor que ella sembró y que, unidos como familia, podamos mantener vivo su recuerdo."
+  ],
+  mensajeFamilia: "El mejor homenaje que podemos hacerle a Mami Olguita es seguir amándonos como familia. Que nunca permitamos que las diferencias nos separen y que el amor que ella sembró sea siempre motivo para permanecer unidos."
+};
+
+const htmlContent = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Novena Día 3 - Mami Olguita</title>
+  <style>
+    @page {
+      size: letter portrait;
+      margin: 12mm 15mm 12mm 15mm;
+      @bottom-right {
+        content: "Página " counter(page);
+        font-size: 8pt;
+        color: #777;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+      @bottom-left {
+        content: "Novena por el Eterno Descanso de Mami Olguita • Día 3";
+        font-size: 8pt;
+        color: #777;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      color: #1a1a1a;
+      background: #fff;
+      line-height: 1.38;
+      font-size: 9.8pt;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Portadilla */
+    .cover-header {
+      text-align: center;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #8c6d37;
+    }
+
+    .cross-symbol {
+      font-size: 22pt;
+      color: #8c6d37;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .main-title {
+      font-size: 17.5pt;
+      font-weight: 700;
+      color: #5c4217;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 2px 0;
+    }
+
+    .subtitle {
+      font-size: 10.5pt;
+      font-style: italic;
+      color: #73531f;
+      margin: 0 0 3px 0;
+    }
+
+    .day-banner {
+      background: #faf4e8;
+      border: 1px solid #d4b886;
+      border-radius: 6px;
+      padding: 5px 12px;
+      margin: 5px auto 0 auto;
+      max-width: 480px;
+      text-align: center;
+    }
+
+    .day-banner h2 {
+      margin: 0;
+      font-size: 11.5pt;
+      color: #704f14;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .day-banner p {
+      margin: 1px 0 0 0;
+      font-size: 8.8pt;
+      color: #555;
+    }
+
+    /* Secciones */
+    .section-title {
+      font-size: 11.5pt;
+      font-weight: 700;
+      color: #704f14;
+      border-bottom: 1px solid #e0cdb2;
+      padding-bottom: 2px;
+      margin: 10px 0 6px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .sub-section-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #444;
+      margin: 8px 0 3px 0;
+    }
+
+    .prayer-card {
+      background: #fdfbf7;
+      border-left: 3px solid #8c6d37;
+      padding: 6px 9px;
+      margin-bottom: 6px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .dialogue-box {
+      margin-bottom: 6px;
+    }
+
+    .role-guia {
+      display: inline-block;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 7.2pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #7a1c1c;
+      color: #fff;
+      padding: 1px 5px;
+      border-radius: 3px;
+      margin-bottom: 2px;
+    }
+
+    .role-todos {
+      display: inline-block;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 7.2pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #1e3a5f;
+      color: #fff;
+      padding: 1px 5px;
+      border-radius: 3px;
+      margin-bottom: 2px;
+    }
+
+    .role-text-guia {
+      color: #2b2b2b;
+      margin-bottom: 2px;
+      padding-left: 2px;
+    }
+
+    .role-text-todos {
+      color: #111;
+      font-weight: 600;
+      padding-left: 2px;
+      margin-bottom: 5px;
+    }
+
+    .meditacion-box {
+      background: #f4f6fa;
+      border: 1px solid #ccd7e6;
+      border-left: 3.5px solid #1e3a5f;
+      border-radius: 4px;
+      padding: 5px 8px;
+      margin: 4px 0 5px 0;
+      font-style: italic;
+      color: #1e293b;
+      font-size: 9.3pt;
+    }
+
+    .misterio-header {
+      background: #fbf5ea;
+      border-radius: 4px;
+      padding: 4px 8px;
+      margin-top: 8px;
+      margin-bottom: 3px;
+      border: 1px solid #e2d1b3;
+    }
+
+    .misterio-header h3 {
+      margin: 0;
+      font-size: 10pt;
+      color: #704f14;
+    }
+
+    .cita-biblica {
+      font-size: 10.5pt;
+      font-style: italic;
+      color: #4b3619;
+      text-align: center;
+      margin: 6px 0;
+      padding: 5px 12px;
+      background: #fff8ed;
+      border-radius: 4px;
+      border-left: 3px solid #b89355;
+    }
+
+    .letanias-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px 14px;
+      font-size: 8.2pt;
+      margin: 5px 0;
+      line-height: 1.26;
+    }
+
+    .letania-item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dotted #e2e2e2;
+      padding: 1px 0;
+    }
+
+    .letania-invocacion {
+      color: #222;
+    }
+
+    .letania-resp {
+      font-weight: 600;
+      color: #1e3a5f;
+      text-align: right;
+      padding-left: 4px;
+      white-space: nowrap;
+    }
+
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+
+    .homenaje-card {
+      border: 2px solid #8c6d37;
+      background: #fdfaf4;
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-align: center;
+      margin-top: 10px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .homenaje-card .nombre {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #704f14;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+
+    .homenaje-card .lineas {
+      font-size: 9.8pt;
+      font-style: italic;
+      color: #333;
+      margin: 3px 0;
+      line-height: 1.45;
+    }
+
+    .homenaje-card .rip {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #7a1c1c;
+      margin-top: 6px;
+    }
+
+    .homenaje-card .mensaje {
+      font-size: 8.8pt;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    p {
+      margin: 2px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= PÁGINA 1: APERTURA Y CREDO ================= -->
+  <div class="cover-header">
+    <div class="cross-symbol">✝</div>
+    <div class="subtitle">Novena por el Eterno Descanso de Nuestra Querida</div>
+    <h1 class="main-title">Mami Olguita</h1>
+    <p style="margin: 2px 0; font-style: italic; color: #73531f; font-size: 9.8pt;">
+      “Dale, Señor, el descanso eterno, y brille para ella la luz perpetua.”
+    </p>
+
+    <div class="day-banner">
+      <h2>DÍA 3 • EL AMOR PERMANECE</h2>
+      <p>Santo Rosario de Misterios Dolorosos y Rezo Familiar • Viernes, 2 de Octubre</p>
+    </div>
+  </div>
+
+  <div class="section-title">1. Rito Inicial</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Orador (Guía)</span>
+    <div class="role-text-guia">
+      Por la señal de la Santa Cruz, de nuestros enemigos líbranos Señor, Dios nuestro. En el nombre del Padre, del Hijo y del Espíritu Santo.
+    </div>
+    <span class="role-todos">Todos respondemos</span>
+    <div class="role-text-todos">
+      Amén.
+    </div>
+  </div>
+
+  <div class="section-title">2. Acto de Contrición</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Orador (Guía) lee:</span>
+    <div class="role-text-guia">
+      Señor mío Jesucristo, Dios y Hombre verdadero, Creador, Padre y Redentor mío; por ser Vos quien sois, bondad infinita, y porque os amo sobre todas las cosas, me pesa de todo corazón haberos ofendido; también me pesa porque podéis castigarme con las penas del infierno.
+      <br>
+      Ayudado de vuestra divina gracia, propongo firmemente nunca más pecar, confesarme y cumplir la penitencia que me fuere impuesta.
+    </div>
+    <span class="role-todos">Todos respondemos:</span>
+    <div class="role-text-todos">
+      Amén.
+    </div>
+  </div>
+
+  <div class="section-title">3. El Santo Rosario (Misterios Dolorosos)</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Orador (Ofrecimiento):</span>
+    <div class="role-text-guia">
+      Ofrecemos este Santo Rosario por el eterno descanso de nuestra querida <strong>Mami Olguita</strong>. Pedimos al Señor que purifique su alma, que perdone sus faltas y que la reciba en su gloria celestial, concediendo también el consuelo, la paz y la unión a nuestra familia en este momento de dolor.
+      <br>
+      Santa María, Madre de Dios, acompáñanos durante esta santa oración e intercede por ella ante tu Hijo Jesucristo. Amén.
+    </div>
+  </div>
+
+  <div class="sub-section-title">📖 Credo de los Apóstoles</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Guía:</span>
+    <div class="role-text-guia">
+      Creo en Dios, Padre todopoderoso, Creador del cielo y de la tierra.
+    </div>
+    <span class="role-todos">Todos:</span>
+    <div class="role-text-todos">
+      Creo en Jesucristo, su único Hijo, nuestro Señor, que fue concebido por obra y gracia del Espíritu Santo; nació de Santa María Virgen; padeció bajo el poder de Poncio Pilato; fue crucificado, muerto y sepultado; descendió a los infiernos; al tercer día resucitó de entre los muertos; subió a los cielos y está sentado a la derecha de Dios, Padre todopoderoso. Desde allí ha de venir a juzgar a vivos y muertos. Creo en el Espíritu Santo, la Santa Iglesia Católica, la comunión de los santos, el perdón de los pecados, la resurrección de la carne y la vida eterna. Amén.
+    </div>
+  </div>
+
+  <!-- ================= PÁGINA 2: MISTERIOS 1, 2 Y 3 ================= -->
+  <div class="page-break"></div>
+
+  <div class="prayer-card" style="margin-top: 4px;">
+    <div style="font-weight: 700; color: #704f14; font-size: 9.3pt; margin-bottom: 2px;">Oraciones que rezamos en cada Misterio:</div>
+    <div style="font-size: 8.6pt; color: #444; line-height: 1.42;">
+      <strong>Padre Nuestro:</strong> Guía hasta <em>“como en el cielo”</em> • Todos: <em>“Danos hoy nuestro pan de cada día...”</em><br>
+      <strong>10 Ave Marías:</strong> Guía hasta <em>“fruto de tu vientre, Jesús”</em> • Todos: <em>“Santa María, Madre de Dios, ruega por nosotros...”</em><br>
+      <strong>Gloria:</strong> Guía: <em>“Gloria al Padre, al Hijo y al Espíritu Santo”</em> • Todos: <em>“Como era en el principio, ahora y siempre...”</em><br>
+      <strong>Jaculatorias por Mami Olguita:</strong><br>
+      • Guía: <em>“Si por tu sangre preciosa, Señor, la has redimido.”</em> • Todos: <strong>“Que la perdones, te pido, por tu Pasión dolorosa.”</strong><br>
+      • Guía: <em>“Dale, Señor, el descanso eterno.”</em> • Todos: <strong>“Y brille para ella la luz perpetua. Que por la misericordia de Dios, el alma de Mami Olguita descanse en paz. Amén.”</strong>
+    </div>
+  </div>
+
+  <div class="section-title">Misterios Dolorosos del Día (Viernes)</div>
+
+  <!-- Misterio 1 -->
+  <div class="misterio-header">
+    <h3>1º Misterio Doloroso: La Agonía de Jesús en el Huerto</h3>
+  </div>
+  <div class="meditacion-box">
+    <strong>🕊️ Meditación por Mami Olguita:</strong><br>
+    “Unimos las fatigas y sufrimientos de la vida terrenal de Mami Olguita a la oración de Jesús, pidiendo paz infinita para su alma.”
+  </div>
+  <p style="font-size: 8.3pt; color: #666; margin: 0 0 8px 4px;">(Se reza 1 Padre Nuestro, 10 Ave Marías, 1 Gloria y las 2 Jaculatorias por Mami Olguita).</p>
+
+  <!-- Misterio 2 -->
+  <div class="misterio-header">
+    <h3>2º Misterio Doloroso: La Flagelación de Jesús</h3>
+  </div>
+  <div class="meditacion-box">
+    <strong>🕊️ Meditación por Mami Olguita:</strong><br>
+    “Por los méritos del dolor de Cristo, suplicamos que perdone cualquier falta humana de Mami Olguita y purifique su espíritu.”
+  </div>
+  <p style="font-size: 8.3pt; color: #666; margin: 0 0 8px 4px;">(Se reza 1 Padre Nuestro, 10 Ave Marías, 1 Gloria y las 2 Jaculatorias por Mami Olguita).</p>
+
+  <!-- Misterio 3 -->
+  <div class="misterio-header">
+    <h3>3º Misterio Doloroso: La Coronación de Espinas</h3>
+  </div>
+  <div class="meditacion-box">
+    <strong>🕊️ Meditación por Mami Olguita:</strong><br>
+    “Pedimos que, a cambio de las pruebas de este mundo, el Señor corone a Mami Olguita con la corona de la vida eterna.”
+  </div>
+  <p style="font-size: 8.3pt; color: #666; margin: 0 0 4px 4px;">(Se reza 1 Padre Nuestro, 10 Ave Marías, 1 Gloria y las 2 Jaculatorias por Mami Olguita).</p>
+
+  <!-- ================= PÁGINA 3: MISTERIOS 4 Y 5 + CIERRE ================= -->
+  <div class="page-break"></div>
+
+  <!-- Misterio 4 -->
+  <div class="misterio-header">
+    <h3>4º Misterio Doloroso: Jesús carga con la Cruz camino al Calvario</h3>
+  </div>
+  <div class="meditacion-box">
+    <strong>🕊️ Meditación por Mami Olguita:</strong><br>
+    “Recordamos la entereza con que Mami Olguita afrontó los momentos difíciles de la vida, y pedimos que ahora descanse en los brazos de Dios.”
+  </div>
+  <p style="font-size: 8.3pt; color: #666; margin: 0 0 10px 4px;">(Se reza 1 Padre Nuestro, 10 Ave Marías, 1 Gloria y las 2 Jaculatorias por Mami Olguita).</p>
+
+  <!-- Misterio 5 -->
+  <div class="misterio-header">
+    <h3>5º Misterio Doloroso: La Crucifixión y Muerte de Jesús</h3>
+  </div>
+  <div class="meditacion-box">
+    <strong>🕊️ Meditación por Mami Olguita:</strong><br>
+    “Por la entrega en la Cruz, confiamos en que Jesús acogió a Mami Olguita en el paraíso prometido a quienes creen en Él.”
+  </div>
+  <p style="font-size: 8.3pt; color: #666; margin: 0 0 12px 4px;">(Se reza 1 Padre Nuestro, 10 Ave Marías, 1 Gloria y las 2 Jaculatorias por Mami Olguita).</p>
+
+  <div class="section-title">Cierre del Santo Rosario</div>
+  <div class="dialogue-box">
+    <div style="font-size: 9.3pt; color: #333; margin-bottom: 6px;">
+      Rezado por las intenciones del Santo Padre y el aumento de la fe, la esperanza y la caridad de toda nuestra familia:
+      <br>
+      • <strong>1 Padre Nuestro</strong><br>
+      • <strong>3 Ave Marías</strong><br>
+      • <strong>1 Gloria al Padre</strong>
+    </div>
+  </div>
+
+  <div class="prayer-card" style="margin-top: 8px;">
+    <div style="font-style: italic; color: #704f14; font-size: 9pt;">
+      “Bajo tu amparo nos acogemos, Santa Madre de Dios; no deseches las súplicas que te dirigimos en nuestras necesidades, antes bien líbranos de todo peligro, ¡oh Virgen gloriosa y bendita!”
+    </div>
+  </div>
+
+  <!-- ================= PÁGINA 4: LA SALVE Y LETANÍAS COMPLETAS ================= -->
+  <div class="page-break"></div>
+
+  <div class="section-title">🌹 La Salve</div>
+  <div class="dialogue-box" style="margin-bottom: 8px;">
+    <span class="role-guia">Guía:</span>
+    <div class="role-text-guia">
+      Dios te salve, Reina y Madre de misericordia, vida, dulzura y esperanza nuestra. Dios te salve.
+    </div>
+    <span class="role-todos">Todos:</span>
+    <div class="role-text-todos">
+      A Ti llamamos los desterrados hijos de Eva. A Ti suspiramos, gimiendo y llorando en este valle de lágrimas. Ea, pues, Señora, abogada nuestra, vuelve a nosotros esos tus ojos misericordiosos. Y después de este destierro, muéstranos a Jesús, fruto bendito de tu vientre. ¡Oh clemente, oh piadosa, oh dulce Virgen María! Ruega por nosotros, Santa Madre de Dios, para que seamos dignos de alcanzar las promesas de Nuestro Señor Jesucristo. Amén.
+    </div>
+  </div>
+
+  <div class="section-title">✨ Letanías Lauretanas a la Santísima Virgen María</div>
+  <div class="letanias-grid">
+    <div class="letania-item"><span class="letania-invocacion">Señor, ten piedad</span><span class="letania-resp">Señor, ten piedad</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Cristo, ten piedad</span><span class="letania-resp">Cristo, ten piedad</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Señor, ten piedad</span><span class="letania-resp">Señor, ten piedad</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Santa María</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Santa Madre de Dios</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Santa Virgen de las vírgenes</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre de Cristo</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre de la Iglesia</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre de la divina gracia</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre purísima</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre castísima</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre siempre virgen</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre inmaculada</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre amable</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre admirable</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre del buen consejo</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre del Creador</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Madre del Salvador</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Virgen prudentísima</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Virgen digna de veneración</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Virgen digna de alabanza</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Virgen poderosa</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Virgen clemente</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Virgen fiel</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Espejo de justicia</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Trono de la sabiduría</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Causa de nuestra alegría</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Vaso espiritual</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Vaso digno de honor</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Vaso insigne de devoción</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Rosa mística</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Torre de David</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Torre de marfil</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Casa de oro</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Arca de la alianza</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Puerta del cielo</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Estrella de la mañana</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Salud de los enfermos</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Refugio de los pecadores</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Consuelo de los afligidos</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Auxilio de los cristianos</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina de los ángeles</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina de los patriarcas</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina de los profetas</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina de los apóstoles</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina de los mártires</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina de los confesores</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina de las vírgenes</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina de todos los santos</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina concebida sin pecado original</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina asunta al cielo</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina del Santísimo Rosario</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina de la familia</span><span class="letania-resp">Ruega por nosotros</span></div>
+    <div class="letania-item"><span class="letania-invocacion">Reina de la paz</span><span class="letania-resp">Ruega por nosotros</span></div>
+  </div>
+
+  <!-- ================= PÁGINA 5: LA NOVENA (DÍA 3) ================= -->
+  <div class="page-break"></div>
+
+  <div class="section-title">4. Novena • Día Tercero: El Amor Permanece</div>
+
+  <div class="sub-section-title">🙏 Oración Inicial de todos los días</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Orador (Guía) lee:</span>
+    <div class="role-text-guia">
+      <p>Señor Dios, Padre misericordioso, nos reunimos como familia para recordar con amor a nuestra querida Mami Olguita, quien ha partido de este mundo.</p>
+      <p>Te damos gracias por el regalo de su vida, por todo el amor que nos entregó, por sus enseñanzas, sus palabras, sus cuidados y por tantos momentos que permanecerán para siempre en nuestra memoria.</p>
+      <p>Hoy ponemos su alma en tus manos y te pedimos que, por tu infinita misericordia, perdones sus faltas y la recibas en tu Reino, donde ya no existe el dolor, ni la tristeza, ni la enfermedad, sino la vida eterna junto a Ti.</p>
+      <p>Danos también fortaleza a quienes quedamos aquí. Consuela nuestros corazones y ayúdanos a aceptar tu voluntad con fe y esperanza.</p>
+      <p>Que esta novena sea una muestra de nuestro amor y gratitud por Mami Olguita.</p>
+    </div>
+    <span class="role-todos">Todos respondemos:</span>
+    <div class="role-text-todos">
+      Amén.
+    </div>
+  </div>
+
+  <div class="cita-biblica">
+    ${dia3Data.cita}
+    <div style="font-size: 8.2pt; color: #704f14; font-weight: 700; margin-top: 1px;">${dia3Data.referencia}</div>
+  </div>
+
+  <div class="sub-section-title">💡 Reflexión del Día 3</div>
+  <div class="prayer-card">
+    ${dia3Data.reflexion}
+  </div>
+
+  <div class="sub-section-title">🕊️ Oración del Día 3</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Orador (Guía) lee:</span>
+    <div class="role-text-guia">
+      ${dia3Data.oracion.map(p => `<p>${p}</p>`).join('')}
+    </div>
+    <span class="role-todos">Todos respondemos:</span>
+    <div class="role-text-todos">
+      Amén.
+    </div>
+  </div>
+
+  <div class="sub-section-title">🤍 Mensaje para la Familia</div>
+  <div class="meditacion-box" style="background: #faf7f0; border-left-color: #8c6d37;">
+    <strong>Recordatorio para nuestro hogar:</strong><br>
+    ${dia3Data.mensajeFamilia}
+  </div>
+
+  <!-- ================= PÁGINA 6: ORACIONES FINALES, BENDICIÓN Y HOMENAJE ================= -->
+  <div class="page-break"></div>
+
+  <div class="section-title">5. Oraciones Finales y Despedida</div>
+
+  <div class="sub-section-title">Oración final por Mami Olguita</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Orador (Guía) lee:</span>
+    <div class="role-text-guia">
+      <p>Oh Dios, que concediste a tu sierva Mami Olguita la gracia de compartir su vida con nosotros, recibe ahora su alma en tu Reino. Perdona sus faltas y concédele la vida eterna.</p>
+      <p>Que descanse en paz, libre de todo sufrimiento, y que pueda contemplar eternamente tu rostro. A nosotros, sus familiares, danos fortaleza para continuar viviendo con fe, esperanza y amor. Que el recuerdo de Mami Olguita nos ayude a permanecer unidos y que algún día podamos reunirnos nuevamente en tu Reino. Por Jesucristo, nuestro Señor.</p>
+    </div>
+    <span class="role-todos">Todos respondemos:</span>
+    <div class="role-text-todos">
+      Amén.
+    </div>
+  </div>
+
+  <div class="sub-section-title">Oración final de la familia</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Orador (Guía) lee:</span>
+    <div class="role-text-guia">
+      <p>Señor, hoy nos reunimos como familia y queremos darte las gracias por la vida de nuestra querida Mami Olguita. Gracias por habérnosla regalado. Gracias por cada momento vivido a su lado. Gracias por su amor, sus enseñanzas, sus cuidados y por las historias y recuerdos que nos dejó.</p>
+      <p>Te pedimos que la recibas en tu Reino y que le concedas el descanso eterno. Y te pedimos algo más, Señor: cuida de nuestra familia. Ayúdanos a permanecer unidos, a perdonarnos, a acompañarnos y a querernos. Que nunca olvidemos que somos familia y que el amor debe ser siempre más fuerte que cualquier diferencia. Que desde el cielo ella pueda ver a su familia unida.</p>
+    </div>
+    <span class="role-todos">Todos respondemos:</span>
+    <div class="role-text-todos">
+      Amén.
+    </div>
+  </div>
+
+  <div class="dialogue-box" style="margin-top: 4px;">
+    <span class="role-guia">Guía:</span>
+    <div class="role-text-guia">Dale, Señor, el descanso eterno.</div>
+    <span class="role-todos">Todos:</span>
+    <div class="role-text-todos">
+      Y brille para ella la luz perpetua. Que su alma y las almas de todos los fieles difuntos, por la misericordia de Dios, descansen en paz. Amén.
+    </div>
+  </div>
+
+  <div class="sub-section-title">Despedida Final y Bendición</div>
+  <div class="dialogue-box">
+    <span class="role-guia">Guía:</span>
+    <div class="role-text-guia">Dale, Señor, el descanso eterno.</div>
+    <span class="role-todos">Todos:</span>
+    <div class="role-text-todos">Y brille para ella la luz perpetua. Que Mami Olguita descanse en paz. Amén.</div>
+    <span class="role-guia">Guía (Bendición final):</span>
+    <div class="role-text-guia">
+      El Señor nos bendiga, nos guarde de todo mal y nos lleve a la vida eterna. En el nombre del Padre, del Hijo y del Espíritu Santo.
+    </div>
+    <span class="role-todos">Todos:</span>
+    <div class="role-text-todos">Amén.</div>
+  </div>
+
+  <!-- HOMENAJE FINAL -->
+  <div class="homenaje-card">
+    <div class="nombre">MAMI OLGUITA</div>
+    <div class="lineas">
+      Tu vida fue un regalo. • Tu amor fue una bendición. • Tu recuerdo será eterno.
+    </div>
+    <div class="rip">Descansa en paz.</div>
+    <div class="mensaje">Te queremos y te llevaremos siempre en nuestros corazones.</div>
+  </div>
+
+</body>
+</html>
+`;
+
+const htmlPath = path.join(__dirname, 'public/dia-3-novena.html');
+fs.writeFileSync(htmlPath, htmlContent, 'utf8');
+
+const pdfOutputPath = path.join(__dirname, 'public/Novena_Mami_Olguita_Dia_3.pdf');
+const pdfRootPath = path.join(__dirname, 'Novena_Mami_Olguita_Dia_3.pdf');
+
+execSync(`chromium --headless --disable-gpu --no-sandbox --no-pdf-header-footer --print-to-pdf="${pdfOutputPath}" "${htmlPath}"`);
+fs.copyFileSync(pdfOutputPath, pdfRootPath);
+
+console.log('PDF final recompilado.');
