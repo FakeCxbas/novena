@@ -5,8 +5,8 @@ const { execSync } = require('child_process');
 const dia3Data = {
   dia: 3,
   titulo: "DÍA 3 — EL AMOR PERMANECE",
-  cita: "“El amor nunca deja de ser.”",
-  referencia: "1 Corintios 13,8",
+  cita: "“El amor todo lo sufre, todo lo cree, todo lo espera, todo lo soporta. El amor nunca deja de ser; pero las profecías se acabarán, cesarán las lenguas y la ciencia se acabará.”",
+  referencia: "1 Corintios 13, 7-8",
   reflexion: "Hay personas que, aunque ya no estén físicamente con nosotros, permanecen para siempre en nuestro corazón. El amor que Mami Olguita dio a su familia no termina con su partida.",
   oracion: [
     "Señor, gracias por el amor que Mami Olguita entregó durante su vida.",

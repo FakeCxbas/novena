@@ -32,8 +32,8 @@ export const NOVENA_DATA = {
     {
       dia: 1,
       titulo: "DÍA 1 — LA ESPERANZA DE LA VIDA ETERNA",
-      cita: "“Yo soy la resurrección y la vida. El que cree en mí, aunque muera, vivirá.”",
-      referencia: "Juan 11,25",
+      cita: "«Jesús le dijo: “Yo soy la resurrección y la vida. El que cree en mí, aunque muera, vivirá; y todo el que vive y cree en mí, no morirá jamás. ¿Crees esto?”»",
+      referencia: "Juan 11, 25-26",
       reflexion: "Hoy comenzamos esta novena con la esperanza que nos da Jesús: la muerte no es el final para quienes creen en Él. Aunque sentimos profundamente la ausencia de Mami Olguita, confiamos en que Dios la ha recibido con amor y que su vida continúa junto a Él. Recordemos todo lo bueno que sembró en nuestra familia y demos gracias por haber tenido la dicha de compartir parte de nuestro camino con ella.",
       oracion: [
         "Señor Jesús, hoy ponemos delante de Ti el alma de nuestra querida Mami Olguita.",
@@ -47,8 +47,8 @@ export const NOVENA_DATA = {
     {
       dia: 2,
       titulo: "DÍA 2 — LA MORADA CELESTIAL",
-      cita: "“No se inquiete el corazón de ustedes. Crean en Dios y crean también en mí. En la casa de mi Padre hay muchas habitaciones... Yo voy a prepararles un lugar.”",
-      referencia: "Juan 14, 1-2",
+      cita: "«“No se turbe su corazón. Crean en Dios y crean también en mí. En la casa de mi Padre hay muchas moradas; si no fuera así, se lo habría dicho; voy, pues, a prepararles un lugar. Y cuando me vaya y les prepare un lugar, volveré otra vez y los llevaré conmigo, para que donde yo estoy, ustedes también estén.”»",
+      referencia: "Juan 14, 1-3",
       reflexion: "Hoy nos unimos con la firme esperanza de que Jesús ya preparó esa morada celestial para nuestra querida Mami Olguita. Dejamos ir la tristeza de este mundo sabiendo que ella descansa donde ya no existe la fatiga ni la enfermedad. Guardemos en familia un momento de oración y silencio para recordarla con amor y gratitud.",
       oracion: [
         "Oh Dios, cuya misericordia es infinita, acoge las oraciones que te dirigimos en este segundo día por el alma de nuestra querida Mami Olguita.",
@@ -60,8 +60,8 @@ export const NOVENA_DATA = {
     {
       dia: 3,
       titulo: "DÍA 3 — EL AMOR PERMANECE",
-      cita: "“El amor nunca deja de ser.”",
-      referencia: "1 Corintios 13,8",
+      cita: "«“El amor todo lo sufre, todo lo cree, todo lo espera, todo lo soporta. El amor nunca deja de ser; pero las profecías se acabarán, cesarán las lenguas y la ciencia se acabará.”»",
+      referencia: "1 Corintios 13, 7-8",
       reflexion: "Hay personas que, aunque ya no estén físicamente con nosotros, permanecen para siempre en nuestro corazón. El amor que Mami Olguita dio a su familia no termina con su partida.",
       oracion: [
         "Señor, gracias por el amor que Mami Olguita entregó durante su vida.",
@@ -74,8 +74,8 @@ export const NOVENA_DATA = {
     {
       dia: 4,
       titulo: "DÍA 4 — DIOS ES NUESTRO REFUGIO",
-      cita: "“Dios es nuestro refugio y nuestra fuerza, una ayuda siempre pronta en los peligros.”",
-      referencia: "Salmo 46,2",
+      cita: "«“Dios es nuestro amparo y nuestra fortaleza, nuestro pronto auxilio en las tribulaciones. Por tanto, no temeremos, aunque la tierra sea conmovida y se traspasen los montes al corazón del mar.”»",
+      referencia: "Salmo 46, 2-3",
       reflexion: "En los momentos de dolor buscamos refugio en Dios. Él conoce nuestras lágrimas, nuestra tristeza y todo aquello que llevamos dentro.",
       oracion: [
         "Señor, en este momento de tristeza buscamos refugio en Ti.",
@@ -88,8 +88,8 @@ export const NOVENA_DATA = {
     {
       dia: 5,
       titulo: "DÍA 5 — LA PAZ DE DIOS",
-      cita: "“Les dejo la paz, mi paz les doy.”",
-      referencia: "Juan 14,27",
+      cita: "«“La paz les dejo, mi paz les doy; yo no se la doy a ustedes como el mundo la da. No se turbe su corazón, ni tenga miedo.”»",
+      referencia: "Juan 14, 27",
       reflexion: "Hoy pedimos a Dios que conceda paz al alma de Mami Olguita y también a todos los corazones que sienten su ausencia.",
       oracion: [
         "Jesús amado, concede tu paz al alma de Mami Olguita.",
@@ -102,8 +102,8 @@ export const NOVENA_DATA = {
     {
       dia: 6,
       titulo: "DÍA 6 — LA MISERICORDIA DE DIOS",
-      cita: "“El Señor es compasivo y misericordioso, lento a la ira y rico en amor.”",
-      referencia: "Salmo 103,8",
+      cita: "«“Misericordioso y clemente es el Señor; lento para la ira y grande en misericordia. No contenderá para siempre, ni guardará el rencor eternamente.”»",
+      referencia: "Salmo 103, 8-9",
       reflexion: "Dios conoce el corazón de cada persona. Hoy confiamos en su misericordia y ponemos el alma de Mami Olguita en sus manos.",
       oracion: [
         "Padre misericordioso, ponemos nuevamente a Mami Olguita en tus manos.",
@@ -116,8 +116,8 @@ export const NOVENA_DATA = {
     {
       dia: 7,
       titulo: "DÍA 7 — LA FAMILIA PERMANECE UNIDA EN EL AMOR",
-      cita: "“Sobre todo, revístanse del amor, que es el vínculo perfecto.”",
-      referencia: "Colosenses 3,14",
+      cita: "«“Y sobre todas estas cosas, revístanse del amor, que es el vínculo perfecto. Y la paz de Dios gobierne en sus corazones, a la que asimismo fueron llamados en un solo cuerpo; y sean agradecidos.”»",
+      referencia: "Colosenses 3, 14-15",
       reflexion: "Mami Olguita formó parte de nuestra historia familiar y dejó una huella que permanecerá entre nosotros. Hoy pedimos que Dios nos ayude a permanecer unidos.",
       oracion: [
         "Señor, te damos gracias por nuestra familia.",
@@ -131,8 +131,8 @@ export const NOVENA_DATA = {
     {
       dia: 8,
       titulo: "DÍA 8 — LA ESPERANZA DEL REENCUENTRO",
-      cita: "“Y así estaremos siempre con el Señor. Consuélense, pues, unos a otros con estas palabras.”",
-      referencia: "1 Tesalonicenses 4,17-18",
+      cita: "«“Hermanos, no queremos que ignoren la suerte de los difuntos, para que no se aflijan como los que no tienen esperanza. Si creemos que Jesús murió y resucitó, de la misma manera Dios llevará con Jesús a los que murieron con él... Y así estaremos siempre con el Señor. Consuélense, pues, mutuamente con estas palabras.”»",
+      referencia: "1 Tesalonicenses 4, 13-14.17-18",
       reflexion: "La separación duele, pero nuestra fe nos enseña que la muerte no tiene la última palabra.",
       oracion: [
         "Señor Jesús, hoy te pedimos que fortalezcas nuestra esperanza.",
@@ -146,8 +146,8 @@ export const NOVENA_DATA = {
     {
       dia: 9,
       titulo: "DÍA 9 — GRACIAS POR TU VIDA, MAMI OLGUITA",
-      cita: "“Bienaventurados los que mueren en el Señor.”",
-      referencia: "Apocalipsis 14,13",
+      cita: "«“Oí una voz del cielo que me decía: «Escribe: Bienaventurados desde ahora los muertos que mueren en el Señor». «Sí —dice el Espíritu—, descansarán de sus fatigas, porque sus obras los acompañan».”»",
+      referencia: "Apocalipsis 14, 13",
       reflexion: "Llegamos al último día de esta novena. Durante estos nueve días hemos rezado por Mami Olguita, pero también hemos recordado todo lo que significó para nuestra familia. Hoy queremos despedir esta novena no con un adiós, sino con un GRACIAS.",
       oracion: [
         "Padre celestial, hoy terminamos esta novena poniendo nuevamente en tus manos el alma de nuestra querida Mami Olguita.",
