@@ -2,9 +2,36 @@
 import { NOVENA_DATA } from './novena-data.js?v=6.3';
 import { icon, replaceDomIcons } from './icons.js?v=6.3';
 
+// Cálculo automático del día de la Novena según fecha local (America/Guayaquil, UTC-5)
+// Día 1: 30 de Septiembre de 2026
+// Día 2: 1 de Octubre de 2026
+// Día 3: 2 de Octubre de 2026 (HOY)
+// Día 4: 3 de Octubre de 2026 (MAÑANA)... hasta Día 9
+function getAutoNovenaDay() {
+  try {
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Guayaquil',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const localDateStr = formatter.format(new Date());
+    const baseDate = new Date('2026-09-30T12:00:00Z');
+    const currentDate = new Date(localDateStr + 'T12:00:00Z');
+    const diffDays = Math.round((currentDate - baseDate) / (1000 * 60 * 60 * 24));
+    const day = 1 + diffDays;
+    return Math.min(Math.max(day, 1), 9);
+  } catch (e) {
+    const d = new Date();
+    const base = new Date(2026, 8, 30);
+    const diff = Math.floor((d - base) / (1000 * 60 * 60 * 24));
+    return Math.min(Math.max(1 + diff, 1), 9);
+  }
+}
+
 // Estado de la aplicación
 const state = {
-  currentDay: 1,
+  currentDay: getAutoNovenaDay(),
   currentStepIndex: 0,
   activeMysteryType: null, // 'gozosos', 'dolorosos', 'luminosos', 'gloriosos' o auto
   fontScaleIndex: 1,
@@ -951,9 +978,10 @@ function renderLogisticsModal() {
   // 1. Selector de Días
   const daysContainer = document.getElementById('logistics-days-grid');
   if (daysContainer) {
+    const autoDay = getAutoNovenaDay();
     daysContainer.innerHTML = NOVENA_DATA.dias.map(d => `
       <button class="logistics-day-btn ${d.dia === state.currentDay ? 'active' : ''}" onclick="window.selectDay(${d.dia})">
-        Día ${d.dia}
+        Día ${d.dia} ${d.dia === autoDay ? '(Hoy)' : ''}
       </button>
     `).join('');
   }

@@ -62,9 +62,43 @@ app.use('/control', express.static(path.join(__dirname, 'public'), {
   maxAge: '1d'
 }));
 
+// Cálculo automático del día de la Novena según fecha local (America/Guayaquil, UTC-5)
+// Día 1: 30 de Septiembre de 2026
+// Día 2: 1 de Octubre de 2026
+// Día 3: 2 de Octubre de 2026 (HOY)
+// Día 4: 3 de Octubre de 2026 (MAÑANA)... hasta Día 9
+function getLocalDateStr(d = new Date()) {
+  try {
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Guayaquil',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    return formatter.format(d); // YYYY-MM-DD
+  } catch (err) {
+    return new Date().toISOString().split('T')[0];
+  }
+}
+
+function getAutoNovenaDay(d = new Date()) {
+  try {
+    const localDateStr = getLocalDateStr(d);
+    const baseDate = new Date('2026-09-30T12:00:00Z'); // Día 1
+    const currentDate = new Date(localDateStr + 'T12:00:00Z');
+    const diffDays = Math.round((currentDate - baseDate) / (1000 * 60 * 60 * 24));
+    const day = 1 + diffDays;
+    return Math.min(Math.max(day, 1), 9);
+  } catch (err) {
+    return 3;
+  }
+}
+
 // Persistent in-memory state of the active Novena
 const novenaState = {
-  currentDay: 1,
+  currentDay: getAutoNovenaDay(),
+  lastCalculatedDateStr: getLocalDateStr(),
+  manualDayOverride: false,
   currentStepIndex: 0,
   selectedMystery: null, // null means auto by day of week
   currentAveMaria: 0,
@@ -75,6 +109,26 @@ const novenaState = {
   lastUpdate: Date.now(),
   sessionStartTime: Date.now()
 };
+
+function checkDateRollOver() {
+  const todayStr = getLocalDateStr();
+  if (novenaState.lastCalculatedDateStr !== todayStr) {
+    novenaState.lastCalculatedDateStr = todayStr;
+    const newAutoDay = getAutoNovenaDay();
+    console.log(`[Novena Auto-Día] Cambio de fecha detectado: ${todayStr}. Avanzando automáticamente al Día ${newAutoDay}`);
+    novenaState.currentDay = newAutoDay;
+    novenaState.currentStepIndex = 0;
+    novenaState.currentAveMaria = 0;
+    novenaState.manualDayOverride = false;
+    io.emit('step-changed', {
+      currentDay: novenaState.currentDay,
+      currentStepIndex: novenaState.currentStepIndex,
+      selectedMystery: novenaState.selectedMystery,
+      currentAveMaria: novenaState.currentAveMaria,
+      hostName: novenaState.hostName
+    });
+  }
+}
 
 function getParticipantsList() {
   const list = [];
@@ -116,6 +170,7 @@ app.get('/api/ping', (req, res) => {
 
 // HTTP Endpoint for light polling fallback if WebSockets fail in rural 3G
 app.get('/api/state', (req, res) => {
+  checkDateRollOver();
   res.setHeader('Cache-Control', 'no-cache, must-revalidate');
   res.json({
     ...novenaState,
@@ -127,7 +182,10 @@ app.get('/api/state', (req, res) => {
 // HTTP Endpoint para cambiar de paso desde logística con 100% de fiabilidad
 app.post('/api/step', (req, res) => {
   const { currentDay, currentStepIndex, selectedMystery, currentAveMaria } = req.body;
-  if (currentDay !== undefined) novenaState.currentDay = Number(currentDay);
+  if (currentDay !== undefined) {
+    novenaState.currentDay = Number(currentDay);
+    novenaState.manualDayOverride = true;
+  }
   if (currentStepIndex !== undefined) novenaState.currentStepIndex = Number(currentStepIndex);
   if (selectedMystery !== undefined) novenaState.selectedMystery = selectedMystery;
   if (currentAveMaria !== undefined) novenaState.currentAveMaria = Number(currentAveMaria);
@@ -240,6 +298,7 @@ app.post('/api/speaker', (req, res) => {
 
 // Socket.io Realtime Sync
 io.on('connection', (socket) => {
+  checkDateRollOver();
   console.log(`[Novena Socket] Cliente conectado: ${socket.id}`);
 
   // Send current state to newly joined client
@@ -416,7 +475,10 @@ io.on('connection', (socket) => {
 
   // Host navigation update (Sincronización instantánea a TODOS los clientes)
   socket.on('update-step', (data) => {
-    if (data.currentDay !== undefined) novenaState.currentDay = Number(data.currentDay);
+    if (data.currentDay !== undefined) {
+      novenaState.currentDay = Number(data.currentDay);
+      novenaState.manualDayOverride = true;
+    }
     if (data.currentStepIndex !== undefined) novenaState.currentStepIndex = Number(data.currentStepIndex);
     if (data.selectedMystery !== undefined) novenaState.selectedMystery = data.selectedMystery;
     if (data.currentAveMaria !== undefined) novenaState.currentAveMaria = Number(data.currentAveMaria);
