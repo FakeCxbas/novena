@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novena Día 5 - Guía para Invitados y Familia (Letra Grande) - Mami Olguita</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: letter portrait;
+      margin: 12mm 14mm 12mm 14mm;
+      @bottom-right {
+        content: "Página " counter(page);
+        font-size: 9pt;
+        color: #666;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      @bottom-left {
+        content: "Novena por Mami Olguita • Guía de Respuestas para la Familia • Día 5";
+        font-size: 9pt;
+        color: #666;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Lora', 'Georgia', serif;
+      color: #111827;
+      background: #ffffff;
+      line-height: 1.5;
+      font-size: 13.5pt; /* LETRA GRANDE PARA LECTURA CÓMODA */
+      margin: 0;
+      padding: 0 15px;
+    }
+
+    /* BARRA SUPERIOR PARA PANTALLA (OCULTA AL IMPRIMIR) */
+    .screen-actions {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: #1e3a8a;
+      color: #ffffff;
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      border-bottom: 2px solid #60a5fa;
+      margin: 0 -15px 20px -15px;
+    }
+
+    .screen-actions-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .screen-actions-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-print {
+      background: #60a5fa;
+      color: #0f172a;
+    }
+
+    .btn-print:hover {
+      background: #93c5fd;
+      transform: translateY(-1px);
+    }
+
+    .btn-pdf {
+      background: #ffffff;
+      color: #1e3a8a;
+    }
+
+    .btn-pdf:hover {
+      background: #f1f5f9;
+      transform: translateY(-1px);
+    }
+
+    .btn-orador {
+      background: rgba(255,255,255,0.18);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.35);
+    }
+
+    .btn-orador:hover {
+      background: rgba(255,255,255,0.28);
+    }
+
+    /* ENCABEZADO CONMEMORATIVO */
+    .cover-header {
+      text-align: center;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+      border-bottom: 2.5px solid #1e3a8a;
+    }
+
+    .cross-symbol {
+      font-size: 26pt;
+      color: #1e3a8a;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 20pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 4px 0;
+    }
+
+    .subtitle {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12pt;
+      font-weight: 700;
+      color: #851d2e;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 2px 0 6px 0;
+    }
+
+    .guide-tag {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10pt;
+      color: #4b5563;
+      font-style: italic;
+    }
+
+    /* SECCIONES Y ENCABEZADOS */
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 14pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      border-bottom: 1.5px solid #93c5fd;
+      padding-bottom: 4px;
+      margin: 16px 0 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    /* ROLES Y TEXTOS DESTACADOS */
+    .role-guia {
+      display: inline-block;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 9.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+      vertical-align: middle;
+    }
+
+    .role-todos {
+      display: inline-block;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: #1e3a8a;
+      color: #ffffff;
+      padding: 3px 9px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+      vertical-align: middle;
+    }
+
+    .voice-block {
+      margin-bottom: 10px;
+    }
+
+    .text-guia {
+      color: #4b5563;
+      font-size: 12pt;
+      line-height: 1.45;
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .text-todos {
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 13.5pt;
+      line-height: 1.5;
+      margin-top: 2px;
+    }
+
+    .rubric {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10pt;
+      color: #64748b;
+      font-style: italic;
+      margin: 3px 0 6px 0;
+    }
+
+    /* TARJETAS DE ORACIÓN PARA LA FAMILIA */
+    .card-todos-box {
+      background: #eff6ff;
+      border: 1.5px solid #bfdbfe;
+      border-left: 5px solid #1e3a8a;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+
+    .card-prayer-generic {
+      background: #f8fafc;
+      border-left: 4px solid #94a3b8;
+      border-radius: 0 6px 6px 0;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+    }
+
+    .jaculatoria-card {
+      background: #fef2f2;
+      border: 1.5px solid #fecaca;
+      border-left: 5.5px solid #851d2e;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 10px 0 14px 0;
+    }
+
+    .jaculatoria-header {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11pt;
+      font-weight: 800;
+      color: #851d2e;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .jaculatoria-line {
+      margin-bottom: 6px;
+      font-size: 13pt;
+      line-height: 1.4;
+    }
+
+    /* MISTERIOS RESUMEN */
+    .misterio-item {
+      background: #fdfaf3;
+      border: 1px solid #e2d1b3;
+      border-left: 4px solid #8c6d37;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+    }
+
+    .misterio-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11.5pt;
+      font-weight: 700;
+      color: #851d2e;
+      margin-bottom: 2px;
+    }
+
+    /* LETANÍAS */
+    .letanias-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 11pt;
+    }
+
+    .letanias-table td {
+      padding: 2.5px 6px;
+      border-bottom: 1px dotted #e2e8f0;
+      vertical-align: top;
+    }
+
+    .letania-resp {
+      font-weight: 700;
+      color: #1e3a8a;
+      text-align: right;
+      white-space: nowrap;
+      padding-left: 8px;
+    }
+
+    /* HOMENAJE */
+    .homenaje-card {
+      text-align: center;
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin: 16px 0;
+    }
+
+    .homenaje-nombre {
+      font-family: 'Cinzel', serif;
+      font-size: 16pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      letter-spacing: 0.08em;
+    }
+
+    .homenaje-texto {
+      font-size: 11.5pt;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    /* CONTROL DE IMPRESIÓN */
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        padding: 0;
+      }
+      .page-break {
+        page-break-after: always;
+        break-after: page;
+      }
+      .avoid-break {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE ACCIÓN PARA PANTALLA -->
+  <div class="screen-actions no-print">
+    <div class="screen-actions-title">
+      <span>👥 Guía de Respuestas para la Familia e Invitados • Día 5</span>
+    </div>
+    <div class="screen-actions-buttons">
+      <button class="btn-action btn-print" onclick="window.print()">
+        <span>🖨️ Imprimir Guía</span>
+      </button>
+      <a href="/Novena_Mami_Olguita_Dia_5_Invitados.pdf" download class="btn-action btn-pdf">
+        <span>📥 Descargar PDF Invitados</span>
+      </a>
+      <a href="/plantilla-imprimir-dia-5.html" class="btn-action btn-orador">
+        <span>📖 Guía del Orador</span>
+      </a>
+      <a href="/" class="btn-action btn-orador">
+        <span>⬅️ Volver a la App</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- PORTADA / ENCABEZADO -->
+  <div class="cover-header">
+    <div class="cross-symbol">✝</div>
+    <div class="main-title">Novena por el Eterno Descanso de Mami Olguita</div>
+    <div class="subtitle">Guía de Respuestas para la Familia e Invitados • Quinto Día</div>
+    <div class="guide-tag">Letra grande: tus respuestas y oraciones compartidas están resaltadas en <strong>[TODOS: NEGRITA]</strong></div>
+  </div>
+
+  <!-- I. SEÑAL DE LA CRUZ -->
+  <div class="avoid-break card-prayer-generic">
+    <div class="section-title">I. Señal de la Santa Cruz</div>
+    <div class="voice-block">
+      <div class="text-guia">Guía: Por la señal de la Santa Cruz, de nuestros enemigos, líbranos, Señor, Dios nuestro...</div>
+      <span class="role-todos" style="margin-top: 4px;">Todos</span>
+      <div class="text-todos">Amén.</div>
+    </div>
+  </div>
+
+  <!-- II. ACTO DE CONTRICIÓN -->
+  <div class="avoid-break">
+    <div class="section-title">II. Acto de Contrición (Rezado por Todos Juntos)</div>
+    <div class="rubric">(Toda la familia reza a una sola voz)</div>
+    <div class="card-todos-box">
+      <span class="role-todos">Todos</span>
+      <div class="text-todos" style="font-size: 14pt; margin-top: 4px;">
+        Señor mío Jesucristo, Dios y Hombre verdadero, Creador, Padre y Redentor mío; por ser Tú quien eres, Bondad infinita, y porque te amo sobre todas las cosas, me pesa de todo corazón haberte ofendido. Propongo firmemente nunca más pecar, apartarme de todas las ocasiones de ofenderte, confesarme y cumplir la penitencia que me fuere impuesta. Ofrezco, Señor, mi vida, obras y trabajos en satisfacción de todos mis pecados; y confío en tu bondad y misericordia infinita que me los perdonarás por los méritos de tu preciosísima Sangre, pasión y muerte, y me darás gracia para enmendarme y perseverar en tu santo servicio hasta el fin de mi vida. Amén.
+      </div>
+    </div>
+  </div>
+
+  <!-- III. INTENCIÓN DEL DÍA -->
+  <div class="avoid-break card-prayer-generic">
+    <div class="section-title">III. Intención y Meditación Inicial (Quinto Día)</div>
+    <div class="text-guia">
+      El Guía proclama la intención por el alma de mami Olguita:<br/>
+      «Señor Jesús, tú que eres la resurrección y la vida, nos reunimos en este quinto día para pedirte por el alma de nuestra mami Olguita... Dale la perseverancia de los justos y recíbela en tu descanso eterno.»
+    </div>
+    <div style="margin-top: 6px;">
+      <span class="role-todos">Todos</span>
+      <div class="text-todos">Amén.</div>
+    </div>
+  </div>
+
+  <!-- IV. EL CREDO -->
+  <div class="avoid-break">
+    <div class="section-title">IV. Profesión de Fe • El Credo de los Apóstoles</div>
+    <div class="rubric">(Proclamamos juntos con fe viva)</div>
+    <div class="card-todos-box">
+      <span class="role-todos">Todos</span>
+      <div class="text-todos" style="font-size: 13.5pt; margin-top: 4px;">
+        Creo en Dios, Padre Todopoderoso, Creador del cielo y de la tierra.<br/>
+        Creo en Jesucristo, su único Hijo, nuestro Señor, que fue concebido por obra y gracia del Espíritu Santo; nació de Santa María Virgen; padeció bajo el poder de Poncio Pilato; fue crucificado, muerto y sepultado; descendió a los infiernos; al tercer día resucitó de entre los muertos; subió a los cielos y está sentado a la derecha de Dios, Padre todopoderoso. Desde allí ha de venir a juzgar a vivos y muertos.<br/>
+        Creo en el Espíritu Santo, la Santa Iglesia Católica, la comunión de los santos, el perdón de los pecados, la resurrección de la carne y la vida eterna. Amén.
+      </div>
+    </div>
+  </div>
+
+  <!-- SALTO DE PÁGINA ANTES DEL ROSARIO -->
+  <div class="page-break"></div>
+
+  <!-- V. RESPUESTAS TRADICIONALES EN CADA MISTERIO -->
+  <div class="avoid-break">
+    <div class="section-title" style="text-align: center; border-bottom: 2px solid #1e3a8a; font-size: 16pt;">
+      V. Respuestas de la Familia en los 5 Misterios
+    </div>
+    <div class="rubric" style="text-align: center;">(En cada misterio el Guía inicia la primera parte y la familia responde a una sola voz)</div>
+
+    <div class="card-todos-box" style="margin-top: 10px;">
+      <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: #1e3a8a; font-size: 11pt; margin-bottom: 4px;">
+        1. Padre Nuestro:
+      </div>
+      <div class="text-guia">Guía: Padre nuestro, que estás en el cielo, santificado sea tu Nombre; venga a nosotros tu Reino; hágase tu voluntad, en la tierra como en el cielo...</div>
+      <span class="role-todos" style="margin-top: 6px;">Todos</span>
+      <div class="text-todos">
+        Danos hoy nuestro pan de cada día; perdona nuestras ofensas, como también nosotros perdonamos a los que nos ofenden; no nos dejes caer en la tentación y líbranos del mal. Amén.
+      </div>
+    </div>
+
+    <div class="card-todos-box">
+      <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: #1e3a8a; font-size: 11pt; margin-bottom: 4px;">
+        2. Diez Ave Marías (en cada misterio):
+      </div>
+      <div class="text-guia">Guía: Dios te salve, María, llena eres de gracia; el Señor es contigo. Bendita tú eres entre todas las mujeres y bendito es el fruto de tu vientre, Jesús...</div>
+      <span class="role-todos" style="margin-top: 6px;">Todos</span>
+      <div class="text-todos">
+        Santa María, Madre de Dios, ruega por nosotros, pecadores, ahora y en la hora de nuestra muerte. Amén.
+      </div>
+    </div>
+
+    <div class="card-todos-box">
+      <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: #1e3a8a; font-size: 11pt; margin-bottom: 4px;">
+        3. Gloria al Padre:
+      </div>
+      <div class="text-guia">Guía: Gloria al Padre, al Hijo y al Espíritu Santo...</div>
+      <span class="role-todos" style="margin-top: 6px;">Todos</span>
+      <div class="text-todos">
+        Como era en el principio, ahora y siempre, por los siglos de los siglos. Amén.
+      </div>
+    </div>
+  </div>
+
+  <!-- VI. JACULATORIA POR MAMI OLGUITA (DESTACADA) -->
+  <div class="avoid-break jaculatoria-card">
+    <div class="jaculatoria-header">
+      ⭐ Jaculatoria por Mami Olguita (Al terminar cada uno de los 5 misterios)
+    </div>
+    <div class="rubric">Después del Gloria de cada misterio, respondemos con mucha fe:</div>
+    
+    <div class="jaculatoria-line">
+      <span class="role-guia">Guía:</span> <span class="text-guia">Si por tu preciosa sangre, Señor, la has redimido.</span><br/>
+      <span class="role-todos">Todos:</span> <strong style="color: #851d2e; font-size: 14pt;">Que la perdones, te pido, por tu pasión dolorosa.</strong>
+    </div>
+
+    <div class="jaculatoria-line" style="border-top: 1px dashed #f87171; padding-top: 6px; margin-top: 6px;">
+      <span class="role-guia">Guía:</span> <span class="text-guia">Dale, Señor, el descanso eterno.</span><br/>
+      <span class="role-todos">Todos:</span> <strong style="color: #851d2e; font-size: 14pt;">Y luzca para ella la luz perpetua.</strong>
+    </div>
+
+    <div class="jaculatoria-line" style="border-top: 1px dashed #f87171; padding-top: 6px; margin-top: 6px;">
+      <span class="role-guia">Guía:</span> <span class="text-guia">Que el alma de nuestra mami Olguita y las demás del Purgatorio, por la misericordia de Dios, descansen en paz.</span><br/>
+      <span class="role-todos">Todos:</span> <strong style="color: #851d2e; font-size: 14pt;">Amén.</strong>
+    </div>
+  </div>
+
+  <!-- VII. GUÍA DE LOS 5 MISTERIOS GLORIOSOS -->
+  <div class="avoid-break">
+    <div class="section-title">VII. Los 5 Misterios Gloriosos de Hoy Domingo</div>
+    
+    <div class="misterio-item">
+      <div class="misterio-name">1º Misterio: La Resurrección del Hijo de Dios</div>
+      <div class="text-guia">Jesús venció a la muerte para darnos vida eterna. Confiamos en que mami Olguita resucitará con Cristo a una vida sin dolor.</div>
+    </div>
+
+    <div class="misterio-item">
+      <div class="misterio-name">2º Misterio: La Ascensión del Señor al Cielo</div>
+      <div class="text-guia">Jesús sube a preparar un lugar. Pedimos que las puertas del paraíso estén abiertas para mami Olguita en la casa del Padre.</div>
+    </div>
+
+    <div class="misterio-item">
+      <div class="misterio-name">3º Misterio: La Venida del Espíritu Santo</div>
+      <div class="text-guia">Rogamos que el Espíritu Divino traiga consuelo, paz y fortaleza al corazón de toda la familia.</div>
+    </div>
+
+    <div class="misterio-item">
+      <div class="misterio-name">4º Misterio: La Asunción de la Virgen María</div>
+      <div class="text-guia">Pedimos a la Virgen que tome de la mano a mami Olguita con amor de madre y la guíe al reino celestial.</div>
+    </div>
+
+    <div class="misterio-item">
+      <div class="misterio-name">5º Misterio: La Coronación de la Virgen María</div>
+      <div class="text-guia">Nos unimos a la alegría del cielo para que mami Olguita sea coronada con la gloria eterna.</div>
+    </div>
+  </div>
+
+  <!-- VIII. TRES AVEMARÍAS POR LA PUREZA -->
+  <div class="avoid-break card-prayer-generic">
+    <div class="section-title">VIII. Tres Ave Marías por su Pureza (Fe, Esperanza, Caridad)</div>
+    <div class="text-guia">El Guía encomienda nuestra fe, esperanza y caridad familiar. En cada una respondemos:</div>
+    <div style="margin-top: 6px;">
+      <span class="role-todos">Todos</span>
+      <div class="text-todos">Santa María, Madre de Dios, ruega por nosotros, pecadores, ahora y en la hora de nuestra muerte. Amén.</div>
+    </div>
+  </div>
+
+  <!-- IX. LA SALVE -->
+  <div class="avoid-break">
+    <div class="section-title">IX. La Salve a la Santísima Virgen María</div>
+    <div class="text-guia">Guía: Dios te salve, Reina y Madre de misericordia, vida, dulzura y esperanza nuestra. Dios te salve...</div>
+    <div class="card-todos-box" style="margin-top: 6px;">
+      <span class="role-todos">Todos</span>
+      <div class="text-todos" style="font-size: 13.5pt; margin-top: 4px;">
+        A Ti llamamos los desterrados hijos de Eva. A Ti suspiramos, gimiendo y llorando en este valle de lágrimas. Ea, pues, Señora, abogada nuestra, vuelve a nosotros esos tus ojos misericordiosos. Y después de este destierro, muéstranos a Jesús, fruto bendito de tu vientre. ¡Oh clemente, oh piadosa, oh dulce Virgen María! Ruega por nosotros, Santa Madre de Dios, para que seamos dignos de alcanzar las promesas de Nuestro Señor Jesucristo. Amén.
+      </div>
+    </div>
+  </div>
+
+  <!-- X. LETANÍAS -->
+  <div class="avoid-break card-prayer-generic">
+    <div class="section-title">X. Letanías Lauretanas (Respuestas de la Familia)</div>
+    <div class="rubric">(El Guía proclama la invocación y la Familia responde a la derecha)</div>
+    
+    <table class="letanias-table">
+      <tr>
+        <td>Señor, ten piedad.</td><td class="letania-resp">Señor, ten piedad.</td>
+        <td style="width: 14px;"></td>
+        <td>Causa de nuestra alegría.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Cristo, ten piedad.</td><td class="letania-resp">Cristo, ten piedad.</td>
+        <td></td>
+        <td>Rosa mística.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Señor, ten piedad.</td><td class="letania-resp">Señor, ten piedad.</td>
+        <td></td>
+        <td>Torre de David.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Cristo, óyenos.</td><td class="letania-resp">Cristo, óyenos.</td>
+        <td></td>
+        <td>Torre de marfil.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Cristo, escúchanos.</td><td class="letania-resp">Cristo, escúchanos.</td>
+        <td></td>
+        <td>Casa de oro.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Dios, Padre celestial.</td><td class="letania-resp">Ten piedad de nosotros.</td>
+        <td></td>
+        <td>Arca de la Alianza.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Dios Hijo, Redentor del mundo.</td><td class="letania-resp">Ten piedad de nosotros.</td>
+        <td></td>
+        <td>Puerta del cielo.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Dios Espíritu Santo.</td><td class="letania-resp">Ten piedad de nosotros.</td>
+        <td></td>
+        <td>Estrella de la mañana.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Santísima Trinidad, un solo Dios.</td><td class="letania-resp">Ten piedad de nosotros.</td>
+        <td></td>
+        <td>Salud de los enfermos.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Santa María.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Refugio de los pecadores.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Santa Madre de Dios.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Consuelo de los afligidos.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Santa Virgen de las Vírgenes.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Auxilio de los cristianos.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Madre de Cristo.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina de los Ángeles.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Madre de la Iglesia.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina de los Patriarcas.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Madre de la divina gracia.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina de los Profetas.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Madre purísima.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina de los Apóstoles.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Madre castísima.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina de los Mártires.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Madre de la esperanza.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina de los Confesores.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Madre del Creador.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina de las Vírgenes.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Madre del Salvador.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina de todos los Santos.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Virgen prudentísima.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina concebida sin pecado original.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Virgen digna de alabanza.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina asunta al Cielo.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Virgen clemente.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina del Santísimo Rosario.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Virgen fiel.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina de la familia.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Espejo de justicia.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td>Reina de la paz.</td><td class="letania-resp">Ruega por ella.</td>
+      </tr>
+      <tr>
+        <td>Trono de la sabiduría.</td><td class="letania-resp">Ruega por ella.</td>
+        <td></td>
+        <td></td><td></td>
+      </tr>
+    </table>
+
+    <div style="border-top: 1.5px solid #93c5fd; padding-top: 8px; margin-top: 8px;">
+      <div class="voice-block">
+        <span class="text-guia">Guía: Cordero de Dios, que quitas el pecado del mundo...</span><br/>
+        <span class="role-todos">Todos:</span> <strong style="color: #1e3a8a; font-size: 13.5pt;">Perdónanos, Señor.</strong>
+      </div>
+      <div class="voice-block">
+        <span class="text-guia">Guía: Cordero de Dios, que quitas el pecado del mundo...</span><br/>
+        <span class="role-todos">Todos:</span> <strong style="color: #1e3a8a; font-size: 13.5pt;">Escúchanos, Señor.</strong>
+      </div>
+      <div class="voice-block">
+        <span class="text-guia">Guía: Cordero de Dios, que quitas el pecado del mundo...</span><br/>
+        <span class="role-todos">Todos:</span> <strong style="color: #1e3a8a; font-size: 13.5pt;">Ten misericordia de nosotros.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- XI. ORACIÓN FAMILIAR Y DESPEDIDA -->
+  <div class="avoid-break card-prayer-generic">
+    <div class="section-title">XI. 🤍 Oración Familiar y Bendición Final</div>
+    <div class="text-guia">
+      El Guía proclama la oración familiar por la unión, el perdón y la sanación en memoria de mami Olguita:
+    </div>
+    
+    <div style="margin: 8px 0;">
+      <span class="role-todos">Todos</span>
+      <div class="text-todos">Amén. <em>(Todos nos persignamos)</em></div>
+    </div>
+
+    <div style="border-top: 1px dashed #94a3b8; padding-top: 8px; margin-top: 8px;">
+      <div class="text-guia">Guía: Dale, Señor, el descanso eterno...</div>
+      <span class="role-todos" style="margin-top: 4px;">Todos</span>
+      <div class="text-todos">
+        Y luzca para ella la luz perpetua. Que el alma de nuestra mami Olguita y las demás del Purgatorio, por la misericordia de Dios, descansen en paz. Amén.
+      </div>
+    </div>
+
+    <div style="border-top: 1px dashed #94a3b8; padding-top: 8px; margin-top: 8px;">
+      <div class="text-guia">Guía: El Señor nos bendiga, nos guarde de todo mal y nos lleve a la vida eterna...</div>
+      <span class="role-todos" style="margin-top: 4px;">Todos</span>
+      <div class="text-todos">Amén.</div>
+    </div>
+
+    <div class="homenaje-card">
+      <div class="homenaje-nombre">MAMI OLGUITA</div>
+      <div class="homenaje-texto">
+        Tu vida fue un regalo. • Tu amor fue una bendición. • Tu recuerdo será eterno.<br/>
+        <strong>Descansa en la paz del Señor.</strong>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -132,11 +132,11 @@
         <span>Recuerdos</span>
       </button>
 
-      <!-- Botón Plantilla Imprimir / PDF para el Orador -->
-      <a href="/plantilla-imprimir-dia-5.html" target="_blank" class="btn-header-album" id="btn-print-pdf" title="Guía en Papel para el Orador (Letra Grande) o Descargar PDF" style="text-decoration: none; border-color: var(--gold-primary); color: var(--gold-light);">
+      <!-- Botón Plantillas Imprimir / PDF (Orador e Invitados) -->
+      <button class="btn-header-album" id="btn-print-pdf" onclick="window.openModal('print-modal')" title="Plantillas para Imprimir en Papel o Descargar PDF" style="border-color: var(--gold-primary); color: var(--gold-light);">
         <i data-icon="book" data-size="14"></i>
         <span>Imprimir PDF</span>
-      </a>
+      </button>
 
       <!-- Ajuste tamaño de letra -->
       <button class="btn-header-icon" id="btn-font-size" onclick="window.cycleFontSize()" title="Tamaño de letra">A+</button>
@@ -262,6 +262,59 @@
         <button class="btn-enter-room" onclick="window.submitHostPin()">
           Tomar Control de la Novena
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PLANTILLAS PARA IMPRIMIR Y DESCARGAR PDF (ORADOR E INVITADOS) -->
+  <div class="modal-overlay" id="print-modal" onclick="if(event.target === this) window.closeModal('print-modal')">
+    <div class="modal-sheet" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display: flex; align-items: center; gap: 0.4rem; color: var(--gold-light);">
+          <i data-icon="book" data-size="18"></i>
+          <span>Plantillas para Imprimir y PDF</span>
+        </h3>
+        <button class="btn-header-icon" onclick="window.closeModal('print-modal')"><i data-icon="x" data-size="16"></i></button>
+      </div>
+
+      <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.45; margin-bottom: 0.8rem;">
+        Selecciona la versión que necesitas imprimir o descargar para el Quinto Día (ambas con letra grande y lectura fácil en papel):
+      </p>
+
+      <!-- Opción 1: Orador / Lector -->
+      <div style="background: rgba(223, 177, 91, 0.08); border: 1.5px solid var(--gold-primary); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 0.8rem;">
+        <div style="display: flex; align-items: center; gap: 0.4rem; font-weight: 700; color: var(--gold-light); font-size: 0.95rem; margin-bottom: 0.25rem;">
+          <span>📖 Guía del Orador / Lector</span>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 0.6rem 0; line-height: 1.35;">
+          Para quien lee y proclama las oraciones, citas bíblicas, meditaciones en voz alta y jaculatorias guiadas.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem;">
+          <a href="/plantilla-imprimir-dia-5.html" target="_blank" class="btn-bead-action" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: var(--gold-primary); color: #190a24; font-weight: 700; font-size: 0.78rem; padding: 0.5rem;">
+            <span>🖨️ Ver Imprimible</span>
+          </a>
+          <a href="/Novena_Mami_Olguita_Dia_5.pdf" download class="btn-bead-action" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: #851d2e; color: #ffffff; font-weight: 700; font-size: 0.78rem; padding: 0.5rem;">
+            <span>📥 Descargar PDF</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Opción 2: Invitados y Familia -->
+      <div style="background: rgba(37, 99, 235, 0.08); border: 1.5px solid rgba(96, 165, 250, 0.5); border-radius: var(--radius-md); padding: 0.85rem;">
+        <div style="display: flex; align-items: center; gap: 0.4rem; font-weight: 700; color: #93c5fd; font-size: 0.95rem; margin-bottom: 0.25rem;">
+          <span>👥 Guía para Invitados y Familia</span>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 0.6rem 0; line-height: 1.35;">
+          Resalta en negrita todas las respuestas compartidas, Acto de Contrición, Credo, misterios y jaculatorias a coro.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem;">
+          <a href="/plantilla-invitados-dia-5.html" target="_blank" class="btn-bead-action" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: #2563eb; color: #ffffff; font-weight: 700; font-size: 0.78rem; padding: 0.5rem;">
+            <span>🖨️ Ver Imprimible</span>
+          </a>
+          <a href="/Novena_Mami_Olguita_Dia_5_Invitados.pdf" download class="btn-bead-action" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: #1e3a8a; color: #ffffff; font-weight: 700; font-size: 0.78rem; padding: 0.5rem;">
+            <span>📥 Descargar PDF</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
