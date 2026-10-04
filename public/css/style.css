@@ -69,7 +69,10 @@
 
 html, body {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
   background-color: var(--bg-primary);
   background-image: 
     radial-gradient(ellipse at 50% 0%, rgba(192, 51, 116, 0.08) 0%, transparent 70%),
@@ -78,9 +81,12 @@ html, body {
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: calc(1.04rem * var(--font-scale));
-  line-height: 1.8;
-  overflow-x: hidden;
+  line-height: 1.5;
+  overflow: hidden !important;
+  overscroll-behavior: none;
   -webkit-text-size-adjust: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .icon-svg {
@@ -97,6 +103,15 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow: hidden !important;
+  position: fixed;
+  inset: 0;
 }
 
 /* ========================================================
@@ -438,28 +453,57 @@ body {
   display: flex;
   align-items: center;
   gap: 0.45rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.btn-header-album,
+.btn-tv-fullscreen,
+.btn-header-icon {
+  height: 32px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .btn-header-album {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
+  padding: 0 0.7rem;
   background: var(--bg-surface-elevated);
   border: 1px solid var(--fucsia-border);
   color: var(--fucsia-soft);
-  border-radius: var(--radius-full);
-  padding: 0.25rem 0.65rem;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .btn-header-album:hover, .btn-header-album:active {
   background: var(--fucsia-tint);
   border-color: var(--fucsia-light);
   color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(192, 51, 116, 0.3);
+}
+
+.btn-tv-fullscreen {
+  padding: 0 0.7rem;
+  background: rgba(223, 177, 91, 0.1);
+  border: 1px solid var(--gold-border);
+  color: var(--gold-primary);
+}
+
+.btn-tv-fullscreen:hover, .btn-tv-fullscreen:active {
+  background: rgba(223, 177, 91, 0.22);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(223, 177, 91, 0.25);
 }
 
 .album-badge {
@@ -472,170 +516,23 @@ body {
 }
 
 .btn-header-icon {
+  width: 32px;
+  padding: 0;
   background: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
-  border-radius: var(--radius-full);
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 0.8rem;
-  transition: all 0.2s ease;
 }
 
 .btn-header-icon:hover {
   border-color: var(--gold-primary);
   color: var(--gold-light);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
 }
 
 /* ========================================================
    TIRA HORIZONTAL DE CÁMARAS VISIBLE (~82px de alto)
    ======================================================== */
-.family-cameras-strip-container {
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 0.35rem 0.6rem;
-  overflow-x: auto;
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  height: 82px;
-  transition: all 0.3s ease;
-  scrollbar-width: none;
-}
-
-.family-cameras-strip-container::-webkit-scrollbar {
-  display: none;
-}
-
-/* Modo galería expandida (si tocan el botón de cámara) */
-.family-cameras-strip-container.expanded-grid {
-  height: auto;
-  max-height: 48vh;
-  overflow-y: auto;
-  white-space: normal;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 0.6rem;
-}
-
-.camera-mini-tile {
-  width: 82px;
-  height: 72px;
-  flex-shrink: 0;
-  border-radius: 12px;
-  background: #100d0b;
-  border: 1.5px solid var(--border-subtle);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.expanded-grid .camera-mini-tile {
-  width: calc(50% - 0.4rem);
-  height: 120px;
-}
-
-.camera-mini-tile video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.camera-mini-tile.self video {
-  transform: scaleX(-1);
-}
-
-.camera-mini-avatar {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #2a201b, #18120f);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-serif);
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: var(--gold-light);
-}
-
-.camera-mini-tile.is-speaker {
-  border: 2px solid var(--gold-amber) !important;
-  box-shadow: 0 0 14px rgba(245, 158, 11, 0.9) !important;
-  animation: speakerGlow 2s infinite ease-in-out;
-}
-
-.camera-mini-tile.is-speaking {
-  border-color: #22c55e !important;
-  box-shadow: 0 0 12px rgba(34, 197, 94, 0.85) !important;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.tile-mic-indicator {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  background: rgba(0, 0, 0, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: var(--radius-full);
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.65rem;
-  cursor: pointer;
-  z-index: 5;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-}
-
-.tile-mic-indicator.muted {
-  background: rgba(239, 68, 68, 0.9);
-  border-color: #ef4444;
-}
-
-.speaker-badge-tag {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  background: var(--gold-amber);
-  color: #111;
-  font-family: var(--font-sans);
-  font-size: 0.55rem;
-  font-weight: 800;
-  padding: 1px 4px;
-  border-radius: 4px;
-  z-index: 5;
-}
-
-.camera-mini-name {
-  position: absolute;
-  bottom: 2px;
-  left: 2px;
-  right: 2px;
-  background: rgba(0, 0, 0, 0.78);
-  font-family: var(--font-sans);
-  font-size: 0.62rem;
-  font-weight: 600;
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 1px 3px;
-  border-radius: 4px;
-}
-
 @keyframes speakerGlow {
   0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.7); }
   50% { box-shadow: 0 0 16px rgba(245, 158, 11, 1); }
@@ -646,33 +543,53 @@ body {
    (OPTIMIZADO PARA PANTALLA GRANDE / DISPOSICIÓN HORIZONTAL TV)
    ======================================================== */
 .main-prayer-container {
-  flex: 1;
+  flex: 1 1 0%;
+  min-height: 0;
+  height: auto;
+  max-height: calc(100dvh - 92px);
   width: 100%;
-  max-width: 680px;
+  max-width: 1040px;
   margin: 0 auto;
-  padding: 0.6rem 0.9rem 5.5rem 0.9rem;
-  transition: all 0.3s ease;
+  padding: clamp(0.2rem, 0.8vh, 0.5rem) clamp(0.5rem, 1.5vw, 1.2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  overflow: hidden !important;
+  box-sizing: border-box;
 }
 
-/* Columna lateral memorial para TV y pantallas horizontales */
+/* Columna lateral memorial para TV (Oculta para dar paso a pantalla limpia única) */
 .tv-memorial-sidebar {
-  display: none;
+  display: none !important;
 }
 
 .prayer-card {
+  width: 100%;
+  max-width: 1040px;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background: var(--bg-surface);
   border: 1px solid var(--fucsia-border-subtle);
   border-radius: var(--radius-lg);
-  padding: 1.6rem 1.3rem;
+  padding: clamp(0.45rem, 1.2vh, 0.95rem) clamp(0.8rem, 2vw, 1.6rem);
   box-shadow: var(--shadow-card);
+  overflow: hidden !important;
+  box-sizing: border-box;
 }
 
 .card-top-header {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.6rem;
-  padding-bottom: 0.45rem;
+  margin-bottom: clamp(0.15rem, 0.5vh, 0.35rem);
+  padding-bottom: clamp(0.1rem, 0.4vh, 0.25rem);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -697,13 +614,26 @@ body {
 }
 
 .section-title {
+  flex-shrink: 0;
   font-family: var(--font-serif);
-  font-size: 1.7rem;
+  font-size: clamp(1.15rem, min(1.8vw, 2.7vh), 1.65rem);
   font-weight: 600;
   color: #ffffff;
-  margin-bottom: 1.1rem;
-  line-height: 1.35;
+  margin-bottom: clamp(0.2rem, 0.6vh, 0.45rem);
+  line-height: 1.2;
   letter-spacing: 0.01em;
+}
+
+#card-step-body {
+  flex: 1 1 0%;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  overflow: hidden !important;
 }
 
 /* Cita Bíblica (Estilo Editorial Clásico) */
@@ -736,28 +666,31 @@ body {
    DIÁLOGOS LITÚRGICOS: GUÍA Y TODOS (Claros y Espaciosos)
    ======================================================== */
 .dialogo-block {
-  margin-bottom: 1.3rem;
+  margin-bottom: clamp(0.25rem, 0.8vh, 0.65rem);
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: clamp(0.35rem, 1vh, 0.65rem);
 }
 
 /* Guía */
 .dialogo-block .guia-part, .guia-part {
-  background: rgba(255, 255, 255, 0.02);
-  border-left: 2.5px solid var(--gold-primary);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 0.85rem 1.05rem;
+  background: rgba(223, 177, 91, 0.08);
+  border: 1px solid rgba(223, 177, 91, 0.25);
+  border-left: 4.5px solid var(--gold-primary);
+  border-radius: var(--radius-md);
+  padding: clamp(0.45rem, 1.2vh, 0.95rem) clamp(0.75rem, 1.6vw, 1.4rem);
 }
 
 .voice-badge {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   font-family: var(--font-sans);
-  font-size: 0.7rem;
+  font-size: clamp(0.75rem, 1.2vh, 0.92rem);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  margin-bottom: 0.35rem;
+  margin-bottom: clamp(0.15rem, 0.4vh, 0.3rem);
 }
 
 .voice-badge.guia {
@@ -770,18 +703,18 @@ body {
 
 .voice-text {
   font-family: var(--font-body);
-  font-size: 1.08rem;
-  line-height: 1.8;
-  color: var(--text-primary);
+  font-size: clamp(0.95rem, min(1.4vw, 2.2vh), 1.42rem);
+  line-height: clamp(1.36, 2.5vh, 1.58);
+  color: #ffffff;
 }
 
 /* Todos responden a coro (Caja distinguida en tono rosa suave) */
 .dialogo-block .todos-part, .todos-part {
-  background: var(--fucsia-tint);
+  background: rgba(192, 51, 116, 0.1);
   border: 1px solid var(--fucsia-border-subtle);
-  border-left: 3px solid var(--fucsia-primary);
-  border-radius: var(--radius-sm);
-  padding: 0.95rem 1.15rem;
+  border-left: 4.5px solid var(--fucsia-primary);
+  border-radius: var(--radius-md);
+  padding: clamp(0.45rem, 1.2vh, 0.95rem) clamp(0.75rem, 1.6vw, 1.4rem);
 }
 
 .todos-part .voice-text {
@@ -965,166 +898,119 @@ body:not(.is-speaker):not(.is-host) .beads-control-btns {
 }
 
 /* ========================================================
-   BARRA INFERIOR FLOTANTE SEGÚN EL ROL (~54px)
+   BARRA INFERIOR FLOTANTE / FIJA (~50px)
    ======================================================== */
 .bottom-floating-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: static !important;
+  flex-shrink: 0;
+  height: 50px;
+  max-height: 50px;
+  width: 100%;
   z-index: 100;
-  background-color: var(--bg-surface-translucent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(16, 12, 18, 0.96);
   border-top: 1px solid var(--border-subtle);
-  height: 56px;
-  padding: 0.35rem 0.8rem;
-  padding-bottom: max(0.35rem, env(safe-area-inset-bottom));
+  padding: 0 0.8rem;
+  padding-bottom: max(0rem, env(safe-area-inset-bottom));
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
 .bottom-bar-inner {
   width: 100%;
-  max-width: 680px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Vistas de control por Rol */
-body.role-familia .family-listener-controls {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-body.role-familia .host-nav-controls {
-  display: none !important;
-}
-
-body.is-host .family-listener-controls {
-  display: none !important;
-}
-
-body.is-host .host-nav-controls {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-/* Botón principal de la Familia: Voz */
-.listener-mic-action {
-  flex: 1;
-  height: 42px;
-  border-radius: var(--radius-full);
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  font-weight: 700;
+  max-width: 1650px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  cursor: pointer;
-  border: 1.5px solid transparent;
-  transition: all 0.2s ease;
+  gap: 0.75rem;
 }
 
-.listener-mic-open {
-  background: rgba(34, 197, 94, 0.22);
-  border-color: var(--success-color);
-  color: #bbf7d0;
-}
-
-.listener-mic-muted {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: var(--danger-color);
-  color: #fca5a5;
-}
-
-.btn-cam-toggle {
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-md);
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
+.host-nav-controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  cursor: pointer;
+  gap: 0.65rem;
   flex-shrink: 0;
 }
 
-/* Botones de navegación del Anfitrión */
-.host-nav-controls {
-  display: none;
-}
-
+/* Botones de navegación (Anterior, Logística, Siguiente) */
 .btn-host-step {
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md);
+  height: 36px;
+  padding: 0 0.95rem;
+  border-radius: var(--radius-full);
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
-  border: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-}
-
-.btn-host-step.next {
-  background: var(--fucsia-btn);
-  color: #ffffff;
-  flex: 1;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(176, 42, 102, 0.35);
-  transition: all 0.2s ease;
-}
-
-.btn-host-step.next:hover {
-  background: var(--fucsia-btn-hover);
-  transform: translateY(-1px);
+  gap: 0.35rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  white-space: nowrap;
 }
 
 .btn-host-step.prev {
   background: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
-  transition: all 0.2s ease;
 }
 
-.btn-host-step.prev:hover {
-  color: var(--text-primary);
-  border-color: var(--border-strong);
+.btn-host-step.prev:hover:not(:disabled) {
+  color: #ffffff;
+  border-color: var(--gold-primary);
+  transform: translateY(-1px);
+}
+
+.btn-host-step.prev:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .btn-host-logistics {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--fucsia-border);
-  color: var(--fucsia-light);
-  padding: 0.75rem 0.9rem;
-  border-radius: var(--radius-md);
+  height: 36px;
+  padding: 0 0.85rem;
+  border-radius: var(--radius-full);
+  background: rgba(223, 177, 91, 0.1);
+  border: 1px solid var(--gold-border);
+  color: var(--gold-light);
   font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 600;
-  display: flex;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center;
+  gap: 0.35rem;
   cursor: pointer;
   flex-shrink: 0;
+  white-space: nowrap;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .btn-host-logistics:hover {
-  background: var(--fucsia-tint);
-  border-color: var(--fucsia-light);
+  background: rgba(223, 177, 91, 0.22);
+  border-color: var(--gold-primary);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-host-step.next {
+  background: linear-gradient(135deg, var(--fucsia-btn) 0%, #db2777 100%);
+  border: none;
+  color: #ffffff;
+  padding: 0 1.25rem;
+  box-shadow: 0 2px 10px rgba(192, 51, 116, 0.45);
+}
+
+.btn-host-step.next:hover {
+  background: linear-gradient(135deg, var(--fucsia-btn-hover) 0%, #f43f5e 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(192, 51, 116, 0.65);
 }
 
 /* ========================================================
@@ -1234,93 +1120,7 @@ body.is-host .host-nav-controls {
   color: #fff;
 }
 
-/* Botones de acción de audio global */
-.btn-audio-action {
-  padding: 0.75rem 0.6rem;
-  border-radius: var(--radius-md);
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  border: none;
-  transition: all 0.2s ease;
-}
 
-.btn-audio-action.mute {
-  background: rgba(239, 68, 68, 0.22);
-  border: 1.5px solid var(--danger-color);
-  color: #fca5a5;
-}
-
-.btn-audio-action.unmute {
-  background: rgba(34, 197, 94, 0.22);
-  border: 1.5px solid var(--success-color);
-  color: #86efac;
-}
-
-.family-members-mic-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  margin-top: 0.4rem;
-  max-height: 220px;
-  overflow-y: auto;
-}
-
-.family-member-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0.7rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-}
-
-.family-member-name {
-  font-family: var(--font-sans);
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.family-member-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.btn-member-mic {
-  padding: 0.35rem 0.65rem;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  border: 1px solid transparent;
-}
-
-.btn-member-mic.active-voice {
-  background: rgba(34, 197, 94, 0.2);
-  border-color: var(--success-color);
-  color: #86efac;
-}
-
-.btn-member-mic.muted-voice {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: var(--danger-color);
-  color: #fca5a5;
-}
 
 /* Toast de Alertas */
 .toast-container {
@@ -2239,33 +2039,266 @@ body:not(.is-host) .family-farewell-await-card {
   color: var(--gold-light);
 }
 
+/* ========================================================
+   DISPOSICIÓN HORIZONTAL / MODO PANTALLA GRANDE (TV)
+   Diseñado especialmente para pantalla única (sin scroll vertical)
+   ======================================================== */
+.btn-tv-fullscreen {
+  background: rgba(223, 177, 91, 0.1);
+  border: 1px solid var(--gold-border);
+  color: var(--gold-primary);
+}
+
+.btn-tv-fullscreen:hover {
+  background: rgba(223, 177, 91, 0.22);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+}
+
+/* Disposición en Pantalla Única: 1 solo tema / oración por pantalla con letras grandes */
+.prayer-grid-2col,
+.prayer-mystery-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.prayer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.single-prayer-view {
+  width: 100%;
+  max-width: 980px;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(0.3rem, 0.9vh, 0.65rem);
+  overflow: hidden !important;
+}
+
+.rubric-hint {
+  font-family: var(--font-serif);
+  font-size: clamp(0.85rem, 1.4vh, 1.15rem);
+  color: var(--gold-amber);
+  font-style: italic;
+  text-align: center;
+  margin-bottom: clamp(0.1rem, 0.3vh, 0.25rem);
+}
+
+.prayer-compact-card {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: clamp(0.4rem, 1vh, 0.8rem) clamp(0.75rem, 1.6vw, 1.4rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.15rem, 0.5vh, 0.35rem);
+}
+
+.prayer-compact-header {
+  font-family: var(--font-sans);
+  font-size: clamp(0.76rem, 1.1vh, 0.92rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dialogo-compact {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.2rem, 0.7vh, 0.45rem);
+  font-size: clamp(0.95rem, min(1.4vw, 2.2vh), 1.42rem);
+  line-height: clamp(1.36, 2.5vh, 1.58);
+}
+
+.dialogo-compact .voice-text {
+  font-size: clamp(0.95rem, min(1.4vw, 2.2vh), 1.42rem);
+  line-height: clamp(1.36, 2.5vh, 1.58);
+}
+
+.dialogo-compact .guia-part,
+.dialogo-compact .todos-part {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+/* Barra horizontal de Avemarías */
+.mystery-beads-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.beads-row-compact {
+  display: flex;
+  gap: 0.22rem;
+  align-items: center;
+}
+
+.bead-item-compact {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bead-item-compact.completed {
+  background: var(--gold-primary);
+  border-color: var(--gold-primary);
+  color: #111111;
+}
+
+.bead-item-compact.active {
+  border-color: var(--fucsia-light);
+  background: var(--fucsia-btn);
+  color: #ffffff;
+  transform: scale(1.18);
+}
+
+.btn-bead-add-compact {
+  background: rgba(223, 177, 91, 0.16);
+  border: 1px solid var(--gold-border);
+  border-radius: 4px;
+  color: var(--gold-light);
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.18rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-bead-add-compact:hover {
+  background: rgba(223, 177, 91, 0.3);
+  color: #ffffff;
+}
+
+/* Letanías en 2 columnas legibles y 3 columnas widescreen sin scroll */
+.letanias-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.18rem, 0.5vh, 0.35rem) clamp(0.4rem, 1vw, 0.8rem);
+  width: 100%;
+}
+
+.letanias-grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.16rem 0.65rem;
+  width: 100%;
+}
+
+.letania-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(0.18rem, 0.45vh, 0.32rem) 0.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.letania-invocacion {
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(0.85rem, min(1.2vw, 1.9vh), 1.15rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 68%;
+}
+
+.letania-respuesta {
+  color: var(--gold-primary);
+  font-weight: 700;
+  font-family: var(--font-sans);
+  font-size: clamp(0.8rem, min(1.05vw, 1.8vh), 1.05rem);
+  white-space: nowrap;
+}
+
+/* Reglas de Pantalla Única (100vh / sin scroll) */
 @media (min-width: 700px), (orientation: landscape) {
+  html, body {
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow: hidden !important;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-nav {
+    flex-shrink: 0;
+    height: 42px;
+    padding: 0.2rem 0.85rem;
+  }
+
   .main-prayer-container {
-    max-width: 1400px;
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 100%;
+    max-height: calc(100dvh - 92px) !important;
+    max-width: 1080px;
     width: 96%;
-    display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
-    gap: 1.8rem;
-    align-items: start;
-    padding: 1.2rem 1.4rem 6rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: clamp(0.2rem, 0.8vh, 0.45rem) 1rem;
+    margin: 0 auto;
+    overflow: hidden !important;
   }
 
   .tv-memorial-sidebar {
-    display: block;
-    position: sticky;
-    top: 56px;
-    z-index: 10;
+    display: none !important;
   }
 
   .tv-sidebar-card {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.65rem 0.85rem;
+    overflow: hidden;
     background: var(--bg-surface);
     border: 1px solid var(--gold-border);
     border-radius: var(--radius-lg);
-    padding: 1.5rem 1.3rem;
     text-align: center;
     box-shadow: var(--shadow-warm);
     position: relative;
-    overflow: hidden;
   }
 
   .tv-sidebar-card::before {
@@ -2280,13 +2313,14 @@ body:not(.is-host) .family-farewell-await-card {
 
   .tv-portrait-container {
     position: relative;
-    width: 100%;
+    max-height: clamp(100px, 17vh, 170px);
+    width: auto;
     aspect-ratio: 1;
+    margin: 0 auto 0.35rem auto;
     border-radius: var(--radius-md);
     overflow: hidden;
-    border: 2px solid var(--gold-primary);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-    margin-bottom: 1.1rem;
+    border: 1.5px solid var(--gold-primary);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
     background: #000000;
   }
 
@@ -2300,49 +2334,55 @@ body:not(.is-host) .family-farewell-await-card {
 
   .tv-candle-badge {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
+    bottom: 5px;
+    right: 5px;
     background: rgba(20, 15, 23, 0.92);
-    border: 1.5px solid var(--gold-primary);
+    border: 1px solid var(--gold-primary);
     border-radius: 50%;
-    width: 38px;
-    height: 38px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
     z-index: 2;
+  }
+
+  .tv-candle-svg {
+    width: 16px;
+    height: 18px;
   }
 
   .tv-sidebar-name {
     font-family: var(--font-serif);
-    font-size: 1.85rem;
+    font-size: 1.45rem;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 0.2rem;
-    letter-spacing: 0.01em;
+    margin-bottom: 0.1rem;
+    line-height: 1.1;
   }
 
   .tv-sidebar-quote {
     font-family: var(--font-serif);
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-style: italic;
     color: var(--gold-primary);
-    margin-bottom: 0.85rem;
+    margin-bottom: 0.35rem;
+    line-height: 1.2;
   }
 
   .tv-sidebar-day-badge {
     display: inline-block;
     font-family: var(--font-sans);
-    font-size: 0.74rem;
+    font-size: 0.68rem;
     font-weight: 600;
     color: var(--fucsia-light);
     background: rgba(192, 51, 116, 0.1);
     border: 1px solid var(--fucsia-border);
     border-radius: var(--radius-full);
-    padding: 0.25rem 0.85rem;
-    margin-bottom: 1rem;
-    letter-spacing: 0.05em;
+    padding: 0.15rem 0.65rem;
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
@@ -2350,13 +2390,13 @@ body:not(.is-host) .family-farewell-await-card {
     background: var(--bg-surface-elevated);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
-    padding: 0.65rem 0.9rem;
+    padding: 0.35rem 0.65rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: 0.35rem;
     font-family: var(--font-sans);
-    font-size: 0.84rem;
+    font-size: 0.78rem;
   }
 
   .tv-speaker-title {
@@ -2372,8 +2412,8 @@ body:not(.is-host) .family-farewell-await-card {
     background: var(--bg-surface-elevated);
     border: 1px solid var(--gold-border);
     border-radius: var(--radius-md);
-    padding: 0.85rem;
-    margin-bottom: 1rem;
+    padding: 0.45rem 0.65rem;
+    margin-bottom: 0.35rem;
   }
 
   .tv-rosary-header {
@@ -2381,30 +2421,30 @@ body:not(.is-host) .family-farewell-await-card {
     justify-content: space-between;
     align-items: center;
     font-family: var(--font-sans);
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--gold-primary);
-    margin-bottom: 0.65rem;
+    margin-bottom: 0.35rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
   }
 
   .tv-rosary-dots {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 0.5rem;
+    gap: 0.32rem;
     justify-items: center;
   }
 
   .tv-rosary-dot {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     border: 1.5px solid var(--border-subtle);
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-muted);
     font-family: var(--font-sans);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -2427,74 +2467,100 @@ body:not(.is-host) .family-farewell-await-card {
 
   .tv-remote-hint {
     font-family: var(--font-sans);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     color: var(--text-muted);
-    padding: 0.45rem 0.2rem 0 0.2rem;
+    padding-top: 0.3rem;
     border-top: 1px solid var(--border-subtle);
-    line-height: 1.45;
+    line-height: 1.35;
   }
 
   .tv-remote-hint strong {
     color: var(--gold-primary);
   }
 
-  /* Escalado de la lectura sagrada en pantalla grande */
+  /* Santuario Litúrgico en Pantalla Única */
   .prayer-card {
-    padding: 2.2rem 2.6rem;
+    height: 100%;
+    max-height: 100% !important;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    overflow: hidden !important;
+    background: var(--bg-surface);
+    border: 1px solid var(--fucsia-border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
   }
 
-  .section-title {
-    font-size: 2.25rem;
-    line-height: 1.32;
-    margin-bottom: 1.35rem;
-  }
-
-  .voice-text {
-    font-size: 1.25rem;
-    line-height: 1.88;
-  }
-
-  .dialogo-block .guia-part, .dialogo-block .todos-part {
-    padding: 1.1rem 1.45rem;
-  }
-
-  .bible-quote-box {
-    font-size: 1.35rem;
-    line-height: 1.85;
-    padding: 1.25rem 1.65rem;
+  .card-top-header {
+    flex-shrink: 0;
+    margin-bottom: 0.2rem;
+    padding-bottom: 0.15rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .day-badge-text {
-    font-size: 0.8rem;
-  }
-}
-
-/* Escalado extra para pantallas gigantes / Smart TV 1080p y 4K */
-@media (min-width: 1400px) {
-  .main-prayer-container {
-    max-width: 1680px;
-    grid-template-columns: 420px minmax(0, 1fr);
-    gap: 3rem;
-    padding: 1.8rem 2.2rem 7rem 2.2rem;
+    font-size: 0.72rem;
   }
 
   .section-title {
-    font-size: 2.7rem;
+    flex-shrink: 0;
+    font-size: clamp(1.15rem, 1.8vh, 1.5rem);
+    line-height: 1.18;
+    margin-bottom: 0.25rem;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  #card-step-body {
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 100%;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    overflow: hidden !important;
+  }
+
+  .bottom-floating-bar {
+    flex-shrink: 0;
+    height: 50px;
+    max-height: 50px;
+    padding: 0 0.85rem;
+    position: static !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden !important;
+  }
+}
+
+/* Escalado para pantallas grandes / Smart TV 1080p y 4K */
+@media (min-width: 1400px) {
+  .main-prayer-container {
+    max-width: 1140px;
+    padding: 0.4rem 1.4rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.3rem, 2.4vh, 1.85rem);
   }
 
   .voice-text {
-    font-size: 1.4rem;
-    line-height: 1.95;
+    font-size: clamp(1.05rem, min(1.6vw, 2.4vh), 1.5rem);
+    line-height: clamp(1.38, 2.6vh, 1.6);
   }
 
-  .bible-quote-box {
-    font-size: 1.5rem;
-    line-height: 1.92;
-    padding: 1.45rem 1.9rem;
-  }
-
-  .dialogo-block .guia-part, .dialogo-block .todos-part {
-    padding: 1.3rem 1.8rem;
+  .dialogo-compact .voice-text {
+    font-size: clamp(1.05rem, min(1.6vw, 2.4vh), 1.5rem);
+    line-height: clamp(1.38, 2.6vh, 1.6);
   }
 
   .theater-quote-text {
@@ -2503,6 +2569,16 @@ body:not(.is-host) .family-farewell-await-card {
 
   .theater-active-photo {
     max-height: 75vh;
+  }
+}
+
+@media (max-width: 699px) and (orientation: portrait) {
+  .prayer-grid-2col,
+  .prayer-mystery-grid {
+    grid-template-columns: 1fr;
+  }
+  .letanias-grid-3col {
+    grid-template-columns: 1fr;
   }
 }
 

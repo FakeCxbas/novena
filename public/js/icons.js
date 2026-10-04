@@ -2,12 +2,15 @@
 // Proporciona iconos profesionales, solemnes y nítidos inspirados en Lucide/Feather.
 
 export const ICONS = {
-  // Vela litúrgica y llama sagrada
+  // Vela litúrgica y llama sagrada con cuerpo sólido y resplandor
   candle: `
-    <svg viewBox="0 0 24 24" width="{size}" height="{size}" fill="none" stroke="{color}" stroke-width="{stroke}" stroke-linecap="round" stroke-linejoin="round" class="{class}">
-      <path d="M12 2c.8 1.4 1.5 2.5 1.5 3.5a1.5 1.5 0 0 1-3 0c0-1 .7-2.1 1.5-3.5Z" fill="#F59E0B" stroke="#DFB15B"/>
-      <path d="M9 10h6v11a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V10Z"/>
-      <line x1="12" y1="5.5" x2="12" y2="10"/>
+    <svg viewBox="0 0 24 24" width="{size}" height="{size}" fill="none" class="{class}">
+      <circle cx="12" cy="7" r="5.5" fill="#F59E0B" fill-opacity="0.18"/>
+      <path d="M12 1.5C10.2 4 9 6.2 9 8.2a3 3 0 0 0 6 0C15 6.2 13.8 4 12 1.5Z" fill="#F59E0B" stroke="#DFB15B" stroke-width="0.8"/>
+      <path d="M12 4.5C11 5.8 10.5 7 10.5 8a1.5 1.5 0 0 0 3 0C13.5 7 13 5.8 12 4.5Z" fill="#FEF08A"/>
+      <line x1="12" y1="9" x2="12" y2="11.5" stroke="#78350F" stroke-width="1.2" stroke-linecap="round"/>
+      <rect x="8" y="11" width="8" height="11.5" rx="1.5" fill="#DFB15B" fill-opacity="0.4" stroke="#DFB15B" stroke-width="1.5"/>
+      <ellipse cx="12" cy="11.5" rx="4" ry="1.2" fill="#FEF08A" fill-opacity="0.7" stroke="#DFB15B" stroke-width="0.8"/>
     </svg>
   `,
 

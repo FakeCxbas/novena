@@ -165,10 +165,10 @@ html, body {
   text-decoration: none;
 }
 
-/* 2. Barra de Pestañas Principales (4 Pestañas) */
+/* 2. Barra de Pestañas Principales (2 Pestañas) */
 .nav-tab-bar {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   background: #17120f;
   border-bottom: 1px solid var(--border-subtle);
   padding: 0.35rem 0.4rem;

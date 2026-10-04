@@ -1,6 +1,6 @@
 // app.js - Lógica interactiva con 3 Roles (Anfitrión, Orador, Familia), control total de micrófonos y cámaras activas
-import { NOVENA_DATA } from './novena-data.js?v=7.0';
-import { icon, replaceDomIcons } from './icons.js?v=7.0';
+import { NOVENA_DATA } from './novena-data.js?v=8.0';
+import { icon, replaceDomIcons } from './icons.js?v=8.0';
 
 // Cálculo automático del día de la Novena según fecha local (America/Guayaquil, UTC-5)
 // Día 1: 30 de Septiembre de 2026
@@ -41,6 +41,8 @@ const state = {
   isSyncedWithHost: true,
   connectedUsers: 1,
   currentAveMaria: 0,
+  userName: localStorage.getItem('novena-user-name') || '',
+  participants: [],
   hostName: null,
   speakerName: 'Esperando Orador',
   speakerSocketId: null,
@@ -69,560 +71,522 @@ function getAutoMysteryType() {
   }
 }
 
-// Generar la lista de pasos secuenciales para el día actual
+// Generar la lista de pasos secuenciales para el día actual con el nuevo orden
 function buildStepsForDay(dayNumber) {
   const dayData = NOVENA_DATA.dias.find(d => d.dia === dayNumber) || NOVENA_DATA.dias[0];
-  const mysteryType = state.activeMysteryType || getAutoMysteryType();
-  const mysteryObj = NOVENA_DATA.rosario.misterios[mysteryType];
+  const mysteryType = state.activeMysteryType || dayData.tipoMisterio || getAutoMysteryType();
+  const mysteryObj = NOVENA_DATA.rosario.misterios[mysteryType] || NOVENA_DATA.rosario.misterios.dolorosos;
 
   const oradorBadge = (label = 'Guía') => `<span class="voice-badge guia">${label}</span>`;
   const todosBadge = (label = 'Todos') => `<span class="voice-badge todos">${label}</span>`;
 
   return [
-    // Paso 0: Portada & Apertura
+    // 1. Señal de la Santa Cruz
     {
-      id: 'apertura',
-      badge: 'Inicio de la Novena',
-      title: 'Por la Señal de la Santa Cruz',
+      id: 'cruz',
+      badge: '1. Ritos Iniciales',
+      title: 'I. Señal de la Santa Cruz',
       render: () => `
-        <div style="text-align: center; margin-bottom: 1.4rem;">
-          <div class="candle-icon" style="margin: 0 auto 0.5rem auto; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;">
-            ${icon('candle', { size: 38, color: '#DFB15B' })}
-          </div>
-          <h2 class="memorial-dedication-title">Mami Olguita</h2>
-          <div class="memorial-dedication-jaculatoria">
-            ${NOVENA_DATA.info.jaculatoria}
-          </div>
-        </div>
-
-        <div class="prayer-subheading">
-          Rito Inicial
-        </div>
-
-        <div class="dialogo-block">
-          <div class="guia-part">
-            ${oradorBadge('Guía')}
-            <div class="voice-text">Por la señal de la Santa Cruz, de nuestros enemigos líbranos Señor, Dios nuestro. En el nombre del Padre, del Hijo y del Espíritu Santo.</div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge('Todos')}
-            <div class="voice-text">Amén.</div>
-          </div>
-        </div>
-      `
-    },
-
-    // Paso 1: Acto de Contrición
-    {
-      id: 'acto-contricion',
-      badge: 'Inicio de la Novena',
-      title: NOVENA_DATA?.actoContricion?.title || 'Acto de Contrición',
-      render: () => `
-        <div class="dialogo-block">
-          <div class="guia-part">
-            ${oradorBadge('Guía')}
-            <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.75rem;">
-              ${(NOVENA_DATA?.actoContricion?.paragraphs || [
-                'Señor mío Jesucristo, Dios y Hombre verdadero, Creador, Padre y Redentor mío; por ser Vos quien sois, bondad infinita, y porque os amo sobre todas las cosas, me pesa de todo corazón haberos ofendido; también me pesa porque podéis castigarme con las penas del infierno.',
-                'Ayudado de vuestra divina gracia, propongo firmemente nunca más pecar, confesarme y cumplir la penitencia que me fuere impuesta.'
-              ]).map(p => `<p style="margin:0;">${p}</p>`).join('')}
-            </div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge('Todos')}
-            <div class="voice-text">${NOVENA_DATA?.actoContricion?.response || 'Amén.'}</div>
-          </div>
-        </div>
-      `
-    },
-
-    // ----------------------------------------------------
-    // PARTE 3: LA NOVENA (DÍA CORRESPONDIENTE)
-    // ----------------------------------------------------
-    // Oración Inicial de todos los días
-    {
-      id: 'oracion-inicial',
-      badge: 'Oración de Todos los Días',
-      title: NOVENA_DATA.oracionInicial.title,
-      render: () => `
-        <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Guía')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
-            ${NOVENA_DATA.oracionInicial.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
-          </div>
-        </div>
-        <div class="todos-part">
-          ${todosBadge('Todos')}
-          <div class="voice-text">Amén.</div>
-        </div>
-      `
-    },
-
-    // Lectura Bíblica y Meditación del Día
-    {
-      id: 'reflexion-dia',
-      badge: `Día ${dayData.dia}`,
-      title: dayData.titulo,
-      render: () => {
-        const dayPhotoNum = ((dayData.dia - 1) % 10) + 3; // olguita-03 a olguita-12
-        const dayPhotoSrc = `/fotos-olguita/olguita-${String(dayPhotoNum).padStart(2, '0')}.jpg`;
-        return `
-          <div class="bible-quote-box">
-            <p style="font-size: 1.25rem; font-style: italic; line-height: 1.7; margin: 0; color: #ffffff;">${dayData.cita}</p>
-            <span class="bible-ref" style="display: block; margin-top: 0.5rem; font-weight: 700; color: var(--gold-amber);">— ${dayData.referencia}</span>
-          </div>
-
-          <!-- Fotografía Conmemorativa de Mami Olguita -->
-          <div class="prayer-photo-card" onclick="window.openLightboxBySrc('${dayPhotoSrc}', 'Mami Olguita • Reflexión del Día ${dayData.dia}')" title="Toca para ver foto ampliada">
-            <div class="prayer-photo-img-wrap">
-              <img src="${dayPhotoSrc}" alt="Mami Olguita" class="prayer-photo-img" loading="lazy">
-              <div class="prayer-photo-overlay">
-                <span class="prayer-photo-badge">En memoria de Mami Olguita</span>
+        <div class="single-prayer-view">
+          <div class="rubric-hint">✝️ (Todos nos persignamos en la frente, la boca y el pecho)</div>
+          
+          <div class="dialogo-block">
+            <div class="guia-part">
+              ${oradorBadge('Guía')}
+              <div class="voice-text">
+                Por la señal de la Santa Cruz, de nuestros enemigos, líbranos, Señor, Dios nuestro. En el nombre del Padre, del Hijo y del Espíritu Santo.
               </div>
             </div>
-            <div class="prayer-photo-caption">
-              <span>«Tu sonrisa y tu amor maternal siguen iluminando a nuestra familia.»</span>
-            </div>
-          </div>
 
-          <div class="guia-part" style="margin-top: 1.2rem;">
-            ${oradorBadge('Reflexión')}
-            <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; margin: 0.4rem 0 0 0;">${dayData.reflexion}</p>
-          </div>
-        `;
-      }
-    },
-
-    // Oración del Día
-    {
-      id: 'oracion-dia',
-      badge: `Día ${dayData.dia}`,
-      title: `Oración del Día ${dayData.dia}`,
-      render: () => `
-        <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Guía')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
-            ${dayData.oracion.map(p => `<p style="margin:0;">${p}</p>`).join('')}
-          </div>
-        </div>
-        <div class="todos-part">
-          ${todosBadge('Todos')}
-          <div class="voice-text">Amén.</div>
-        </div>
-      `
-    },
-
-    // Mensaje para la Familia
-    {
-      id: 'mensaje-familia',
-      badge: `Día ${dayData.dia} • Mensaje`,
-      title: 'Mensaje para la Familia',
-      render: () => {
-        const famPhotoNum = ((dayData.dia * 3) % 20) + 5; // e.g. olguita-08, olguita-11, etc.
-        const famPhotoSrc = `/fotos-olguita/olguita-${String(famPhotoNum).padStart(2, '0')}.jpg`;
-        return `
-          <div class="guia-part" style="border-left: 3px solid var(--fucsia-primary); padding: 1.1rem 1.25rem;">
-            ${oradorBadge('Mensaje')}
-            <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; color: var(--gold-light); margin: 0.4rem 0 0 0;">${dayData.mensajeFamilia}</p>
-          </div>
-
-          <!-- Fotografía Familiar Conmemorativa -->
-          <div class="prayer-photo-card" onclick="window.openLightboxBySrc('${famPhotoSrc}', 'Familia de Mami Olguita • Día ${dayData.dia}')" title="Toca para ver foto ampliada">
-            <div class="prayer-photo-img-wrap">
-              <img src="${famPhotoSrc}" alt="Familia Mami Olguita" class="prayer-photo-img" loading="lazy">
-              <div class="prayer-photo-overlay">
-                <span class="prayer-photo-badge">Recuerdo Familiar</span>
+            <div class="todos-part">
+              ${todosBadge('Todos')}
+              <div class="voice-text">
+                Amén.
               </div>
             </div>
-            <div class="prayer-photo-caption">
-              <span>«El amor que sembraste entre nosotros permanece vivo por siempre.»</span>
-            </div>
           </div>
-        `;
-      }
-    },
 
-    // ----------------------------------------------------
-    // PARTE 4: EL SANTO ROSARIO
-    // ----------------------------------------------------
-    // Santo Rosario - Ofrecimiento y Credo
-    {
-      id: 'rosario-inicio',
-      badge: 'Santo Rosario',
-      title: 'Ofrecimiento y Credo de los Apóstoles',
-      render: () => `
-        <div class="guia-part" style="margin-bottom: 1.2rem;">
-          ${oradorBadge('Ofrecimiento del Rosario')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.35rem;">
-            ${NOVENA_DATA.rosario.oracionInicial.text.map(t => `<p style="margin:0;">${t}</p>`).join('')}
-          </div>
-        </div>
-
-        <div class="prayer-subheading">
-          Credo de los Apóstoles
-        </div>
-
-        <div class="dialogo-block">
-          <div class="guia-part">
-            ${oradorBadge('Guía')}
-            <div class="voice-text">${NOVENA_DATA.rosario.credo.guia}</div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge('Todos')}
-            <div class="voice-text">${NOVENA_DATA.rosario.credo.todos}</div>
+          <div style="text-align: center; margin-top: 0.4rem; padding: 0.45rem 1rem; background: rgba(223, 177, 91, 0.08); border: 1px solid var(--gold-border); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: var(--gold-light); font-size: clamp(0.92rem, min(1.35vw, 2.1vh), 1.25rem);">
+            <i data-icon="candle" data-size="18"></i>
+            <span>${NOVENA_DATA.info.jaculatoria}</span>
           </div>
         </div>
       `
     },
 
-    // Los 5 Misterios del día
-    ...mysteryObj.lista.map((mItem, index) => {
-      const mTitulo = typeof mItem === 'string' ? mItem : mItem.titulo;
+    // 2. Acto de Contrición
+    {
+      id: 'contricion',
+      badge: '1. Ritos Iniciales',
+      title: 'II. Acto de Contrición',
+      render: () => `
+        <div class="single-prayer-view">
+          <div class="rubric-hint">(Rezado con devoción a una sola voz por toda la familia)</div>
+
+          <div class="todos-part" style="padding: clamp(0.6rem, 1.4vh, 1.2rem) clamp(0.9rem, 2vw, 1.6rem);">
+            ${todosBadge('Todos a una voz')}
+            <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.45rem; font-size: clamp(0.95rem, min(1.45vw, 2.2vh), 1.38rem); line-height: clamp(1.34, 2.4vh, 1.55);">
+              <p style="margin:0;">
+                Señor mío Jesucristo, Dios y Hombre verdadero, Creador, Padre y Redentor mío; por ser Tú quien eres, Bondad infinita, y porque te amo sobre todas las cosas, me pesa de todo corazón haberte ofendido; también me pesa porque puedes castigarme con las penas del infierno.
+              </p>
+              <p style="margin:0;">
+                Ayudado de tu divina gracia, propongo firmemente nunca más pecar, confesarme y cumplir la penitencia que me fuere impuesta. Amén.
+              </p>
+            </div>
+          </div>
+        </div>
+      `
+    },
+
+    // 3. Intención del Día
+    {
+      id: 'intencion',
+      badge: dayData.dia === 5 ? '2. Intención del Quinto Día' : `2. Intención del Día ${dayData.dia}`,
+      title: dayData.dia === 5 ? 'Intención del Quinto Día por la Mami Olguita' : `Intención del Día ${dayData.dia}`,
+      render: () => `
+        <div class="single-prayer-view">
+          <div class="rubric-hint">(Ofrecimiento del Santo Rosario por el descanso de la mami Olguita)</div>
+
+          <div class="guia-part" style="padding: clamp(0.7rem, 1.6vh, 1.3rem) clamp(0.9rem, 2vw, 1.6rem);">
+            ${oradorBadge('Guía')}
+            <div class="voice-text" style="font-size: clamp(1.02rem, min(1.55vw, 2.35vh), 1.5rem); line-height: clamp(1.36, 2.5vh, 1.58);">
+              ${dayData.intencion}
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 0.4rem; padding: 0.45rem 1rem; background: rgba(223, 177, 91, 0.08); border-radius: var(--radius-md); border: 1.5px solid var(--gold-border); display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: var(--gold-light); font-size: clamp(0.9rem, min(1.25vw, 2vh), 1.18rem);">
+            <i data-icon="candle" data-size="18"></i>
+            <span>Por el descanso eterno de nuestra querida e inolvidable mami Olguita</span>
+          </div>
+        </div>
+      `
+    },
+
+    // 4. El Credo
+    {
+      id: 'credo',
+      badge: '2. Profesión de Fe',
+      title: 'El Credo de los Apóstoles',
+      render: () => `
+        <div class="single-prayer-view">
+          <div class="rubric-hint">(Rezado con fe viva a una sola voz por toda la familia)</div>
+
+          <div class="todos-part" style="padding: clamp(0.55rem, 1.2vh, 1rem) clamp(0.85rem, 1.8vw, 1.4rem);">
+            ${todosBadge('Todos')}
+            <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.38rem; font-size: clamp(0.88rem, min(1.3vw, 1.95vh), 1.25rem); line-height: clamp(1.3, 2.2vh, 1.48);">
+              <p style="margin: 0; font-weight: 600; color: #ffffff;">Creo en Dios, Padre Todopoderoso, Creador del cielo y de la tierra.</p>
+              <p style="margin: 0;">Creo en Jesucristo, su único Hijo, nuestro Señor, que fue concebido por obra y gracia del Espíritu Santo; nació de Santa María Virgen; padeció bajo el poder de Poncio Pilato; fue crucificado, muerto y sepultado; descendió a los infiernos; al tercer día resucitó de entre los muertos; subió a los cielos y está sentado a la derecha de Dios, Padre todopoderoso. Desde allí ha de venir a juzgar a vivos y muertos.</p>
+              <p style="margin: 0;">Creo en el Espíritu Santo, la Santa Iglesia Católica, la comunión de los santos, el perdón de los pecados, la resurrección de la carne y la vida eterna. Amén.</p>
+            </div>
+          </div>
+        </div>
+      `
+    },
+
+    // 📿 Las Meditaciones de los 5 Misterios y sus Decenarios Atómicos
+    ...mysteryObj.lista.flatMap((mItem, index) => {
+      const rawTitulo = typeof mItem === 'string' ? mItem : mItem.titulo;
+      const mTitulo = rawTitulo.replace(/^(\d+\.?\s*|Primer\s+|Segundo\s+|Tercer\s+|Cuarto\s+|Quinto\s+Misterio:?\s*)/i, '').trim();
       const mMeditacion = typeof mItem === 'object' && mItem.meditacion ? mItem.meditacion : '';
       const mCita = typeof mItem === 'object' && mItem.cita ? mItem.cita : '';
       const mReferencia = typeof mItem === 'object' && mItem.referencia ? mItem.referencia : '';
 
-      return {
-        id: `misterio-${index + 1}`,
-        badge: `${mysteryObj.nombre} (${index + 1}/5)`,
-        title: `${index + 1}º Misterio: ${mTitulo}`,
-        render: () => `
-          ${mCita ? `
-            <div class="bible-quote-box" style="margin-bottom: 0.9rem;">
-              <p style="font-size: 1.15rem; font-style: italic; line-height: 1.65; margin: 0; color: #ffffff;">${mCita}</p>
-              ${mReferencia ? `<span class="bible-ref" style="display: block; margin-top: 0.45rem; font-weight: 700; color: var(--gold-amber);">— ${mReferencia}</span>` : ''}
-            </div>
-          ` : ''}
+      return [
+        // Paso A: Meditación del Misterio
+        {
+          id: `misterio-${index + 1}`,
+          badge: `${mysteryObj.nombre} (${index + 1}/5) • Meditación`,
+          title: `${index + 1}º Misterio: ${mTitulo}`,
+          render: () => `
+            <div class="single-prayer-view" style="gap: clamp(0.4rem, 1vh, 0.75rem);">
+              ${mCita ? `
+                <div class="bible-quote-box" style="padding: clamp(0.45rem, 1vh, 0.75rem) clamp(0.8rem, 1.6vw, 1.2rem); margin: 0;">
+                  <p style="font-size: clamp(0.98rem, min(1.4vw, 2.1vh), 1.35rem); font-style: italic; line-height: clamp(1.32, 2.3vh, 1.5); margin: 0; color: #ffffff;">«${mCita}»</p>
+                  ${mReferencia ? `<span class="bible-ref" style="margin-top: 0.25rem; font-weight: 700; color: var(--gold-amber); font-size: clamp(0.82rem, 1.1vw, 0.95rem);">— ${mReferencia}</span>` : ''}
+                </div>
+              ` : ''}
 
-          ${mMeditacion ? `
-            <div class="meditacion-box">
-              <div class="meditacion-title">
-                Meditación por Mami Olguita
-              </div>
-              <p class="meditacion-text">
-                "${mMeditacion}"
-              </p>
-            </div>
-          ` : ''}
-
-          <!-- Recuerdo Conmemorativo de Mami Olguita -->
-          <div class="mystery-memory-chip" onclick="window.openLightboxBySrc('/fotos-olguita/olguita-${String(13 + index).padStart(2, '0')}.jpg', 'Recuerdo de Mami Olguita • ${mTitulo}')" title="Toca para ver foto ampliada">
-            <img src="/fotos-olguita/olguita-${String(13 + index).padStart(2, '0')}.jpg" alt="Mami Olguita" class="mystery-chip-thumb" loading="lazy">
-            <div class="mystery-chip-info">
-              <div class="mystery-chip-label">En memoria de su fe y devoción</div>
-              <div class="mystery-chip-quote">«Ofrecemos este misterio por el eterno descanso de Mami Olguita.»</div>
-            </div>
-          </div>
-
-          <!-- 1. Padre Nuestro -->
-          <div class="prayer-section">
-            <div class="prayer-subheading">
-              Padre Nuestro
-            </div>
-            <div class="dialogo-block">
-              <div class="guia-part">
-                ${oradorBadge('Guía')}
-                <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.guia}</div>
-              </div>
-              <div class="todos-part">
-                ${todosBadge('Todos')}
-                <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.todos}</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 2. Diez Ave Marías -->
-          <div class="prayer-section">
-            <div class="prayer-subheading">
-              Diez Avemarías
-            </div>
-
-            <!-- Rosario Contador de 10 Ave Marías -->
-            <div class="rosario-counter-card">
-              <div class="rosario-counter-header" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.95rem; font-weight:600; color:var(--gold-light);">
-                Avemarías rezadas: (<span id="bead-count-label">${state.currentAveMaria}</span> de 10)
-              </div>
-              <div class="beads-row" id="beads-container">
-                ${Array.from({ length: 10 }).map((_, bIdx) => `
-                  <div class="bead-item ${bIdx < state.currentAveMaria ? 'completed' : ''} ${bIdx === state.currentAveMaria - 1 ? 'active' : ''}" 
-                       onclick="window.setAveMaria(${bIdx + 1})" title="Ave María ${bIdx + 1}">
-                    ${bIdx + 1}
+              ${mMeditacion ? `
+                <div class="meditacion-box" style="padding: clamp(0.55rem, 1.2vh, 0.95rem) clamp(0.8rem, 1.6vw, 1.3rem); margin: 0; background: rgba(192, 51, 116, 0.08); border-left: 4.5px solid var(--fucsia-primary); border-radius: var(--radius-md);">
+                  <div class="meditacion-title" style="font-size: clamp(0.82rem, 1.1vh, 0.95rem); margin-bottom: 0.25rem; color: var(--gold-primary); font-weight: 700; text-transform: uppercase;">
+                    Meditación por la mami Olguita
                   </div>
-                `).join('')}
+                  <p class="meditacion-text" style="font-size: clamp(1.02rem, min(1.5vw, 2.3vh), 1.42rem); line-height: clamp(1.35, 2.4vh, 1.55); margin: 0; color: #faf6f9;">
+                    "${mMeditacion}"
+                  </p>
+                </div>
+              ` : ''}
+
+              <div style="text-align: center; padding: 0.45rem 0.8rem; background: rgba(223, 177, 91, 0.08); border: 1px solid var(--gold-border); border-radius: var(--radius-md); color: var(--gold-light); font-size: clamp(0.88rem, min(1.3vw, 2vh), 1.15rem); font-family: var(--font-sans); font-weight: 600;">
+                📿 Rezar: 1 Padre Nuestro, 10 Ave Marías y 1 Gloria (Toca Siguiente para el conteo y Jaculatoria)
               </div>
-              <div class="beads-control-btns" style="margin-top: 0.65rem; display: flex; justify-content: center; gap: 0.5rem;">
-                <button class="btn-speaker-item" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;" onclick="window.nextAveMaria()">
-                  ${icon('plus', { size: 14 })} Contar Ave María
+            </div>
+          `
+        },
+
+        // Paso B: Decenario de Cuentas y Jaculatoria
+        {
+          id: `misterio-${index + 1}-rosario`,
+          badge: `${mysteryObj.nombre} (${index + 1}/5) • Rezo y Jaculatoria`,
+          title: `${index + 1}º Misterio: Decenario y Jaculatoria`,
+          render: () => `
+            <div class="single-prayer-view" style="gap: clamp(0.4rem, 1vh, 0.75rem);">
+              <!-- Barra Interactiva de Avemarías del Misterio -->
+              <div class="mystery-beads-bar" style="background: rgba(255,255,255,0.03); border: 1.5px solid var(--gold-border); border-radius: var(--radius-md); padding: clamp(0.4rem, 1vh, 0.65rem) clamp(0.7rem, 1.5vw, 1.1rem);">
+                <span style="font-family: var(--font-sans); font-size: clamp(0.85rem, min(1.2vw, 2vh), 1.05rem); font-weight: 700; color: var(--gold-light);">
+                  Avemarías: <strong id="bead-count-label" style="color: var(--gold-primary); font-size: 1.25em;">${state.currentAveMaria}</strong> / 10
+                </span>
+                <div class="beads-row-compact" id="beads-container" style="gap: 0.35rem;">
+                  ${Array.from({ length: 10 }).map((_, bIdx) => `
+                    <div class="bead-item-compact ${bIdx < state.currentAveMaria ? 'completed' : ''} ${bIdx === state.currentAveMaria - 1 ? 'active' : ''}" 
+                         onclick="window.setAveMaria(${bIdx + 1})" title="Ave María ${bIdx + 1}"
+                         style="width: clamp(26px, 3.5vh, 36px); height: clamp(26px, 3.5vh, 36px); font-size: clamp(0.78rem, 1.6vh, 0.95rem); font-weight: 700;">
+                      ${bIdx + 1}
+                    </div>
+                  `).join('')}
+                </div>
+                <button class="btn-bead-add-compact" onclick="window.nextAveMaria()" title="Contar siguiente Ave María" style="padding: 0.4rem 0.85rem; font-size: clamp(0.85rem, 1.8vh, 1rem); font-weight: 700;">
+                  +1 Cuenta
                 </button>
-                <button class="btn-speaker-item" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; opacity: 0.8;" onclick="window.setAveMaria(0)">
-                  ${icon('refresh', { size: 14 })} Reiniciar cuentas
-                </button>
               </div>
-            </div>
 
-            <div class="dialogo-block">
-              <div class="guia-part">
-                ${oradorBadge('Guía')}
-                <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.guia}</div>
-              </div>
-              <div class="todos-part">
-                ${todosBadge('Todos')}
-                <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 3. Gloria al Padre -->
-          <div class="prayer-section">
-            <div class="prayer-subheading">
-              Gloria al Padre
-            </div>
-            <div class="dialogo-block">
-              <div class="guia-part">
-                ${oradorBadge('Guía')}
-                <div class="voice-text">${NOVENA_DATA.rosario.gloria.guia}</div>
-              </div>
-              <div class="todos-part">
-                ${todosBadge('Todos')}
-                <div class="voice-text">${NOVENA_DATA.rosario.gloria.todos}</div>
+              <!-- Jaculatoria Tradicional por la Mami Olguita -->
+              <div class="prayer-compact-card" style="border-left: 4.5px solid var(--gold-primary); padding: clamp(0.55rem, 1.2vh, 0.95rem) clamp(0.85rem, 1.8vw, 1.4rem);">
+                <div class="prayer-compact-header" style="color: var(--gold-primary); margin-bottom: 0.25rem;">
+                  <span>Jaculatoria por la mami Olguita</span>
+                  <span style="font-size: clamp(0.76rem, 1.2vh, 0.88rem); color: var(--gold-amber);">(Al terminar cada misterio)</span>
+                </div>
+                <div class="dialogo-compact" style="gap: clamp(0.25rem, 0.8vh, 0.45rem); font-size: clamp(0.95rem, min(1.4vw, 2.2vh), 1.42rem); line-height: clamp(1.35, 2.4vh, 1.55);">
+                  <div style="display:flex; flex-direction:column; gap:0.1rem;">
+                    <div><strong style="color:var(--color-guia);">Guía:</strong> Si por tu preciosa sangre, Señor, la has redimido.</div>
+                    <div><strong style="color:var(--color-todos);">Todos:</strong> Que la perdones, te pido, por tu pasión dolorosa.</div>
+                  </div>
+                  <div style="display:flex; flex-direction:column; gap:0.1rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.2rem;">
+                    <div><strong style="color:var(--color-guia);">Guía:</strong> Dale, Señor, el descanso eterno.</div>
+                    <div><strong style="color:var(--color-todos);">Todos:</strong> Y luzca para ella la luz perpetua.</div>
+                  </div>
+                  <div style="display:flex; flex-direction:column; gap:0.1rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.2rem;">
+                    <div><strong style="color:var(--color-guia);">Guía:</strong> Que el alma de nuestra mami Olguita y las demás del Purgatorio, por la misericordia de Dios, descansen en paz.</div>
+                    <div><strong style="color:var(--color-todos);">Todos:</strong> Amén.</div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-
-          <!-- 4. Jaculatorias por Mami Olguita -->
-          <div class="prayer-section">
-            <div class="prayer-subheading">
-              Jaculatorias por Mami Olguita
-            </div>
-            
-            <!-- 1. Sangre Preciosa -->
-            <div class="dialogo-block">
-              <div class="guia-part">
-                ${oradorBadge('Guía')}
-                <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.preciosa.guia}</div>
-              </div>
-              <div class="todos-part">
-                ${todosBadge('Todos')}
-                <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.preciosa.todos}</div>
-              </div>
-            </div>
-
-            <!-- 2. Descanso Eterno -->
-            <div class="dialogo-block">
-              <div class="guia-part">
-                ${oradorBadge('Guía')}
-                <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.descanso.guia}</div>
-              </div>
-              <div class="todos-part">
-                ${todosBadge('Todos')}
-                <div class="voice-text">${NOVENA_DATA.rosario.jaculatoriaOlguita.descanso.todos}</div>
-              </div>
-            </div>
-          </div>
-        `
-      };
+          `
+        }
+      ];
     }),
 
-    // Cuentas Finales después del Santo Rosario
+    // 15. 1ª Ave María por su Pureza: Fe
     {
-      id: 'cuentas-finales',
-      badge: 'Santo Rosario',
-      title: 'Padre Nuestro, 3 Ave Marías y Gloria al Padre',
+      id: 'cuentas-fe',
+      badge: '3. Oraciones Finales (1/3)',
+      title: '1ª Ave María por su Pureza • Por la Fe',
       render: () => `
-        <div style="text-align: center; margin-bottom: 1.1rem; background: rgba(223, 177, 91, 0.08); padding: 0.85rem 1rem; border-radius: 6px;">
-          <p style="font-size: 1.05rem; color: var(--gold-light); font-weight: 600; margin: 0; line-height: 1.6;">
-            Al concluir los 5 misterios, rezamos 1 Padre Nuestro, 3 Ave Marías (por la Fe, Esperanza y Caridad) y 1 Gloria al Padre.
-          </p>
-        </div>
+        <div class="single-prayer-view" style="gap: clamp(0.4rem, 1vh, 0.75rem);">
+          <div class="rubric-hint">(Rezamos entregando la pureza de la mami Olguita y pidiendo por nuestra fe)</div>
 
-        <div class="prayer-subheading">I. Padre Nuestro</div>
-        <div class="dialogo-block">
-          <div class="guia-part">
-            ${oradorBadge('Guía')}
-            <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.guia}</div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge('Todos')}
-            <div class="voice-text">${NOVENA_DATA.rosario.padreNuestro.todos}</div>
-          </div>
-        </div>
+          <div class="dialogo-block">
+            <div class="guia-part" style="padding: clamp(0.7rem, 1.6vh, 1.3rem) clamp(0.9rem, 2vw, 1.6rem);">
+              ${oradorBadge('Guía')}
+              <div class="voice-text" style="font-size: clamp(1.05rem, min(1.55vw, 2.3vh), 1.5rem); line-height: clamp(1.36, 2.5vh, 1.58);">
+                Dios te salve, María Santísima, Hija de Dios Padre, Virgen purísima antes del parto; en tus manos encomendamos nuestra fe y el alma de la mami Olguita para que la salves...
+              </div>
+            </div>
 
-        <div class="prayer-subheading">II. Tres Avemarías</div>
-        <div class="dialogo-block">
-          <div class="guia-part">
-            ${oradorBadge('Guía')}
-            <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.guia}</div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge('Todos')}
-            <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
-          </div>
-        </div>
-        <p style="font-size: 0.9rem; color: var(--gold-amber); font-style: italic; text-align: center; margin: 0.2rem 0 1rem 0;">(Por el aumento de la Fe, Esperanza y Caridad)</p>
-
-        <div class="prayer-subheading">III. Gloria al Padre</div>
-        <div class="dialogo-block">
-          <div class="guia-part">
-            ${oradorBadge('Guía')}
-            <div class="voice-text">${NOVENA_DATA.rosario.gloria.guia}</div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge('Todos')}
-            <div class="voice-text">${NOVENA_DATA.rosario.gloria.todos}</div>
+            <div class="todos-part" style="padding: clamp(0.7rem, 1.6vh, 1.3rem) clamp(0.9rem, 2vw, 1.6rem);">
+              ${todosBadge('Todos')}
+              <div class="voice-text" style="font-size: clamp(1.05rem, min(1.55vw, 2.3vh), 1.5rem); line-height: clamp(1.36, 2.5vh, 1.58);">
+                ${NOVENA_DATA.rosario.aveMaria.todos}
+              </div>
+            </div>
           </div>
         </div>
       `
     },
 
-    // La Salve
+    // 16. 2ª Ave María por su Pureza: Esperanza
+    {
+      id: 'cuentas-esperanza',
+      badge: '3. Oraciones Finales (2/3)',
+      title: '2ª Ave María por su Pureza • Por la Esperanza',
+      render: () => `
+        <div class="single-prayer-view" style="gap: clamp(0.4rem, 1vh, 0.75rem);">
+          <div class="rubric-hint">(Rezamos entregando la pureza de la mami Olguita y pidiendo por nuestra esperanza)</div>
+
+          <div class="dialogo-block">
+            <div class="guia-part" style="padding: clamp(0.7rem, 1.6vh, 1.3rem) clamp(0.9rem, 2vw, 1.6rem);">
+              ${oradorBadge('Guía')}
+              <div class="voice-text" style="font-size: clamp(1.05rem, min(1.55vw, 2.3vh), 1.5rem); line-height: clamp(1.36, 2.5vh, 1.58);">
+                Dios te salve, María Santísima, Madre de Dios Hijo, Virgen purísima en el parto; en tus manos encomendamos nuestra esperanza y el descanso eterno de la mami Olguita...
+              </div>
+            </div>
+
+            <div class="todos-part" style="padding: clamp(0.7rem, 1.6vh, 1.3rem) clamp(0.9rem, 2vw, 1.6rem);">
+              ${todosBadge('Todos')}
+              <div class="voice-text" style="font-size: clamp(1.05rem, min(1.55vw, 2.3vh), 1.5rem); line-height: clamp(1.36, 2.5vh, 1.58);">
+                ${NOVENA_DATA.rosario.aveMaria.todos}
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+    },
+
+    // 17. 3ª Ave María por su Pureza: Caridad y Unión
+    {
+      id: 'cuentas-caridad',
+      badge: '3. Oraciones Finales (3/3)',
+      title: '3ª Ave María por su Pureza • Por la Caridad y Unión',
+      render: () => `
+        <div class="single-prayer-view" style="gap: clamp(0.4rem, 1vh, 0.75rem);">
+          <div class="rubric-hint">(Rezamos entregando la pureza de la mami Olguita y pidiendo por la unión inquebrantable familiar)</div>
+
+          <div class="dialogo-block">
+            <div class="guia-part" style="padding: clamp(0.7rem, 1.6vh, 1.3rem) clamp(0.9rem, 2vw, 1.6rem);">
+              ${oradorBadge('Guía')}
+              <div class="voice-text" style="font-size: clamp(1.05rem, min(1.55vw, 2.3vh), 1.5rem); line-height: clamp(1.36, 2.5vh, 1.58);">
+                Dios te salve, María Santísima, Esposa del Espíritu Santo, Virgen purísima después del parto; en tus manos encomendamos nuestra caridad y la unión inquebrantable de nuestra familia...
+              </div>
+            </div>
+
+            <div class="todos-part" style="padding: clamp(0.7rem, 1.6vh, 1.3rem) clamp(0.9rem, 2vw, 1.6rem);">
+              ${todosBadge('Todos')}
+              <div class="voice-text" style="font-size: clamp(1.05rem, min(1.55vw, 2.3vh), 1.5rem); line-height: clamp(1.36, 2.5vh, 1.58);">
+                ${NOVENA_DATA.rosario.aveMaria.todos}
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+    },
+
+    // 18. La Salve
     {
       id: 'la-salve',
-      badge: 'Santo Rosario',
-      title: 'La Salve a la Santísima Virgen',
+      badge: '3. Oraciones Finales',
+      title: 'La Salve a la Santísima Virgen María',
       render: () => `
-        <div class="prayer-subheading">
-          Salve Regina
-        </div>
-        <div class="dialogo-block">
-          <div class="guia-part">
-            ${oradorBadge('Guía')}
-            <div class="voice-text">${NOVENA_DATA.rosario.salve.guia}</div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge('Todos')}
-            <div class="voice-text">${NOVENA_DATA.rosario.salve.todos}</div>
-          </div>
-        </div>
-      `
-    },
+        <div class="single-prayer-view" style="gap: clamp(0.4rem, 1vh, 0.75rem);">
+          <div class="rubric-hint">(Diálogo filial a una sola voz)</div>
 
-    // Las Letanías
-    {
-      id: 'letanias',
-      badge: 'Santo Rosario',
-      title: 'Letanías a la Santísima Virgen María',
-      render: () => `
-        <div style="background: rgba(223, 177, 91, 0.08); border-left: 3px solid var(--gold-primary); padding: 0.85rem 1.1rem; border-radius: 0 8px 8px 0; margin-bottom: 1rem;">
-          <p style="font-size: 1.02rem; color: #ffffff; margin: 0; font-weight: 500;">
-            El Guía menciona cada título — Respondemos todos a una sola voz: <strong style="color: var(--gold-primary);">"Ruega por ella"</strong>
-          </p>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 0.45rem; max-height: 480px; overflow-y: auto; padding-right: 0.35rem;">
-          ${NOVENA_DATA.rosario.letanias.map(item => `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.9rem; border-radius: 8px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border-subtle); font-size: 1.05rem;">
-              <span style="color: #ffffff; font-family: var(--font-body); font-weight: 400;">${item.guia || item.invocacion}</span>
-              <span style="color: var(--gold-primary); font-weight: 600; font-family: var(--font-sans); font-size: 0.95rem; letter-spacing: 0.02em;">${item.todos || item.respuesta}</span>
+          <div class="dialogo-block">
+            <div class="guia-part" style="padding: clamp(0.6rem, 1.4vh, 1.1rem) clamp(0.9rem, 2vw, 1.5rem);">
+              ${oradorBadge('Guía')}
+              <div class="voice-text" style="font-size: clamp(1rem, min(1.5vw, 2.2vh), 1.45rem); line-height: clamp(1.35, 2.4vh, 1.55); color: #ffffff;">
+                ${NOVENA_DATA.rosario.salve.guia}
+              </div>
             </div>
-          `).join('')}
+
+            <div class="todos-part" style="padding: clamp(0.6rem, 1.4vh, 1.1rem) clamp(0.9rem, 2vw, 1.5rem);">
+              ${todosBadge('Todos')}
+              <div class="voice-text" style="font-size: clamp(0.98rem, min(1.48vw, 2.2vh), 1.42rem); line-height: clamp(1.35, 2.4vh, 1.55); color: #fff8fc;">
+                ${NOVENA_DATA.rosario.salve.todos}
+              </div>
+            </div>
+          </div>
         </div>
       `
     },
 
-    // ----------------------------------------------------
-    // PARTE 5: ORACIONES FINALES Y DESPEDIDA
-    // ----------------------------------------------------
-    // Oración Final por Mami Olguita
+    // 19. Letanías Lauretanas (1/3): Invocaciones y Santa María
     {
-      id: 'oracion-final-olguita',
-      badge: 'Oraciones Finales',
-      title: NOVENA_DATA.oracionFinalOlguita.title,
-      render: () => `
-        <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Guía')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
-            ${NOVENA_DATA.oracionFinalOlguita.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
+      id: 'letanias-1',
+      badge: '3. Oraciones Finales • Letanías (1/3)',
+      title: 'Letanías: Invocaciones y Santa María',
+      render: () => {
+        const items = NOVENA_DATA.rosario.letanias.slice(0, 16);
+        return `
+          <div class="single-prayer-view" style="gap: clamp(0.3rem, 0.8vh, 0.6rem);">
+            <div style="background: rgba(223, 177, 91, 0.08); border-left: 4px solid var(--gold-primary); padding: 0.35rem 0.8rem; border-radius: 0 6px 6px 0; display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: clamp(0.82rem, 1.2vw, 0.95rem); color: #ffffff; font-weight: 600;">
+                El Guía nombra cada invocación
+              </span>
+              <span style="font-size: clamp(0.82rem, 1.2vw, 0.95rem); color: var(--gold-primary); font-weight: 700;">
+                Respondemos todos: «Ruega por la mami Olguita»
+              </span>
+            </div>
+
+            <div class="letanias-grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.2rem, 0.6vh, 0.4rem) clamp(0.5rem, 1.2vw, 1rem);">
+              ${items.map(item => `
+                <div class="letania-item-row" style="display: flex; justify-content: space-between; align-items: center; padding: clamp(0.2rem, 0.5vh, 0.35rem) 0.5rem; background: rgba(255,255,255,0.02); border-radius: 4px;">
+                  <span class="letania-invocacion" style="font-size: clamp(0.85rem, min(1.2vw, 1.9vh), 1.15rem);">${item.guia || item.invocacion}</span>
+                  <span class="letania-respuesta" style="font-size: clamp(0.82rem, min(1.1vw, 1.8vh), 1.05rem); color: var(--gold-primary); font-weight: 600;">Ruega por ella</span>
+                </div>
+              `).join('')}
+            </div>
           </div>
-        </div>
-        <div class="todos-part">
-          ${todosBadge('Todos')}
-          <div class="voice-text">${NOVENA_DATA.oracionFinalOlguita.response}</div>
-        </div>
-      `
+        `;
+      }
     },
 
-    // Oración Final de la Familia
+    // 20. Letanías Lauretanas (2/3): Títulos de la Santísima Virgen
     {
-      id: 'oracion-final-familia',
-      badge: 'Oraciones Finales',
-      title: NOVENA_DATA.oracionFinalFamilia.title,
-      render: () => `
-        <div class="guia-part" style="margin-bottom: 1rem;">
-          ${oradorBadge('Guía')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
-            ${NOVENA_DATA.oracionFinalFamilia.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
+      id: 'letanias-2',
+      badge: '3. Oraciones Finales • Letanías (2/3)',
+      title: 'Letanías: Títulos de la Santísima Virgen',
+      render: () => {
+        const items = NOVENA_DATA.rosario.letanias.slice(16, 32);
+        return `
+          <div class="single-prayer-view" style="gap: clamp(0.3rem, 0.8vh, 0.6rem);">
+            <div style="background: rgba(223, 177, 91, 0.08); border-left: 4px solid var(--gold-primary); padding: 0.35rem 0.8rem; border-radius: 0 6px 6px 0; display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: clamp(0.82rem, 1.2vw, 0.95rem); color: #ffffff; font-weight: 600;">
+                Títulos Marianos
+              </span>
+              <span style="font-size: clamp(0.82rem, 1.2vw, 0.95rem); color: var(--gold-primary); font-weight: 700;">
+                Respondemos todos: «Ruega por la mami Olguita»
+              </span>
+            </div>
+
+            <div class="letanias-grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.2rem, 0.6vh, 0.4rem) clamp(0.5rem, 1.2vw, 1rem);">
+              ${items.map(item => `
+                <div class="letania-item-row" style="display: flex; justify-content: space-between; align-items: center; padding: clamp(0.2rem, 0.5vh, 0.35rem) 0.5rem; background: rgba(255,255,255,0.02); border-radius: 4px;">
+                  <span class="letania-invocacion" style="font-size: clamp(0.85rem, min(1.2vw, 1.9vh), 1.15rem);">${item.guia || item.invocacion}</span>
+                  <span class="letania-respuesta" style="font-size: clamp(0.82rem, min(1.1vw, 1.8vh), 1.05rem); color: var(--gold-primary); font-weight: 600;">Ruega por ella</span>
+                </div>
+              `).join('')}
+            </div>
           </div>
-        </div>
-        <div class="dialogo-block">
-          <div class="guia-part">
-            ${oradorBadge('Guía')}
-            <div class="voice-text">${NOVENA_DATA.oracionFinalFamilia.despedidaJaculatoria.guia}</div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge('Todos')}
-            <div class="voice-text">${NOVENA_DATA.oracionFinalFamilia.despedidaJaculatoria.todos}</div>
-          </div>
-        </div>
-      `
+        `;
+      }
     },
 
-    // Paso 17: Despedida & Placa Conmemorativa
+    // 21. Letanías Lauretanas (3/3): Reina Celestial y Cordero de Dios
+    {
+      id: 'letanias-3',
+      badge: '3. Oraciones Finales • Letanías (3/3)',
+      title: 'Letanías: Reina Celestial y Cordero de Dios',
+      render: () => {
+        const items = NOVENA_DATA.rosario.letanias.slice(32);
+        return `
+          <div class="single-prayer-view" style="gap: clamp(0.3rem, 0.8vh, 0.6rem);">
+            <div style="background: rgba(223, 177, 91, 0.08); border-left: 4px solid var(--gold-primary); padding: 0.35rem 0.8rem; border-radius: 0 6px 6px 0; display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: clamp(0.82rem, 1.2vw, 0.95rem); color: #ffffff; font-weight: 600;">
+                Reina del Cielo y Cordero de Dios
+              </span>
+              <span style="font-size: clamp(0.82rem, 1.2vw, 0.95rem); color: var(--gold-primary); font-weight: 700;">
+                Respondemos todos: «Ruega por la mami Olguita»
+              </span>
+            </div>
+
+            <div class="letanias-grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.18rem, 0.5vh, 0.35rem) clamp(0.5rem, 1.2vw, 1rem);">
+              ${items.map(item => `
+                <div class="letania-item-row" style="display: flex; justify-content: space-between; align-items: center; padding: clamp(0.18rem, 0.45vh, 0.32rem) 0.5rem; background: rgba(255,255,255,0.02); border-radius: 4px;">
+                  <span class="letania-invocacion" style="font-size: clamp(0.82rem, min(1.15vw, 1.85vh), 1.1rem);">${item.guia || item.invocacion}</span>
+                  <span class="letania-respuesta" style="font-size: clamp(0.8rem, min(1.05vw, 1.75vh), 1rem); color: var(--gold-primary); font-weight: 600;">Ruega por ella</span>
+                </div>
+              `).join('')}
+            </div>
+
+            <div style="text-align: center; margin-top: 0.2rem; padding: 0.35rem 0.8rem; background: rgba(192, 51, 116, 0.08); border: 1px solid var(--fucsia-border-subtle); border-radius: var(--radius-md); font-size: clamp(0.85rem, min(1.2vw, 1.9vh), 1.1rem); color: var(--fucsia-light); font-weight: 600;">
+              Cordero de Dios: Perdónanos, escúchanos y ten misericordia de la mami Olguita.
+            </div>
+          </div>
+        `;
+      }
+    },
+
+    // 22. Oración Familiar (1/2): Conciencia y Perdón
+    {
+      id: 'oracion-reconciliacion-1',
+      badge: '4. Oración Familiar (1/2)',
+      title: '🤍 Oración Familiar: Conciencia y Perdón',
+      render: () => {
+        const fullPrayer = dayData.oracionFamiliar || '';
+        const paragraphs = fullPrayer.split('\n\n').filter(Boolean);
+        const p1 = paragraphs[0] || fullPrayer;
+        return `
+          <div class="single-prayer-view" style="gap: clamp(0.4rem, 1vh, 0.75rem);">
+            <div style="background: rgba(223, 177, 91, 0.1); border: 1.5px solid var(--gold-primary); border-radius: 8px; padding: 0.4rem 0.85rem; text-align: center;">
+              <span style="font-size: clamp(0.88rem, min(1.25vw, 2vh), 1.1rem); font-weight: 700; color: var(--gold-primary);">
+                🤲 Momento Sagrado de Unión Familiar —
+              </span>
+              <span style="font-size: clamp(0.85rem, min(1.2vw, 1.9vh), 1.05rem); font-style: italic; color: #ffffff;">
+                (Nos tomamos de las manos o cerramos los ojos)
+              </span>
+            </div>
+
+            <div class="guia-part" style="padding: clamp(0.7rem, 1.6vh, 1.3rem) clamp(0.9rem, 2vw, 1.6rem);">
+              ${oradorBadge('Guía')}
+              <div class="voice-text" style="font-size: clamp(1.02rem, min(1.5vw, 2.25vh), 1.46rem); line-height: clamp(1.35, 2.45vh, 1.56);">
+                <p style="margin:0;">${p1}</p>
+              </div>
+            </div>
+
+            <div style="text-align: right; color: var(--gold-amber); font-size: clamp(0.82rem, 1.1vw, 0.95rem); font-family: var(--font-sans); font-weight: 600;">
+              Continúa en la siguiente pantalla →
+            </div>
+          </div>
+        `;
+      }
+    },
+
+    // 23. Oración Familiar (2/2): Unión y Sanación
+    {
+      id: 'oracion-reconciliacion-2',
+      badge: '4. Oración Familiar (2/2)',
+      title: '🤍 Oración Familiar: Unión y Sanación',
+      render: () => {
+        const fullPrayer = dayData.oracionFamiliar || '';
+        const paragraphs = fullPrayer.split('\n\n').filter(Boolean);
+        const remaining = paragraphs.slice(1).join('<br><br>');
+        return `
+          <div class="single-prayer-view" style="gap: clamp(0.4rem, 1vh, 0.75rem);">
+            <div class="guia-part" style="padding: clamp(0.7rem, 1.6vh, 1.3rem) clamp(0.9rem, 2vw, 1.6rem);">
+              ${oradorBadge('Guía')}
+              <div class="voice-text" style="font-size: clamp(1rem, min(1.48vw, 2.2vh), 1.44rem); line-height: clamp(1.34, 2.4vh, 1.54);">
+                <p style="margin:0;">${remaining || fullPrayer}</p>
+              </div>
+            </div>
+
+            <div class="todos-part" style="padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                ${todosBadge('Todos')}
+                <span style="font-size: clamp(1.05rem, 1.5vw, 1.35rem); font-weight: 700; color: var(--gold-light);">Amén.</span>
+              </div>
+              <div style="font-size: clamp(0.85rem, 1.1vw, 1rem); font-style: italic; color: var(--gold-amber);">
+                ✝️ (Se finaliza con la señal de la cruz)
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    },
+
+    // 24. Cierre, Bendición y Homenaje
     {
       id: 'despedida-homenaje',
-      badge: 'Cierre de la Novena',
-      title: 'Despedida, Bendición y Homenaje',
+      badge: '5. Cierre y Homenaje',
+      title: 'Despedida, Bendición Final y Homenaje Conmemorativo',
       render: () => `
-        <div class="prayer-subheading">
-          Bendición Final
-        </div>
-        <div class="dialogo-block" style="margin-bottom: 1.2rem;">
-          <div class="guia-part">
-            ${oradorBadge('Guía')}
-            <div class="voice-text">${NOVENA_DATA.despedidaFinal.guia}</div>
-          </div>
-          <div class="todos-part">
-            ${todosBadge('Todos')}
-            <div class="voice-text">${NOVENA_DATA.despedidaFinal.todos}</div>
-          </div>
-        </div>
+        <div class="single-prayer-view" style="gap: clamp(0.4rem, 1vh, 0.75rem);">
+          <div class="dialogo-block">
+            <div class="guia-part" style="padding: clamp(0.6rem, 1.4vh, 1.1rem) clamp(0.85rem, 1.8vw, 1.4rem);">
+              ${oradorBadge('Guía')}
+              <div class="voice-text" style="font-size: clamp(1.02rem, min(1.5vw, 2.2vh), 1.45rem); line-height: 1.42; color: #ffffff;">
+                El Señor nos bendiga, nos guarde de todo mal y nos lleve a la vida eterna.
+              </div>
+            </div>
 
-        <div style="text-align: center; margin: 1.2rem 0; font-family: var(--font-serif); color: var(--gold-primary); font-weight: 600; font-size: 1.25rem; line-height: 1.6;">
-          ${NOVENA_DATA.despedidaFinal.bendicion}
-        </div>
+            <div class="todos-part" style="padding: clamp(0.6rem, 1.4vh, 1.1rem) clamp(0.85rem, 1.8vw, 1.4rem);">
+              ${todosBadge('Todos')}
+              <div class="voice-text" style="font-size: clamp(1.02rem, min(1.5vw, 2.2vh), 1.45rem); line-height: 1.42; color: #fff8fc;">
+                Amén.
+              </div>
+            </div>
+          </div>
 
-        <!-- Placa Conmemorativa -->
-        <div class="tribute-box">
-          <div class="candle-icon" style="margin: 0 auto 0.6rem auto; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
-            ${icon('candle', { size: 36, color: '#DFB15B' })}
+          <div style="background: rgba(223, 177, 91, 0.08); border: 1.5px solid var(--gold-border); border-radius: var(--radius-md); padding: clamp(0.5rem, 1.2vh, 0.9rem); text-align: center; color: var(--gold-light);">
+            <div style="font-size: clamp(1rem, min(1.4vw, 2.1vh), 1.35rem); font-weight: 600; margin-bottom: 0.25rem;">
+              «Dale, Señor, el descanso eterno, y brille para ella la luz perpetua. Que en paz descanse. Amén.»
+            </div>
           </div>
-          <div class="tribute-name">${NOVENA_DATA.placaHomenaje.nombre}</div>
-          <div class="tribute-lines">
-            ${NOVENA_DATA.placaHomenaje.lineas.map(l => `<div>${l}</div>`).join('')}
-          </div>
-          <div class="tribute-rip">${NOVENA_DATA.placaHomenaje.cierre}</div>
-          <div class="tribute-footer">${NOVENA_DATA.placaHomenaje.mensajeFinal}</div>
-        </div>
 
-        <!-- Proyección de Despedida (Solo controlable por Logística / Anfitrión) -->
-        <div class="host-tribute-projection-card">
-          <div class="host-projection-badge">Control de Logística</div>
-          <div class="host-projection-title">Proyección Conmemorativa de Despedida</div>
-          <div class="host-projection-desc">
-            Inicia el pase de 46 fotografías conmemorativas a pantalla completa en los teléfonos de toda la familia, acompañado de música.
-          </div>
-          <button class="btn-project-farewell" onclick="window.startTributeProjection()">
-            <span>Proyectar Despedida a la Familia</span>
-          </button>
-        </div>
-
-        <div class="family-farewell-await-card">
-          <div style="margin: 0 auto 0.5rem auto; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-            ${icon('candle', { size: 30, color: '#DFB15B' })}
-          </div>
-          <div style="font-family: var(--font-serif); font-size: 1.22rem; font-weight: 600; color: #ffffff; margin-bottom: 0.35rem;">
-            Homenaje y Despedida
-          </div>
-          <div style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
-            En breve, la logística iniciará la proyección conmemorativa de fotos a pantalla completa en memoria de nuestra querida Mami Olguita.
+          <div style="display: flex; justify-content: center; margin-top: 0.3rem;">
+            <button class="btn-theater-trigger" onclick="window.startTheaterMode()" style="padding: clamp(0.55rem, 1.3vh, 0.85rem) 1.5rem; font-size: clamp(0.95rem, 1.3vw, 1.15rem); font-weight: 700; background: linear-gradient(135deg, var(--fucsia-primary), var(--fucsia-deep)); border: 1.5px solid var(--fucsia-light); border-radius: var(--radius-full); color: #ffffff; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 18px rgba(192, 51, 116, 0.4);">
+              <i data-icon="sparkles" data-size="18"></i>
+              <span>Proyectar Homenaje Conmemorativo de la Mami Olguita</span>
+            </button>
           </div>
         </div>
       `
@@ -665,7 +629,8 @@ window.selectEntryRole = function(role) {
 // ========================================================
 const stepsCache = new Map();
 function getStepsForDay(dayNumber, mysteryType) {
-  const mType = mysteryType || state.activeMysteryType || getAutoMysteryType();
+  const dayData = NOVENA_DATA.dias.find(d => d.dia === dayNumber) || NOVENA_DATA.dias[0];
+  const mType = mysteryType || state.activeMysteryType || dayData.tipoMisterio || getAutoMysteryType();
   const cacheKey = `${dayNumber}_${mType}`;
   if (!stepsCache.has(cacheKey)) {
     stepsCache.set(cacheKey, buildStepsForDay(dayNumber));
@@ -744,25 +709,29 @@ function renderCurrentStep(force = false) {
   if (tvSpeakerName) tvSpeakerName.textContent = state.speakerName || 'Oración Comunitaria';
 
   // Si estamos en un paso con foto (ej. misterios o fotos intermedias), mostrarla en grande a la izquierda en la TV
-  if (tvSidebarImg) {
-    if (state.currentStepIndex >= 7 && state.currentStepIndex <= 11) {
-      const mysteryPhotoIdx = ((state.currentStepIndex - 7) % 5) + 1;
-      tvSidebarImg.src = `/fotos-olguita/olguita-0${mysteryPhotoIdx}.jpg`;
-    } else if (state.currentStepIndex === 2) {
+  if (tvSidebarImg && currentStep) {
+    if (currentStep.id.startsWith('misterio-')) {
+      const mysteryPhotoIdx = parseInt(currentStep.id.replace('misterio-', '').replace('-rosario', ''), 10) || 1;
+      tvSidebarImg.src = `/fotos-olguita/olguita-${String(12 + mysteryPhotoIdx).padStart(2, '0')}.jpg`;
+    } else if (currentStep.id === 'cruz' || currentStep.id === 'contricion') {
+      tvSidebarImg.src = '/fotos-olguita/olguita-01.jpg';
+    } else if (currentStep.id === 'intencion' || currentStep.id === 'credo') {
       tvSidebarImg.src = '/fotos-olguita/olguita-02.jpg';
-    } else if (state.currentStepIndex === 4) {
+    } else if (currentStep.id.startsWith('cuentas-') || currentStep.id === 'la-salve') {
       tvSidebarImg.src = '/fotos-olguita/olguita-03.jpg';
-    } else if (state.currentStepIndex === 14) {
+    } else if (currentStep.id.startsWith('letanias')) {
       tvSidebarImg.src = '/fotos-olguita/olguita-04.jpg';
-    } else if (state.currentStepIndex === 16 || state.currentStepIndex === 17) {
+    } else if (currentStep.id.startsWith('oracion-reconciliacion')) {
+      tvSidebarImg.src = '/fotos-olguita/olguita-08.jpg';
+    } else if (currentStep.id === 'despedida-homenaje') {
       tvSidebarImg.src = '/fotos-olguita/olguita-05.jpg';
     } else {
       tvSidebarImg.src = '/olguita.jpg';
     }
   }
 
-  // Si estamos en un misterio del rosario (pasos 7 al 11), encender el widget TV de cuentas
-  const isMysteryStep = state.currentStepIndex >= 7 && state.currentStepIndex <= 11;
+  // Si estamos en un misterio del rosario, encender el widget TV de cuentas
+  const isMysteryStep = Boolean(currentStep && currentStep.id.startsWith('misterio-'));
   if (tvRosaryWidget) {
     tvRosaryWidget.style.display = isMysteryStep ? 'block' : 'none';
   }
@@ -774,8 +743,6 @@ function renderCurrentStep(force = false) {
       bodyEl.innerHTML = currentStep.render();
       replaceDomIcons(bodyEl);
     }
-    // AUTO-SCROLL AL TOPE: Para que en teléfono celular NUNCA quede cortado el texto
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Actualizar visualización de las cuentas si es un misterio
@@ -826,9 +793,6 @@ function applyRoleUI() {
     hostTrigger.innerHTML = isHost ? icon('settings', { size: 18 }) : icon('crown', { size: 18 });
     hostTrigger.title = isHost ? 'Panel de Logística' : 'Acceso de Anfitrión';
   }
-
-  updateCallControlsUI();
-  updateLocalTileMicUI();
 }
 
 function updateSpeakerUI(speakerSocketId, speakerName) {
@@ -849,17 +813,10 @@ function updateSpeakerUI(speakerSocketId, speakerName) {
     }
   }
 
-  // Resaltar miniatura del orador en la barra de cámaras
-  const localTile = document.getElementById('local-camera-tile');
-  if (localTile) {
-    localTile.classList.toggle('is-speaker', isMe);
+  const tvSpeaker = document.getElementById('tv-sidebar-speaker-name');
+  if (tvSpeaker) {
+    tvSpeaker.textContent = isMe ? `${state.speakerName} (Tú)` : state.speakerName;
   }
-
-  callState.peers.forEach((peer, sId) => {
-    if (peer.tileEl) {
-      peer.tileEl.classList.toggle('is-speaker', sId === speakerSocketId);
-    }
-  });
 
   applyRoleUI();
 }
@@ -894,6 +851,13 @@ window.jumpToStep = function(stepIdx) {
   state.currentAveMaria = 0;
   renderCurrentStep(true);
   closeModal('logistics-modal');
+};
+
+window.jumpToStepId = function(stepId) {
+  const sIdx = steps.findIndex(s => s.id === stepId);
+  if (sIdx !== -1) {
+    window.jumpToStep(sIdx);
+  }
 };
 
 // Ave María contador con actualización DOM in-place ultra ligera
@@ -943,22 +907,15 @@ function initRealtimeSync() {
       state.isOffline = false;
       stopAppFallbackPolling();
 
-      const savedName = localStorage.getItem('novena-user-name') || callState.userName;
+      const savedName = localStorage.getItem('novena-user-name') || state.userName;
       if (savedName) {
+        state.userName = savedName;
         state.socket.emit('set-name', { userName: savedName });
-      }
-
-      // Re-unir a la videollamada si ya estaba conectado
-      if (callState.inCall) {
-        state.socket.emit('join-call', {
-          userName: callState.userName || savedName,
-          isAudioOnly: callState.isVideoOff
-        });
       }
 
       // Re-reclamar anfitrión SOLO si explícitamente se eligió anfitrión en esta sesión
       if (state.isHost && state.selectedEntryRole === 'anfitrion') {
-        state.socket.emit('claim-host', { pin: '1234', name: callState.userName || savedName });
+        state.socket.emit('claim-host', { pin: '1234', name: state.userName || savedName });
       }
     });
 
@@ -1023,80 +980,15 @@ function initRealtimeSync() {
     state.socket.on('speaker-changed', ({ speakerSocketId, speakerName }) => {
       updateSpeakerUI(speakerSocketId, speakerName);
       if (state.socket && state.socket.id === speakerSocketId) {
-        // Si este dispositivo fue nombrado Orador, abrir el micrófono automáticamente
-        if (callState.localStream) {
-          callState.isAudioMuted = false;
-          callState.localStream.getAudioTracks().forEach(t => { t.enabled = true; });
-          updateCallControlsUI();
-          updateLocalTileMicUI();
-          showToast('¡Has sido designado como el Orador! Tu micrófono está abierto.', 'speaker');
-        }
+        showToast('¡Has sido designado como el Orador / Guía de la oración!', 'speaker');
       }
-      if (state.isHost) renderFamilyMicsList();
+      if (state.isHost) renderLogisticsModal();
     });
 
-    // Evento de orden de micrófono del anfitrión (Prender o Apagar)
-    state.socket.on('force-audio-state', ({ enabled }) => {
-      if (callState.localStream) {
-        callState.isAudioMuted = !enabled;
-        callState.localStream.getAudioTracks().forEach(t => { t.enabled = enabled; });
-        updateCallControlsUI();
-        updateLocalTileMicUI();
-
-        showToast(enabled ? 'El anfitrión ha abierto tu micrófono' : 'El anfitrión ha silenciado tu micrófono', enabled ? 'mic' : 'mic-off');
-
-        state.socket.emit('call-media-state', {
-          isAudioMuted: callState.isAudioMuted,
-          isVideoOff: callState.isVideoOff
-        });
-      }
-    });
-
-    // Presintonía de audio recibida desde logística
-    state.socket.on('set-audio-preset', ({ preset }) => {
-      if (!callState.localStream) return;
-      if (preset === 'orador') {
-        const isMe = state.socket && state.socket.id === state.speakerSocketId;
-        callState.isAudioMuted = !isMe;
-        callState.localStream.getAudioTracks().forEach(t => { t.enabled = isMe; });
-        updateCallControlsUI();
-        updateLocalTileMicUI();
-        showToast(isMe ? 'Modo Orador: Tu voz está al aire' : 'Modo Orador: Micrófono silenciado para escuchar', isMe ? 'speaker' : 'mic-off');
-      } else if (preset === 'coro') {
-        callState.isAudioMuted = false;
-        callState.localStream.getAudioTracks().forEach(t => { t.enabled = true; });
-        updateCallControlsUI();
-        updateLocalTileMicUI();
-        showToast('Modo Coro: Micrófono abierto para responder a coro', 'users');
-      } else if (preset === 'silencio') {
-        callState.isAudioMuted = true;
-        callState.localStream.getAudioTracks().forEach(t => { t.enabled = false; });
-        updateCallControlsUI();
-        updateLocalTileMicUI();
-        showToast('Momento de silencio y oración silenciosa', 'mic-off');
-      }
-    });
-
-    state.socket.on('user-media-state-changed', ({ socketId, isAudioMuted, isVideoOff }) => {
-      const peer = callState.peers.get(socketId);
-      if (peer) {
-        if (isAudioMuted !== undefined) {
-          peer.isAudioMuted = isAudioMuted;
-          updatePeerTileMicUI(socketId, isAudioMuted);
-        }
-        if (isVideoOff !== undefined && peer.avatarEl && peer.videoEl) {
-          peer.isVideoOff = isVideoOff;
-          if (isVideoOff) {
-            peer.avatarEl.style.display = 'flex';
-            peer.videoEl.style.display = 'none';
-          } else {
-            peer.avatarEl.style.display = 'none';
-            peer.videoEl.style.display = 'block';
-          }
-        }
-      }
-      if (state.isHost) {
-        renderFamilyMicsList();
+    state.socket.on('participants-list', (list) => {
+      if (Array.isArray(list)) {
+        state.participants = list;
+        if (state.isHost) renderLogisticsModal();
       }
     });
 
@@ -1143,29 +1035,29 @@ function renderLogisticsModal() {
   if (speakerContainer) {
     const isMeSpeaker = state.socket && state.socket.id === state.speakerSocketId;
     let html = `
-      <button class="btn-speaker-item ${isMeSpeaker ? 'active' : ''}" onclick="window.designateSpeaker('${state.socket ? state.socket.id : ''}', '${callState.userName} (Yo)')" style="display:flex; align-items:center; gap:0.4rem;">
+      <button class="btn-speaker-item ${isMeSpeaker ? 'active' : ''}" onclick="window.designateSpeaker('${state.socket ? state.socket.id : ''}', '${state.userName || 'Anfitrión'} (Yo)')" style="display:flex; align-items:center; gap:0.4rem;">
         <span>${icon('user', { size: 16 })}</span>
-        <span>${callState.userName} (Yo)</span>
+        <span>${state.userName || 'Anfitrión'} (Yo)</span>
       </button>
     `;
 
-    callState.peers.forEach((peer, sId) => {
-      const isThisSpeaker = sId === state.speakerSocketId;
-      html += `
-        <button class="btn-speaker-item ${isThisSpeaker ? 'active' : ''}" onclick="window.designateSpeaker('${sId}', '${peer.userName}')" style="display:flex; align-items:center; gap:0.4rem;">
-          <span>${icon('speaker', { size: 16 })}</span>
-          <span>${peer.userName}</span>
-        </button>
-      `;
-    });
+    if (Array.isArray(state.participants)) {
+      state.participants.forEach((user) => {
+        if (state.socket && user.socketId === state.socket.id) return;
+        const isThisSpeaker = user.socketId === state.speakerSocketId;
+        html += `
+          <button class="btn-speaker-item ${isThisSpeaker ? 'active' : ''}" onclick="window.designateSpeaker('${user.socketId}', '${user.userName || 'Familiar'}')" style="display:flex; align-items:center; gap:0.4rem;">
+            <span>${icon('speaker', { size: 16 })}</span>
+            <span>${user.userName || 'Familiar'}</span>
+          </button>
+        `;
+      });
+    }
 
     speakerContainer.innerHTML = html;
   }
 
-  // 3. Control individual de micrófonos
-  renderFamilyMicsList();
-
-  // 4. Saltar a pasos
+  // 3. Saltar a pasos
   const stepsList = document.getElementById('index-steps-list');
   if (stepsList) {
     stepsList.innerHTML = steps.map((s, idx) => `
@@ -1177,96 +1069,12 @@ function renderLogisticsModal() {
   }
 }
 
-function renderFamilyMicsList() {
-  const micListContainer = document.getElementById('family-members-mic-list');
-  if (!micListContainer) return;
-
-  if (callState.peers.size === 0) {
-    micListContainer.innerHTML = `
-      <div style="font-size: 0.78rem; color: var(--text-muted); font-style: italic; padding: 0.3rem;">
-        Esperando que otros familiares se conecten a la videollamada...
-      </div>
-    `;
-    return;
-  }
-
-  let html = '';
-  callState.peers.forEach((peer, sId) => {
-    const isMuted = Boolean(peer.isAudioMuted);
-    const isSpeaker = sId === state.speakerSocketId;
-    html += `
-      <div class="family-member-row">
-        <div class="family-member-name" style="display:flex; align-items:center; gap:0.4rem;">
-          <span>${isMuted ? icon('mic-off', { size: 14 }) : icon('mic', { size: 14 })}</span>
-          <span>${peer.userName} ${isSpeaker ? `<strong style="color:var(--gold-amber)">(${icon('speaker', { size: 12 })} Orador)</strong>` : ''}</span>
-        </div>
-        <div class="family-member-actions">
-          <button class="btn-member-mic ${isMuted ? 'muted-voice' : 'active-voice'}" 
-                  onclick="window.setUserAudio('${sId}', ${isMuted})"
-                  style="display:inline-flex; align-items:center; gap:0.25rem;">
-            ${isMuted ? `${icon('mic', { size: 13 })} Prender Mic` : `${icon('mic-off', { size: 13 })} Silenciar`}
-          </button>
-        </div>
-      </div>
-    `;
-  });
-  micListContainer.innerHTML = html;
-}
-
 window.designateSpeaker = function(socketId, speakerName) {
   if (state.socket && state.socket.connected) {
     state.socket.emit('set-speaker', { socketId, speakerName });
     showToast(`${speakerName} ha sido designado como Orador`, 'speaker');
   }
   closeModal('logistics-modal');
-};
-
-// Control global de micrófonos por el anfitrión (Prender o Apagar a todos)
-window.setAllListenersAudio = function(enabled) {
-  if (state.socket && state.socket.connected) {
-    state.socket.emit('set-all-listeners-audio', { enabled });
-    showToast(enabled ? 'Se activaron los micrófonos de todos' : 'Se silenciaron los micrófonos de todos', enabled ? 'mic' : 'mic-off');
-  }
-  closeModal('logistics-modal');
-};
-
-// Presintonías maestras de audio (Orador solo, Coro, Silencio total)
-window.setAudioPreset = function(preset) {
-  if (state.socket && state.socket.connected) {
-    state.socket.emit('set-audio-preset', { preset });
-  }
-  fetch('/api/audio/preset', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ preset })
-  }).catch(() => {});
-
-  if (preset === 'orador') {
-    showToast('Modo Orador: solo habla quien lee', 'speaker');
-  } else if (preset === 'coro') {
-    showToast('Modo Coro: micrófonos abiertos para responder', 'users');
-  } else if (preset === 'silencio') {
-    showToast('Silencio total activado', 'mic-off');
-  }
-  closeModal('logistics-modal');
-};
-
-// Control individual de micrófono por el anfitrión
-window.setUserAudio = function(targetSocketId, enabled) {
-  if (state.socket && state.socket.connected) {
-    state.socket.emit('set-user-audio-state', { targetSocketId, enabled });
-    const peer = callState.peers.get(targetSocketId);
-    if (peer) {
-      peer.isAudioMuted = !enabled;
-      updatePeerTileMicUI(targetSocketId, !enabled);
-    }
-    renderFamilyMicsList();
-    showToast(enabled ? 'Micrófono activado' : 'Micrófono silenciado', enabled ? 'mic' : 'mic-off');
-  }
-};
-
-window.muteAllListeners = function() {
-  window.setAllListenersAudio(false);
 };
 
 // Acceso de anfitrión
@@ -1285,7 +1093,7 @@ window.submitHostPin = function() {
 
   if (pin === '1234') {
     if (state.socket && state.socket.connected) {
-      state.socket.emit('claim-host', { pin, name: callState.userName });
+      state.socket.emit('claim-host', { pin, name: state.userName });
     } else {
       state.isHost = true;
       localStorage.setItem('novena-is-host', 'true');
@@ -1299,81 +1107,8 @@ window.submitHostPin = function() {
   }
 };
 
-// ========================================================
-// VIDEOLLAMADA FAMILIAR CON CÁMARAS ACTIVAS EN CELULAR (WebRTC)
-// ========================================================
-
-// Detector de actividad vocal en tiempo real (ilumina la cámara con borde verde al hablar)
-let speechAudioContext = null;
-function setupSpeechDetector(stream, onStateChange) {
-  try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    if (!speechAudioContext) {
-      speechAudioContext = new AudioCtx();
-    }
-    if (speechAudioContext.state === 'suspended') {
-      const resume = () => {
-        if (speechAudioContext && speechAudioContext.state === 'suspended') {
-          speechAudioContext.resume();
-        }
-        window.removeEventListener('click', resume);
-        window.removeEventListener('touchstart', resume);
-      };
-      window.addEventListener('click', resume, { once: true });
-      window.addEventListener('touchstart', resume, { once: true });
-    }
-    const source = speechAudioContext.createMediaStreamSource(stream);
-    const analyser = speechAudioContext.createAnalyser();
-    analyser.fftSize = 128;
-    analyser.smoothingTimeConstant = 0.4;
-    source.connect(analyser);
-
-    const buffer = new Uint8Array(analyser.frequencyBinCount);
-    let speaking = false;
-
-    const timer = setInterval(() => {
-      if (!stream.active) {
-        clearInterval(timer);
-        return;
-      }
-      analyser.getByteFrequencyData(buffer);
-      let sum = 0;
-      for (let i = 0; i < buffer.length; i++) sum += buffer[i];
-      const avg = sum / buffer.length;
-      const isNowSpeaking = avg > 14;
-      if (isNowSpeaking !== speaking) {
-        speaking = isNowSpeaking;
-        onStateChange(speaking);
-      }
-    }, 200);
-  } catch (e) {
-    // AudioContext no disponible o política de autoplay
-  }
-}
-
-const callState = {
-  inCall: false,
-  userName: localStorage.getItem('novena-user-name') || '',
-  localStream: null,
-  peers: new Map(),
-  isAudioMuted: false,
-  isVideoOff: false,
-  isFincaMode: false,
-  rtcConfig: {
-    iceServers: [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'stun:stun2.l.google.com:19302' },
-      { urls: 'stun:stun3.l.google.com:19302' },
-      { urls: 'stun:stun4.l.google.com:19302' },
-      { urls: 'stun:stun.cloudflare.com:3478' }
-    ]
-  }
-};
-
-// Entrar a la sala con un solo toque (Cámara y Voz SIEMPRE activas por defecto)
-window.enterRoomOneTouch = async function() {
+// Entrar a la sala con un solo toque (Sincronización instantánea de rezo)
+window.enterRoomOneTouch = function() {
   const nameInput = document.getElementById('welcome-name-input');
   let chosenName = nameInput ? nameInput.value.trim() : '';
 
@@ -1381,7 +1116,7 @@ window.enterRoomOneTouch = async function() {
     chosenName = 'Familiar ' + Math.floor(Math.random() * 90 + 10);
   }
 
-  callState.userName = chosenName;
+  state.userName = chosenName;
   localStorage.setItem('novena-user-name', chosenName);
 
   // Verificación de PIN si eligió Anfitrión
@@ -1392,442 +1127,33 @@ window.enterRoomOneTouch = async function() {
       state.isHost = true;
       localStorage.setItem('novena-is-host', 'true');
     } else {
-      // Si el PIN no es 1234, no bloquear con alert: entrar como familiar
       state.isHost = false;
       localStorage.removeItem('novena-is-host');
       state.selectedEntryRole = 'familia';
       showToast('PIN incorrecto o vacío (es 1234). Entraste como familiar.', 'users');
     }
   } else {
-    // Si entra como familiar u orador, limpiar cualquier estado previo de host
     state.isHost = false;
     localStorage.removeItem('novena-is-host');
   }
 
-  // Mostrar guía de permisos con flecha
-  const permGuide = document.getElementById('permission-guide-overlay');
-  if (permGuide) permGuide.style.display = 'flex';
-
-  // Pedir cámara y micrófono con video de buena calidad para teléfono
-  try {
-    const constraints = {
-      audio: {
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: true
-      },
-      video: {
-        width: { ideal: 360, max: 480 },
-        height: { ideal: 360, max: 480 },
-        facingMode: 'user'
-      }
-    };
-
-    callState.localStream = await navigator.mediaDevices.getUserMedia(constraints);
-    callState.isVideoOff = false;
-  } catch (err) {
-    console.warn('Fallo cámara/audio juntos, intentando audio solo:', err);
-    try {
-      callState.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      callState.isVideoOff = true;
-    } catch (audioErr) {
-      console.warn('No se obtuvo acceso a micrófono. Entrando en Modo Oyente sin bloquear:', audioErr);
-      callState.localStream = null;
-      callState.isVideoOff = true;
-      callState.isAudioMuted = true;
-      showToast('Entraste como oyente para seguir las oraciones', 'book');
-    }
-  }
-
-  // NUNCA BLOQUEAR: Siempre ocultar overlays y entrar
-  if (permGuide) permGuide.style.display = 'none';
   const gateOverlay = document.getElementById('welcome-gate-overlay');
   if (gateOverlay) gateOverlay.style.display = 'none';
 
-  callState.inCall = true;
-
-  // Miniatura propia con video forzado a reproducir
-  const localVideo = document.getElementById('local-video');
-  const localAvatar = document.getElementById('local-avatar');
-  const localName = document.getElementById('local-user-name');
-
-  if (localName) localName.textContent = `${callState.userName} (Tú)`;
-  if (localAvatar) localAvatar.textContent = callState.userName.slice(0, 2).toUpperCase();
-
-  if (callState.localStream) {
-    localVideo.srcObject = callState.localStream;
-    localVideo.muted = true;
-    localVideo.playsInline = true;
-    localVideo.setAttribute('playsinline', 'true');
-    localVideo.setAttribute('webkit-playsinline', 'true');
-    localVideo.play().catch(e => console.log('Local video play error', e));
-
-    if (callState.isVideoOff) {
-      if (localAvatar) localAvatar.style.display = 'flex';
-      if (localVideo) localVideo.style.display = 'none';
-    } else {
-      if (localAvatar) localAvatar.style.display = 'none';
-      if (localVideo) localVideo.style.display = 'block';
-    }
-
-    // Monitorear actividad vocal propia para iluminar miniatura
-    setupSpeechDetector(callState.localStream, (isSpeaking) => {
-      const localTile = document.getElementById('local-camera-tile');
-      if (localTile) {
-        localTile.classList.toggle('is-speaking', isSpeaking && !callState.isAudioMuted);
-      }
-    });
-
-    // Agregar tracks a peers existentes que ya estuvieran negociados (ej. Mando de Logística)
-    callState.peers.forEach(peer => {
-      if (peer.pc) {
-        callState.localStream.getTracks().forEach(track => {
-          try {
-            peer.pc.addTrack(track, callState.localStream);
-          } catch(e) {}
-        });
-      }
-    });
-  }
-
   if (state.socket && state.socket.connected) {
-    state.socket.emit('join-call', {
-      userName: callState.userName,
-      isAudioOnly: callState.isVideoOff
-    });
+    state.socket.emit('set-name', { userName: state.userName });
 
     if (state.selectedEntryRole === 'anfitrion') {
-      state.socket.emit('claim-host', { pin: '1234', name: callState.userName });
+      state.socket.emit('claim-host', { pin: '1234', name: state.userName });
     } else if (state.selectedEntryRole === 'orador') {
-      state.socket.emit('claim-speaker', { name: callState.userName });
+      state.socket.emit('claim-speaker', { name: state.userName });
     }
   }
 
   applyRoleUI();
   renderCurrentStep();
-  updateCallControlsUI();
+  showToast(`¡Bienvenido(a), ${state.userName}!`, 'candle');
 };
-
-// Crear miniatura visible de cámara en la tira superior (~82px)
-function createParticipantTile(socketId, userName) {
-  const container = document.getElementById('remote-cameras-container');
-  
-  const tileEl = document.createElement('div');
-  tileEl.className = 'camera-mini-tile';
-  tileEl.id = `participant-${socketId}`;
-
-  const initials = (userName || 'Familiar').slice(0, 2).toUpperCase();
-
-  tileEl.innerHTML = `
-    <video autoplay playsinline muted webkit-playsinline></video>
-    <audio autoplay playsinline></audio>
-    <div class="camera-mini-avatar">${initials}</div>
-    <div class="camera-mini-name">${userName || 'Familiar'}</div>
-    <div class="tile-mic-indicator" id="tile-mic-${socketId}" title="Micrófono">${icon('mic', { size: 12 })}</div>
-  `;
-
-  container.appendChild(tileEl);
-
-  const videoEl = tileEl.querySelector('video');
-  const audioEl = tileEl.querySelector('audio');
-  const avatarEl = tileEl.querySelector('.camera-mini-avatar');
-  const micIndicator = tileEl.querySelector('.tile-mic-indicator');
-
-  if (socketId === state.speakerSocketId) {
-    tileEl.classList.add('is-speaker');
-  }
-
-  // Si el usuario actual es el Anfitrión, puede hacer clic en el mic de cualquier miniatura para silenciarlo o prenderlo
-  micIndicator.onclick = () => {
-    if (state.isHost) {
-      const peer = callState.peers.get(socketId);
-      const willEnable = peer ? Boolean(peer.isAudioMuted) : true;
-      window.setUserAudio(socketId, willEnable);
-    }
-  };
-
-  return { tileEl, videoEl, audioEl, avatarEl, micIndicator };
-}
-
-function createPeerConnection(targetSocketId, targetUserName, isInitiator) {
-  if (callState.peers.has(targetSocketId)) {
-    const existing = callState.peers.get(targetSocketId);
-    if (existing.pc && existing.pc.connectionState !== 'closed' && existing.pc.connectionState !== 'failed') {
-      return existing.pc;
-    }
-    if (existing.pc) existing.pc.close();
-    if (existing.tileEl && existing.tileEl.parentNode) existing.tileEl.parentNode.removeChild(existing.tileEl);
-    callState.peers.delete(targetSocketId);
-  }
-
-  const pc = new RTCPeerConnection(callState.rtcConfig);
-
-  if (callState.localStream) {
-    callState.localStream.getTracks().forEach(track => {
-      try {
-        pc.addTrack(track, callState.localStream);
-      } catch (e) {}
-    });
-  }
-
-  const isMando = Boolean(targetUserName && targetUserName.includes('(Mando)'));
-
-  const { tileEl, videoEl, audioEl, avatarEl, micIndicator } = isMando
-    ? { tileEl: null, videoEl: null, audioEl: null, avatarEl: null, micIndicator: null }
-    : createParticipantTile(targetSocketId, targetUserName);
-
-  const peerData = {
-    pc,
-    userName: targetUserName,
-    tileEl,
-    videoEl,
-    audioEl,
-    avatarEl,
-    micIndicator,
-    isAudioMuted: false,
-    pendingCandidates: [],
-    remoteStream: new MediaStream()
-  };
-
-  callState.peers.set(targetSocketId, peerData);
-
-  pc.ontrack = (event) => {
-    peerData.remoteStream.addTrack(event.track);
-
-    if (isMando) return;
-
-    if (event.track.kind === 'video' && videoEl) {
-      videoEl.srcObject = peerData.remoteStream;
-      videoEl.muted = true;
-      videoEl.playsInline = true;
-      videoEl.setAttribute('playsinline', 'true');
-      videoEl.setAttribute('webkit-playsinline', 'true');
-      videoEl.play().catch(e => console.log('Remote video play err', e));
-      if (avatarEl) avatarEl.style.display = 'none';
-      videoEl.style.display = 'block';
-    } else if (event.track.kind === 'audio' && audioEl) {
-      audioEl.srcObject = peerData.remoteStream;
-      audioEl.play().catch(e => console.log('Remote audio play err', e));
-      setupSpeechDetector(peerData.remoteStream, (isSpeaking) => {
-        if (tileEl) tileEl.classList.toggle('is-speaking', isSpeaking && !peerData.isAudioMuted);
-      });
-    }
-  };
-
-  pc.onicecandidate = (event) => {
-    if (event.candidate && state.socket && state.socket.connected) {
-      state.socket.emit('webrtc-ice-candidate', {
-        targetSocketId,
-        candidate: event.candidate
-      });
-    }
-  };
-
-  if (isInitiator) {
-    pc.createOffer({
-      offerToReceiveAudio: true,
-      offerToReceiveVideo: true
-    }).then(offer => pc.setLocalDescription(offer)).then(() => {
-      state.socket.emit('webrtc-offer', {
-        targetSocketId,
-        offer: pc.localDescription
-      });
-    }).catch(err => console.error(err));
-  }
-
-  if (state.isHost) {
-    renderFamilyMicsList();
-  }
-
-  return pc;
-}
-
-function setupWebRTCSocketListeners() {
-  if (!state.socket) return;
-
-  state.socket.on('call-joined', ({ existingUsers }) => {
-    existingUsers.forEach(u => {
-      if (u.userName && u.userName.includes('(Mando)')) return;
-      createPeerConnection(u.socketId, u.userName, true);
-    });
-  });
-
-  state.socket.on('user-joined-call', ({ socketId, userName }) => {
-    if (userName && userName.includes('(Mando)')) return;
-    createPeerConnection(socketId, userName, false);
-  });
-
-  state.socket.on('webrtc-offer', async ({ senderSocketId, senderName, offer }) => {
-    const pc = createPeerConnection(senderSocketId, senderName, false);
-    const peer = callState.peers.get(senderSocketId);
-    try {
-      await pc.setRemoteDescription(new RTCSessionDescription(offer));
-      // Drenar candidatos que llegaron antes del remoteDescription
-      if (peer && peer.pendingCandidates && peer.pendingCandidates.length > 0) {
-        for (const cand of peer.pendingCandidates) {
-          try {
-            await pc.addIceCandidate(new RTCIceCandidate(cand));
-          } catch (e) {}
-        }
-        peer.pendingCandidates = [];
-      }
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
-      state.socket.emit('webrtc-answer', {
-        targetSocketId: senderSocketId,
-        answer
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  });
-
-  state.socket.on('webrtc-answer', async ({ senderSocketId, answer }) => {
-    const peer = callState.peers.get(senderSocketId);
-    if (peer && peer.pc) {
-      try {
-        await peer.pc.setRemoteDescription(new RTCSessionDescription(answer));
-        if (peer.pendingCandidates && peer.pendingCandidates.length > 0) {
-          for (const cand of peer.pendingCandidates) {
-            try {
-              await peer.pc.addIceCandidate(new RTCIceCandidate(cand));
-            } catch (e) {}
-          }
-          peer.pendingCandidates = [];
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  });
-
-  state.socket.on('webrtc-ice-candidate', async ({ senderSocketId, candidate }) => {
-    const peer = callState.peers.get(senderSocketId);
-    if (!peer || !peer.pc || !candidate) return;
-    try {
-      if (!peer.pc.remoteDescription || !peer.pc.remoteDescription.type) {
-        peer.pendingCandidates = peer.pendingCandidates || [];
-        peer.pendingCandidates.push(candidate);
-      } else {
-        await peer.pc.addIceCandidate(new RTCIceCandidate(candidate));
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  });
-
-  state.socket.on('user-left-call', ({ socketId }) => {
-    const peer = callState.peers.get(socketId);
-    if (peer) {
-      if (peer.pc) peer.pc.close();
-      if (peer.tileEl && peer.tileEl.parentNode) {
-        peer.tileEl.parentNode.removeChild(peer.tileEl);
-      }
-      callState.peers.delete(socketId);
-    }
-    if (state.isHost) {
-      renderFamilyMicsList();
-    }
-  });
-}
-
-// Controles de Micrófono y Cámara
-window.toggleAudio = function() {
-  if (!callState.localStream) return;
-  const audioTracks = callState.localStream.getAudioTracks();
-  if (audioTracks.length > 0) {
-    callState.isAudioMuted = !callState.isAudioMuted;
-    audioTracks.forEach(t => { t.enabled = !callState.isAudioMuted; });
-    updateCallControlsUI();
-    updateLocalTileMicUI();
-
-    if (state.socket && state.socket.connected) {
-      state.socket.emit('call-media-state', {
-        isAudioMuted: callState.isAudioMuted,
-        isVideoOff: callState.isVideoOff
-      });
-    }
-  }
-};
-
-window.toggleVideo = function() {
-  if (!callState.localStream) return;
-  const videoTracks = callState.localStream.getVideoTracks();
-  if (videoTracks.length > 0) {
-    callState.isVideoOff = !callState.isVideoOff;
-    videoTracks.forEach(t => { t.enabled = !callState.isVideoOff; });
-  } else {
-    callState.isVideoOff = !callState.isVideoOff;
-  }
-
-  const localVideo = document.getElementById('local-video');
-  const localAvatar = document.getElementById('local-avatar');
-
-  if (callState.isVideoOff) {
-    if (localAvatar) localAvatar.style.display = 'flex';
-    if (localVideo) localVideo.style.display = 'none';
-  } else {
-    if (localAvatar) localAvatar.style.display = 'none';
-    if (localVideo) localVideo.style.display = 'block';
-  }
-
-  if (state.socket && state.socket.connected) {
-    state.socket.emit('call-media-state', {
-      isAudioMuted: callState.isAudioMuted,
-      isVideoOff: callState.isVideoOff
-    });
-  }
-};
-
-// Alternar entre vista de cámaras grande y compacta
-window.toggleCameraLayout = function() {
-  const strip = document.getElementById('family-cameras-strip');
-  if (strip) {
-    strip.classList.toggle('expanded-grid');
-    const isExpanded = strip.classList.contains('expanded-grid');
-    showToast(isExpanded ? 'Cámaras ampliadas' : 'Vista compacta de rezo', isExpanded ? 'video' : 'book');
-  }
-};
-
-function updateCallControlsUI() {
-  const famMicBtn = document.getElementById('btn-family-mic');
-  const famMicIcon = document.getElementById('family-mic-icon');
-  const famMicText = document.getElementById('family-mic-text');
-
-  if (famMicBtn && famMicIcon && famMicText) {
-    const isSpeaker = state.isSpeaker || (state.socket && state.socket.id === state.speakerSocketId);
-
-    if (callState.isAudioMuted) {
-      famMicBtn.className = 'listener-mic-action listener-mic-muted';
-      famMicIcon.innerHTML = icon('mic-off', { size: 18 });
-      famMicText.textContent = isSpeaker 
-        ? 'Micrófono en SILENCIO (Toca para hablar como Guía)' 
-        : 'Micrófono en SILENCIO (Toca para responder)';
-    } else {
-      famMicBtn.className = 'listener-mic-action listener-mic-open';
-      famMicIcon.innerHTML = icon('mic', { size: 18 });
-      famMicText.innerHTML = isSpeaker 
-        ? `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('speaker', { size: 13 })} Micrófono ENCENDIDO (Guía leyendo)</span>` 
-        : 'Micrófono ENCENDIDO (Te escuchan todos)';
-    }
-  }
-}
-
-function updateLocalTileMicUI() {
-  const badge = document.getElementById('local-tile-mic-badge');
-  if (badge) {
-    badge.innerHTML = callState.isAudioMuted ? icon('mic-off', { size: 12 }) : icon('mic', { size: 12 });
-    badge.classList.toggle('muted', callState.isAudioMuted);
-  }
-}
-
-function updatePeerTileMicUI(socketId, isMuted) {
-  const badge = document.getElementById(`tile-mic-${socketId}`);
-  if (badge) {
-    badge.innerHTML = isMuted ? icon('mic-off', { size: 12 }) : icon('mic', { size: 12 });
-    badge.classList.toggle('muted', isMuted);
-  }
-}
 
 function showToast(message, iconName = null) {
   const container = document.getElementById('toast-container');
@@ -2284,7 +1610,6 @@ document.addEventListener('keydown', (e) => {
 
 function startApp() {
   init();
-  setupWebRTCSocketListeners();
 }
 
 if (document.readyState === 'loading') {
