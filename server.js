@@ -50,6 +50,17 @@ app.get(['/control', '/control/'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'logistica.html'));
 });
 
+// Atajos amigables para compartir por WhatsApp
+app.get(['/guia', '/guia/'], (req, res) => {
+  res.redirect('/guia-lectores-dia-7.html');
+});
+app.get(['/folleto', '/folleto/'], (req, res) => {
+  res.redirect('/dia-7-novena.html');
+});
+app.get(['/dia-7', '/dia7'], (req, res) => {
+  res.redirect('/dia-7-novena.html');
+});
+
 // Fallback to serve assets under /logistica/ and /control/ in case of relative paths
 app.use('/logistica', express.static(path.join(__dirname, 'public'), {
   etag: true,

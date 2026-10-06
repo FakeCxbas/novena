@@ -34,8 +34,8 @@ const state = {
   currentDay: getAutoNovenaDay(),
   currentStepIndex: 0,
   activeMysteryType: null, // 'gozosos', 'dolorosos', 'luminosos', 'gloriosos' o auto
-  fontScaleIndex: 1,
-  fontScales: [0.95, 1.12, 1.28],
+  zoomLevels: [0.75, 0.85, 0.92, 1.0, 1.10, 1.22, 1.36, 1.50],
+  currentZoomIndex: 3, // 1.0 = 100% por defecto
   isHost: false, // La consola de anfitrión está en /logistica
   isSpeaker: false,
   isSyncedWithHost: true,
@@ -85,17 +85,13 @@ function buildStepsForDay(dayNumber) {
       badge: 'Inicio de la Novena',
       title: 'Por la Señal de la Santa Cruz',
       render: () => `
-        <div style="text-align: center; margin-bottom: 1.4rem;">
-          <div class="candle-icon" style="margin: 0 auto 0.5rem auto; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;">
-            ${icon('candle', { size: 38, color: '#DFB15B' })}
-          </div>
-          <h2 class="memorial-dedication-title">Mami Olguita</h2>
-          <div class="memorial-dedication-jaculatoria">
+        <div style="text-align: center; margin-bottom: 0.9rem;">
+          <p class="memorial-dedication-jaculatoria" style="margin: 0;">
             ${NOVENA_DATA.info.jaculatoria}
-          </div>
+          </p>
         </div>
 
-        <div class="prayer-subheading">
+        <div class="prayer-subheading" style="margin-top: 0.4rem;">
           Rito Inicial
         </div>
 
@@ -147,7 +143,7 @@ function buildStepsForDay(dayNumber) {
       render: () => `
         <div class="guia-part" style="margin-bottom: 1rem;">
           ${oradorBadge('Guía')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.75rem;">
             ${NOVENA_DATA.oracionInicial.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
@@ -168,8 +164,8 @@ function buildStepsForDay(dayNumber) {
         const dayPhotoSrc = `/fotos-olguita/olguita-${String(dayPhotoNum).padStart(2, '0')}.jpg`;
         return `
           <div class="bible-quote-box">
-            <p style="font-size: 1.25rem; font-style: italic; line-height: 1.7; margin: 0; color: #ffffff;">${dayData.cita}</p>
-            <span class="bible-ref" style="display: block; margin-top: 0.5rem; font-weight: 700; color: var(--gold-amber);">— ${dayData.referencia}</span>
+            <p style="font-style: italic; margin: 0; color: #ffffff;">${dayData.cita}</p>
+            <span class="bible-ref" style="display: block; margin-top: 0.55rem; font-weight: 700; color: var(--gold-amber);">— ${dayData.referencia}</span>
           </div>
 
           <!-- Fotografía Conmemorativa de Mami Olguita -->
@@ -187,7 +183,7 @@ function buildStepsForDay(dayNumber) {
 
           <div class="guia-part" style="margin-top: 1.2rem;">
             ${oradorBadge('Reflexión')}
-            <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; margin: 0.4rem 0 0 0;">${dayData.reflexion}</p>
+            <p class="voice-text" style="margin: 0.4rem 0 0 0;">${dayData.reflexion}</p>
           </div>
         `;
       }
@@ -201,7 +197,7 @@ function buildStepsForDay(dayNumber) {
       render: () => `
         <div class="guia-part" style="margin-bottom: 1rem;">
           ${oradorBadge('Guía')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.75rem;">
             ${dayData.oracion.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
@@ -223,7 +219,7 @@ function buildStepsForDay(dayNumber) {
         return `
           <div class="guia-part" style="border-left: 3px solid var(--fucsia-primary); padding: 1.1rem 1.25rem;">
             ${oradorBadge('Mensaje')}
-            <p class="voice-text" style="font-size: 1.15rem; line-height: 1.85; color: var(--gold-light); margin: 0.4rem 0 0 0;">${dayData.mensajeFamilia}</p>
+            <p class="voice-text" style="color: var(--gold-light); margin: 0.4rem 0 0 0;">${dayData.mensajeFamilia}</p>
           </div>
 
           <!-- Fotografía Familiar Conmemorativa -->
@@ -289,8 +285,8 @@ function buildStepsForDay(dayNumber) {
         render: () => `
           ${mCita ? `
             <div class="bible-quote-box" style="margin-bottom: 0.9rem;">
-              <p style="font-size: 1.15rem; font-style: italic; line-height: 1.65; margin: 0; color: #ffffff;">${mCita}</p>
-              ${mReferencia ? `<span class="bible-ref" style="display: block; margin-top: 0.45rem; font-weight: 700; color: var(--gold-amber);">— ${mReferencia}</span>` : ''}
+              <p style="font-style: italic; margin: 0; color: #ffffff;">${mCita}</p>
+              ${mReferencia ? `<span class="bible-ref" style="display: block; margin-top: 0.5rem; font-weight: 700; color: var(--gold-amber);">— ${mReferencia}</span>` : ''}
             </div>
           ` : ''}
 
@@ -339,7 +335,7 @@ function buildStepsForDay(dayNumber) {
 
             <!-- Rosario Contador de 10 Ave Marías -->
             <div class="rosario-counter-card">
-              <div class="rosario-counter-header" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.95rem; font-weight:600; color:var(--gold-light);">
+              <div class="rosario-counter-header" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:1.10rem; font-weight:600; color:var(--gold-light);">
                 Avemarías rezadas: (<span id="bead-count-label">${state.currentAveMaria}</span> de 10)
               </div>
               <div class="beads-row" id="beads-container">
@@ -351,10 +347,10 @@ function buildStepsForDay(dayNumber) {
                 `).join('')}
               </div>
               <div class="beads-control-btns" style="margin-top: 0.65rem; display: flex; justify-content: center; gap: 0.5rem;">
-                <button class="btn-speaker-item" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;" onclick="window.nextAveMaria()">
+                <button class="btn-speaker-item" style="padding: 0.45rem 0.95rem; font-size: 0.95rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;" onclick="window.nextAveMaria()">
                   ${icon('plus', { size: 14 })} Contar Ave María
                 </button>
-                <button class="btn-speaker-item" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; opacity: 0.8;" onclick="window.setAveMaria(0)">
+                <button class="btn-speaker-item" style="padding: 0.45rem 0.95rem; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.35rem; opacity: 0.8;" onclick="window.setAveMaria(0)">
                   ${icon('refresh', { size: 14 })} Reiniciar cuentas
                 </button>
               </div>
@@ -430,7 +426,7 @@ function buildStepsForDay(dayNumber) {
       title: 'Padre Nuestro, 3 Ave Marías y Gloria al Padre',
       render: () => `
         <div style="text-align: center; margin-bottom: 1.1rem; background: rgba(223, 177, 91, 0.08); padding: 0.85rem 1rem; border-radius: 6px;">
-          <p style="font-size: 1.05rem; color: var(--gold-light); font-weight: 600; margin: 0; line-height: 1.6;">
+          <p style="font-size: 1.20rem; color: var(--gold-light); font-weight: 600; margin: 0; line-height: 1.6;">
             Al concluir los 5 misterios, rezamos 1 Padre Nuestro, 3 Ave Marías (por la Fe, Esperanza y Caridad) y 1 Gloria al Padre.
           </p>
         </div>
@@ -458,7 +454,7 @@ function buildStepsForDay(dayNumber) {
             <div class="voice-text">${NOVENA_DATA.rosario.aveMaria.todos}</div>
           </div>
         </div>
-        <p style="font-size: 0.9rem; color: var(--gold-amber); font-style: italic; text-align: center; margin: 0.2rem 0 1rem 0;">(Por el aumento de la Fe, Esperanza y Caridad)</p>
+        <p style="font-size: 1.05rem; color: var(--gold-amber); font-style: italic; text-align: center; margin: 0.3rem 0 1rem 0;">(Por el aumento de la Fe, Esperanza y Caridad)</p>
 
         <div class="prayer-subheading">III. Gloria al Padre</div>
         <div class="dialogo-block">
@@ -501,21 +497,93 @@ function buildStepsForDay(dayNumber) {
       id: 'letanias',
       badge: 'Santo Rosario',
       title: 'Letanías a la Santísima Virgen María',
-      render: () => `
-        <div style="background: rgba(223, 177, 91, 0.08); border-left: 3px solid var(--gold-primary); padding: 0.85rem 1.1rem; border-radius: 0 8px 8px 0; margin-bottom: 1rem;">
-          <p style="font-size: 1.02rem; color: #ffffff; margin: 0; font-weight: 500;">
-            El Guía menciona cada título — Respondemos todos a una sola voz: <strong style="color: var(--gold-primary);">"Ruega por ella"</strong>
-          </p>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 0.45rem; max-height: 480px; overflow-y: auto; padding-right: 0.35rem;">
-          ${NOVENA_DATA.rosario.letanias.map(item => `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.9rem; border-radius: 8px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border-subtle); font-size: 1.05rem;">
-              <span style="color: #ffffff; font-family: var(--font-body); font-weight: 400;">${item.guia || item.invocacion}</span>
-              <span style="color: var(--gold-primary); font-weight: 600; font-family: var(--font-sans); font-size: 0.95rem; letter-spacing: 0.02em;">${item.todos || item.respuesta}</span>
+      render: () => {
+        const marianas = NOVENA_DATA.rosario.letanias.slice(3);
+        const categories = [
+          { start: 1, end: 3, name: "Invocaciones a Santa María", icon: "✨" },
+          { start: 4, end: 15, name: "Títulos de la Maternidad Divina", icon: "🌹" },
+          { start: 16, end: 21, name: "Virtudes Virginales", icon: "🕊️" },
+          { start: 22, end: 34, name: "Símbolos y Figuras Bíblicas", icon: "🏺" },
+          { start: 35, end: 38, name: "Amparo, Salud y Consuelo", icon: "🛡️" },
+          { start: 39, end: 51, name: "Títulos de la Realeza Celestial", icon: "👑" }
+        ];
+
+        return `
+          <div style="background: rgba(223, 177, 91, 0.08); border-left: 3px solid var(--gold-primary); padding: 0.95rem 1.2rem; border-radius: 0 8px 8px 0; margin-bottom: 1rem;">
+            <p style="font-size: 1.18rem; color: #ffffff; margin: 0; font-weight: 500; line-height: 1.6;">
+              El Guía proclama cada invocación — Respondemos todos a una sola voz: <strong style="color: var(--gold-primary);">"Ruega por ella"</strong> (o "Ruega por nosotros")
+            </p>
+          </div>
+
+          <!-- Súplicas Iniciales (Kyrie) -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.85rem 1.1rem; margin-bottom: 0.95rem;">
+            <div style="font-size: 0.92rem; font-weight: 700; color: var(--gold-amber); text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em;">
+              Súplicas Iniciales
             </div>
-          `).join('')}
-        </div>
-      `
+            <div style="display: flex; flex-direction: column; gap: 0.45rem; font-size: 1.22rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dotted rgba(255,255,255,0.08); padding-bottom: 4px;">
+                <span style="color: #eeeeee;">Señor, ten piedad.</span>
+                <span style="color: var(--gold-primary); font-weight: 700;">Señor, ten piedad.</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dotted rgba(255,255,255,0.08); padding-bottom: 4px;">
+                <span style="color: #eeeeee;">Cristo, ten piedad.</span>
+                <span style="color: var(--gold-primary); font-weight: 700;">Cristo, ten piedad.</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #eeeeee;">Señor, ten piedad.</span>
+                <span style="color: var(--gold-primary); font-weight: 700;">Señor, ten piedad.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 51 Invocaciones Numeradas y Categorizadas -->
+          <div style="display: flex; flex-direction: column; gap: 0.45rem; max-height: 560px; overflow-y: auto; padding-right: 0.35rem;">
+            ${marianas.map((item, idx) => {
+              const num = idx + 1;
+              const numStr = String(num).padStart(2, '0');
+              const cat = categories.find(c => c.start === num);
+              const catHeader = cat ? `
+                <div style="margin: 0.9rem 0 0.3rem 0; font-family: var(--font-sans); font-size: 0.95rem; font-weight: 700; color: var(--gold-primary); text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.7rem; background: rgba(223, 177, 91, 0.09); border-radius: 6px; border-left: 3px solid var(--gold-primary);">
+                  <span>${cat.icon}</span>
+                  <span>${cat.name} (${String(cat.start).padStart(2, '0')} – ${String(cat.end).padStart(2, '0')})</span>
+                </div>
+              ` : '';
+
+              return `
+                ${catHeader}
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.65rem 0.95rem; border-radius: 8px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border-subtle); font-size: 1.25rem; gap: 0.6rem;">
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="font-family: var(--font-sans); font-size: 0.95rem; font-weight: 700; color: var(--gold-primary); background: rgba(223, 177, 91, 0.15); padding: 3px 8px; border-radius: 4px; min-width: 32px; text-align: center;">${numStr}</span>
+                    <span style="color: #ffffff; font-family: var(--font-body); font-weight: 400;">${item.invocacion}</span>
+                  </div>
+                  <span style="color: var(--gold-primary); font-weight: 700; font-family: var(--font-sans); font-size: 1.15rem; letter-spacing: 0.02em; white-space: nowrap;">Ruega por ella</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- Cordero de Dios (Agnus Dei) -->
+          <div style="background: rgba(223, 177, 91, 0.08); border: 1.5px solid var(--gold-primary); border-radius: 10px; padding: 1rem 1.25rem; margin-top: 1.1rem;">
+            <div style="font-size: 0.95rem; font-weight: 700; color: var(--gold-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.4rem;">
+              <span>🐑</span> <span>Cordero de Dios (Agnus Dei)</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.7rem; font-size: 1.22rem;">
+              <div style="padding-bottom: 0.5rem; border-bottom: 1px dashed rgba(223, 177, 91, 0.3);">
+                <div style="color: #d6cfc7; font-size: 1.12rem;"><strong style="color: var(--gold-primary);">Guía:</strong> Cordero de Dios, que quitas los pecados del mundo.</div>
+                <div style="color: #ffffff; font-weight: 700; margin-top: 3px;"><strong style="color: var(--gold-primary);">Todos:</strong> Perdónanos, Señor.</div>
+              </div>
+              <div style="padding-bottom: 0.5rem; border-bottom: 1px dashed rgba(223, 177, 91, 0.3);">
+                <div style="color: #d6cfc7; font-size: 1.12rem;"><strong style="color: var(--gold-primary);">Guía:</strong> Cordero de Dios, que quitas los pecados del mundo.</div>
+                <div style="color: #ffffff; font-weight: 700; margin-top: 3px;"><strong style="color: var(--gold-primary);">Todos:</strong> Escúchanos, Señor.</div>
+              </div>
+              <div>
+                <div style="color: #d6cfc7; font-size: 1.12rem;"><strong style="color: var(--gold-primary);">Guía:</strong> Cordero de Dios, que quitas los pecados del mundo.</div>
+                <div style="color: #ffffff; font-weight: 700; margin-top: 3px;"><strong style="color: var(--gold-primary);">Todos:</strong> Ten piedad y misericordia de nosotros.</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
     },
 
     // ----------------------------------------------------
@@ -529,7 +597,7 @@ function buildStepsForDay(dayNumber) {
       render: () => `
         <div class="guia-part" style="margin-bottom: 1rem;">
           ${oradorBadge('Guía')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.75rem;">
             ${NOVENA_DATA.oracionFinalOlguita.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
@@ -548,7 +616,7 @@ function buildStepsForDay(dayNumber) {
       render: () => `
         <div class="guia-part" style="margin-bottom: 1rem;">
           ${oradorBadge('Guía')}
-          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 1.15rem; line-height: 1.8;">
+          <div class="voice-text" style="display: flex; flex-direction: column; gap: 0.75rem;">
             ${NOVENA_DATA.oracionFinalFamilia.paragraphs.map(p => `<p style="margin:0;">${p}</p>`).join('')}
           </div>
         </div>
@@ -1845,16 +1913,58 @@ function showToast(message, iconName = null) {
   }, 3500);
 }
 
-// Tamaño de fuente
-window.cycleFontSize = function() {
-  state.fontScaleIndex = (state.fontScaleIndex + 1) % state.fontScales.length;
-  const scale = state.fontScales[state.fontScaleIndex];
+// ========================================================
+// CONTROLES DE ZOOM Y TAMAÑO DE FUENTE
+// ========================================================
+function applyZoom(notify = false) {
+  const scale = state.zoomLevels[state.currentZoomIndex] || 1.0;
   document.documentElement.style.setProperty('--font-scale', scale);
-  const btn = document.getElementById('btn-font-size');
-  if (btn) {
-    const labels = ['A', 'A+', 'A++'];
-    btn.textContent = labels[state.fontScaleIndex];
+  const percentage = Math.round(scale * 100);
+  const label = document.getElementById('zoom-percentage-text');
+  if (label) {
+    label.textContent = `${percentage}%`;
   }
+  try {
+    localStorage.setItem('novena_zoom_index', state.currentZoomIndex);
+    localStorage.setItem('novena_zoom_scale', scale);
+  } catch (e) {}
+
+  if (notify) {
+    showToast(`Tamaño de letra: ${percentage}%`, 'type');
+  }
+}
+
+window.zoomIn = function() {
+  if (state.currentZoomIndex < state.zoomLevels.length - 1) {
+    state.currentZoomIndex++;
+    applyZoom(true);
+  } else {
+    showToast('Tamaño máximo de letra (150%)', 'zoom-in');
+  }
+};
+
+window.zoomOut = function() {
+  if (state.currentZoomIndex > 0) {
+    state.currentZoomIndex--;
+    applyZoom(true);
+  } else {
+    showToast('Tamaño mínimo de letra (75%)', 'zoom-out');
+  }
+};
+
+window.zoomReset = function() {
+  state.currentZoomIndex = 3; // 1.0 = 100%
+  applyZoom(true);
+  showToast('Tamaño de letra restablecido (100%)', 'refresh-cw');
+};
+
+window.cycleFontSize = function() {
+  if (state.currentZoomIndex >= state.zoomLevels.length - 1) {
+    state.currentZoomIndex = 3; // volver a 100%
+  } else {
+    state.currentZoomIndex++;
+  }
+  applyZoom(true);
 };
 
 // Modales
@@ -2215,6 +2325,18 @@ async function syncFromHttpState() {
 
 // Inicializar
 function init() {
+  // Cargar nivel de zoom guardado o iniciar en 100%
+  try {
+    const savedIdx = localStorage.getItem('novena_zoom_index');
+    if (savedIdx !== null && state.zoomLevels[parseInt(savedIdx, 10)] !== undefined) {
+      state.currentZoomIndex = parseInt(savedIdx, 10);
+    } else {
+      state.currentZoomIndex = 3; // 100% por defecto
+    }
+  } catch (e) {
+    state.currentZoomIndex = 3;
+  }
+  applyZoom(false);
   replaceDomIcons();
   renderCurrentStep();
   initRealtimeSync();
@@ -2259,8 +2381,9 @@ window.toggleFullScreen = function() {
 
 document.addEventListener('fullscreenchange', () => {
   const btn = document.getElementById('btn-fullscreen-tv');
+  const isFull = !!document.fullscreenElement;
+  document.body.classList.toggle('modo-tv', isFull);
   if (btn) {
-    const isFull = !!document.fullscreenElement;
     btn.innerHTML = `<i data-icon="${isFull ? 'minimize' : 'maximize'}" data-size="14"></i> <span class="btn-tv-label">${isFull ? 'Salir TV' : 'Modo TV'}</span>`;
     replaceDomIcons(btn);
   }
@@ -2279,6 +2402,15 @@ document.addEventListener('keydown', (e) => {
   } else if (e.key === 'f' || e.key === 'F') {
     e.preventDefault();
     window.toggleFullScreen();
+  } else if (e.key === '+' || e.key === '=') {
+    e.preventDefault();
+    window.zoomIn();
+  } else if (e.key === '-' || e.key === '_') {
+    e.preventDefault();
+    window.zoomOut();
+  } else if (e.key === '0') {
+    e.preventDefault();
+    window.zoomReset();
   }
 });
 

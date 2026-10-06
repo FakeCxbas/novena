@@ -342,22 +342,22 @@ html, body {
 
 .slide-title-text {
   font-family: var(--font-serif);
-  font-size: 1.25rem;
+  font-size: 1.45rem;
   font-weight: 700;
   color: var(--gold-light);
-  margin-bottom: 0.6rem;
-  line-height: 1.25;
+  margin-bottom: 0.65rem;
+  line-height: 1.28;
 }
 
 .slide-role-guidance {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.35rem 0.65rem;
+  padding: 0.4rem 0.75rem;
   border-radius: 8px;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.85rem;
 }
 
 .slide-role-guidance.orador-reads {
@@ -376,11 +376,11 @@ html, body {
   background: rgba(0, 0, 0, 0.4);
   border: 1px dashed rgba(223, 177, 91, 0.25);
   border-radius: 10px;
-  padding: 0.75rem;
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  max-height: 140px;
+  padding: 0.85rem;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+  line-height: 1.68;
+  max-height: 155px;
   overflow-y: auto;
   font-style: italic;
 }

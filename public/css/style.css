@@ -50,7 +50,7 @@
   --font-body: 'Lora', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
-  --font-scale: 1;
+  --font-scale: 1.0;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -67,7 +67,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
+html {
+  font-size: calc(16px * var(--font-scale));
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
   width: 100%;
   min-height: 100vh;
   background-color: var(--bg-primary);
@@ -77,10 +82,9 @@ html, body {
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-body);
-  font-size: calc(1.04rem * var(--font-scale));
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.72;
   overflow-x: hidden;
-  -webkit-text-size-adjust: 100%;
 }
 
 .icon-svg {
@@ -342,17 +346,19 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-subtle);
-  padding: 0.3rem 0.7rem;
+  padding: 0.35rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 42px;
+  min-height: 48px;
+  gap: 0.75rem;
 }
 
 .brand-section {
   display: flex;
   align-items: center;
   gap: 0.65rem;
+  flex-shrink: 0;
 }
 
 .header-avatar-ring {
@@ -406,15 +412,15 @@ body {
   background: rgba(223, 177, 91, 0.08);
   border: 1px solid var(--gold-border);
   border-radius: var(--radius-full);
-  padding: 0.22rem 0.65rem;
+  padding: 0.25rem 0.85rem;
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 600;
   color: var(--text-primary);
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  max-width: 160px;
+  gap: 0.45rem;
+  max-width: 240px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -438,6 +444,71 @@ body {
   display: flex;
   align-items: center;
   gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+/* Grupo de Zoom Elegante y Compacto */
+.zoom-controls-group {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 2px 3px;
+  gap: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.btn-zoom-action {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 3px 6px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  min-width: 26px;
+  height: 26px;
+}
+
+.btn-zoom-action:hover {
+  background: rgba(192, 51, 116, 0.22);
+  color: #ffffff;
+}
+
+.btn-zoom-action:active {
+  transform: scale(0.92);
+}
+
+.btn-zoom-level {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--gold-primary);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  min-width: 44px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-zoom-level:hover {
+  background: rgba(223, 177, 91, 0.15);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
 }
 
 .btn-header-album {
@@ -495,16 +566,18 @@ body {
    TIRA HORIZONTAL DE CÁMARAS VISIBLE (~82px de alto)
    ======================================================== */
 .family-cameras-strip-container {
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 0.35rem 0.6rem;
+  background: rgba(20, 15, 23, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(192, 51, 116, 0.12);
+  padding: 0.25rem 0.8rem;
   overflow-x: auto;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  height: 82px;
+  gap: 0.5rem;
+  height: 56px;
   transition: all 0.3s ease;
   scrollbar-width: none;
 }
@@ -525,18 +598,18 @@ body {
 }
 
 .camera-mini-tile {
-  width: 82px;
-  height: 72px;
+  width: 56px;
+  height: 46px;
   flex-shrink: 0;
-  border-radius: 12px;
-  background: #100d0b;
-  border: 1.5px solid var(--border-subtle);
+  border-radius: 8px;
+  background: #140e15;
+  border: 1px solid var(--border-subtle);
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
@@ -678,57 +751,57 @@ body {
 
 .day-badge-text {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--fucsia-light);
 }
 
 .step-progress-pill {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 700;
   color: var(--gold-primary);
   background: rgba(223, 177, 91, 0.08);
   border: 1px solid var(--gold-border);
   border-radius: var(--radius-full);
-  padding: 0.2rem 0.65rem;
+  padding: 0.25rem 0.75rem;
 }
 
 .section-title {
   font-family: var(--font-serif);
-  font-size: 1.7rem;
+  font-size: 1.85rem;
   font-weight: 600;
   color: #ffffff;
-  margin-bottom: 1.1rem;
-  line-height: 1.35;
+  margin-bottom: 0.95rem;
+  line-height: 1.32;
   letter-spacing: 0.01em;
 }
 
 /* Cita Bíblica (Estilo Editorial Clásico) */
 .bible-quote-box {
   background: rgba(223, 177, 91, 0.05);
-  border-left: 2.5px solid var(--gold-primary);
+  border-left: 3px solid var(--gold-primary);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 1rem 1.2rem;
-  margin-bottom: 1.25rem;
+  padding: 1rem 1.3rem;
+  margin-bottom: 1.15rem;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1.22rem;
+  font-size: 1.18rem;
   color: var(--gold-light);
-  line-height: 1.75;
+  line-height: 1.78;
 }
 
 .bible-ref {
   display: block;
   font-style: normal;
   font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--gold-primary);
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
   text-align: right;
 }
 
@@ -745,19 +818,19 @@ body {
 /* Guía */
 .dialogo-block .guia-part, .guia-part {
   background: rgba(255, 255, 255, 0.02);
-  border-left: 2.5px solid var(--gold-primary);
+  border-left: 3px solid var(--gold-primary);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 0.85rem 1.05rem;
+  padding: 1.05rem 1.3rem;
 }
 
 .voice-badge {
   display: block;
   font-family: var(--font-sans);
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.86rem;
+  font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
 }
 
 .voice-badge.guia {
@@ -770,8 +843,8 @@ body {
 
 .voice-text {
   font-family: var(--font-body);
-  font-size: 1.08rem;
-  line-height: 1.8;
+  font-size: 1.16rem;
+  line-height: 1.76;
   color: var(--text-primary);
 }
 
@@ -779,9 +852,9 @@ body {
 .dialogo-block .todos-part, .todos-part {
   background: var(--fucsia-tint);
   border: 1px solid var(--fucsia-border-subtle);
-  border-left: 3px solid var(--fucsia-primary);
+  border-left: 3.5px solid var(--fucsia-primary);
   border-radius: var(--radius-sm);
-  padding: 0.95rem 1.15rem;
+  padding: 1.15rem 1.4rem;
 }
 
 .todos-part .voice-text {
@@ -798,9 +871,9 @@ body.is-speaker .dialogo-block .guia-part {
 /* Subtítulo litúrgico de sección */
 .prayer-subheading {
   font-family: var(--font-serif);
-  font-size: 1.35rem;
+  font-size: 1.30rem;
   color: #ffffff;
-  margin: 1.4rem 0 0.75rem 0;
+  margin: 1.3rem 0 0.75rem 0;
   padding-bottom: 0.35rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-weight: 600;
@@ -810,29 +883,29 @@ body.is-speaker .dialogo-block .guia-part {
 /* Meditación */
 .meditacion-box {
   background: rgba(192, 51, 116, 0.06);
-  border-left: 2.5px solid var(--fucsia-primary);
+  border-left: 3px solid var(--fucsia-primary);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 0.95rem 1.15rem;
-  margin-bottom: 1.25rem;
+  padding: 1.05rem 1.25rem;
+  margin-bottom: 1.2rem;
 }
 
 .meditacion-box .meditacion-title {
   font-family: var(--font-sans);
-  font-size: 0.76rem;
-  font-weight: 700;
+  font-size: 0.86rem;
+  font-weight: 800;
   color: var(--fucsia-light);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
 }
 
 .meditacion-box .meditacion-text {
   font-family: var(--font-serif);
-  font-size: 1.18rem;
+  font-size: 1.16rem;
   color: #fff;
   font-style: italic;
   margin: 0;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 /* Fotografía y Chip de Recuerdo en Misterios */
@@ -949,19 +1022,19 @@ body:not(.is-speaker):not(.is-host) .beads-control-btns {
 
 .memorial-dedication-title {
   font-family: var(--font-serif);
-  font-size: 2.1rem;
-  font-weight: 600;
+  font-size: 1.65rem;
+  font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.02em;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.25rem;
 }
 
 .memorial-dedication-jaculatoria {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   color: var(--gold-primary);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 /* ========================================================
@@ -2239,21 +2312,26 @@ body:not(.is-host) .family-farewell-await-card {
   color: var(--gold-light);
 }
 
-@media (min-width: 700px), (orientation: landscape) {
+@media (min-width: 820px) {
+  .family-cameras-strip-container {
+    padding-left: max(1.5rem, calc((100% - 1140px) / 2 + 1.2rem));
+    padding-right: max(1.5rem, calc((100% - 1140px) / 2 + 1.2rem));
+  }
+
   .main-prayer-container {
-    max-width: 1400px;
-    width: 96%;
+    max-width: 1140px;
+    width: 95%;
     display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
-    gap: 1.8rem;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 1.5rem;
     align-items: start;
-    padding: 1.2rem 1.4rem 6rem 1.4rem;
+    padding: 1rem 1.2rem 5.5rem 1.2rem;
   }
 
   .tv-memorial-sidebar {
     display: block;
     position: sticky;
-    top: 56px;
+    top: 60px;
     z-index: 10;
   }
 
@@ -2261,7 +2339,7 @@ body:not(.is-host) .family-farewell-await-card {
     background: var(--bg-surface);
     border: 1px solid var(--gold-border);
     border-radius: var(--radius-lg);
-    padding: 1.5rem 1.3rem;
+    padding: 1.2rem 1rem;
     text-align: center;
     box-shadow: var(--shadow-warm);
     position: relative;
@@ -2281,12 +2359,13 @@ body:not(.is-host) .family-farewell-await-card {
   .tv-portrait-container {
     position: relative;
     width: 100%;
+    max-width: 220px;
+    margin: 0 auto 0.9rem auto;
     aspect-ratio: 1;
     border-radius: var(--radius-md);
     overflow: hidden;
     border: 2px solid var(--gold-primary);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-    margin-bottom: 1.1rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
     background: #000000;
   }
 
@@ -2305,43 +2384,43 @@ body:not(.is-host) .family-farewell-await-card {
     background: rgba(20, 15, 23, 0.92);
     border: 1.5px solid var(--gold-primary);
     border-radius: 50%;
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
     z-index: 2;
   }
 
   .tv-sidebar-name {
     font-family: var(--font-serif);
-    font-size: 1.85rem;
+    font-size: 1.55rem;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.15rem;
     letter-spacing: 0.01em;
   }
 
   .tv-sidebar-quote {
     font-family: var(--font-serif);
-    font-size: 1.1rem;
+    font-size: 0.98rem;
     font-style: italic;
     color: var(--gold-primary);
-    margin-bottom: 0.85rem;
+    margin-bottom: 0.75rem;
   }
 
   .tv-sidebar-day-badge {
     display: inline-block;
     font-family: var(--font-sans);
-    font-size: 0.74rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--fucsia-light);
     background: rgba(192, 51, 116, 0.1);
     border: 1px solid var(--fucsia-border);
     border-radius: var(--radius-full);
-    padding: 0.25rem 0.85rem;
-    margin-bottom: 1rem;
+    padding: 0.2rem 0.75rem;
+    margin-bottom: 0.85rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
@@ -2350,13 +2429,13 @@ body:not(.is-host) .family-farewell-await-card {
     background: var(--bg-surface-elevated);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
-    padding: 0.65rem 0.9rem;
+    padding: 0.55rem 0.8rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
     font-family: var(--font-sans);
-    font-size: 0.84rem;
+    font-size: 0.82rem;
   }
 
   .tv-speaker-title {
@@ -2372,8 +2451,8 @@ body:not(.is-host) .family-farewell-await-card {
     background: var(--bg-surface-elevated);
     border: 1px solid var(--gold-border);
     border-radius: var(--radius-md);
-    padding: 0.85rem;
-    margin-bottom: 1rem;
+    padding: 0.75rem;
+    margin-bottom: 0.85rem;
   }
 
   .tv-rosary-header {
@@ -2381,10 +2460,10 @@ body:not(.is-host) .family-farewell-await-card {
     justify-content: space-between;
     align-items: center;
     font-family: var(--font-sans);
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 600;
     color: var(--gold-primary);
-    margin-bottom: 0.65rem;
+    margin-bottom: 0.55rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -2392,19 +2471,19 @@ body:not(.is-host) .family-farewell-await-card {
   .tv-rosary-dots {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 0.5rem;
+    gap: 0.45rem;
     justify-items: center;
   }
 
   .tv-rosary-dot {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: 1.5px solid var(--border-subtle);
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-muted);
     font-family: var(--font-sans);
-    font-size: 0.72rem;
+    font-size: 0.70rem;
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -2422,87 +2501,69 @@ body:not(.is-host) .family-farewell-await-card {
     border-color: var(--fucsia-light);
     background: var(--fucsia-btn);
     color: #ffffff;
-    transform: scale(1.15);
+    transform: scale(1.12);
   }
 
   .tv-remote-hint {
     font-family: var(--font-sans);
-    font-size: 0.72rem;
+    font-size: 0.70rem;
     color: var(--text-muted);
-    padding: 0.45rem 0.2rem 0 0.2rem;
+    padding: 0.4rem 0.2rem 0 0.2rem;
     border-top: 1px solid var(--border-subtle);
-    line-height: 1.45;
+    line-height: 1.4;
   }
 
   .tv-remote-hint strong {
     color: var(--gold-primary);
   }
 
-  /* Escalado de la lectura sagrada en pantalla grande */
   .prayer-card {
-    padding: 2.2rem 2.6rem;
+    padding: 1.6rem 2rem;
   }
 
   .section-title {
-    font-size: 2.25rem;
+    font-size: 1.95rem;
     line-height: 1.32;
-    margin-bottom: 1.35rem;
+    margin-bottom: 1rem;
   }
 
   .voice-text {
-    font-size: 1.25rem;
-    line-height: 1.88;
+    font-size: 1.18rem;
+    line-height: 1.78;
   }
 
   .dialogo-block .guia-part, .dialogo-block .todos-part {
-    padding: 1.1rem 1.45rem;
+    padding: 1rem 1.3rem;
   }
 
   .bible-quote-box {
-    font-size: 1.35rem;
-    line-height: 1.85;
-    padding: 1.25rem 1.65rem;
+    font-size: 1.20rem;
+    line-height: 1.8;
+    padding: 1.1rem 1.4rem;
   }
 
   .day-badge-text {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
 }
 
-/* Escalado extra para pantallas gigantes / Smart TV 1080p y 4K */
-@media (min-width: 1400px) {
-  .main-prayer-container {
-    max-width: 1680px;
-    grid-template-columns: 420px minmax(0, 1fr);
-    gap: 3rem;
-    padding: 1.8rem 2.2rem 7rem 2.2rem;
-  }
+/* Modo TV Explícito (cuando se activa la pantalla completa) */
+body.modo-tv .prayer-card {
+  padding: 2.2rem 2.8rem;
+}
 
-  .section-title {
-    font-size: 2.7rem;
-  }
+body.modo-tv .section-title {
+  font-size: 2.45rem;
+  line-height: 1.3;
+}
 
-  .voice-text {
-    font-size: 1.4rem;
-    line-height: 1.95;
-  }
+body.modo-tv .voice-text {
+  font-size: 1.38rem;
+  line-height: 1.88;
+}
 
-  .bible-quote-box {
-    font-size: 1.5rem;
-    line-height: 1.92;
-    padding: 1.45rem 1.9rem;
-  }
-
-  .dialogo-block .guia-part, .dialogo-block .todos-part {
-    padding: 1.3rem 1.8rem;
-  }
-
-  .theater-quote-text {
-    font-size: 2.2rem;
-  }
-
-  .theater-active-photo {
-    max-height: 75vh;
-  }
+body.modo-tv .bible-quote-box {
+  font-size: 1.42rem;
+  line-height: 1.85;
 }
 

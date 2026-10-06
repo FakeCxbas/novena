@@ -89,6 +89,16 @@
         </div>
       </div>
 
+      <!-- Enlaces directos a Guía de Lectores y Folleto Imprimible (Día 7) -->
+      <div style="margin: 0.8rem 0 1rem 0; display: flex; justify-content: center; gap: 0.85rem; flex-wrap: wrap;">
+        <a href="/guia-lectores-dia-7.html" target="_blank" style="font-size: 0.88rem; font-weight: 600; color: var(--gold-amber); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(223, 177, 91, 0.1); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(223, 177, 91, 0.35);">
+          <i data-icon="book" data-size="15"></i> Guía de Lectores Día 7 (PDF)
+        </a>
+        <a href="/dia-7-novena.html" target="_blank" style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(255, 255, 255, 0.06); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+          <i data-icon="file-text" data-size="15"></i> Folleto Día 7 (PDF)
+        </a>
+      </div>
+
       <button class="btn-enter-room" onclick="window.enterRoomOneTouch()" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
         <i data-icon="candle" data-size="18"></i>
         <span>Entrar a rezar con la familia</span>
@@ -155,6 +165,7 @@
       <span id="speaker-name-label">Oración en Vivo</span>
     </div>
 
+    <div class="nav-right-controls">
       <!-- Botón Modo TV / Pantalla Completa -->
       <button class="btn-header-album btn-tv-fullscreen" id="btn-fullscreen-tv" onclick="window.toggleFullScreen()" title="Modo Pantalla Completa (Ideal para TV)">
         <i data-icon="maximize" data-size="14"></i>
@@ -167,13 +178,23 @@
         <span>Recuerdos</span>
       </button>
 
+      <!-- Grupo de Botones de Zoom / Tamaño de Letra -->
+      <div class="zoom-controls-group" title="Ajustar tamaño de letra (Zoom)">
+        <button class="btn-zoom-action" id="btn-zoom-out" onclick="window.zoomOut()" title="Reducir letra (A−)">
+          <span class="zoom-btn-label">A−</span>
+        </button>
+        <button class="btn-zoom-level" id="btn-zoom-reset" onclick="window.zoomReset()" title="Restablecer tamaño normal (100%)">
+          <span id="zoom-percentage-text">100%</span>
+        </button>
+        <button class="btn-zoom-action" id="btn-zoom-in" onclick="window.zoomIn()" title="Aumentar letra (A+)">
+          <span class="zoom-btn-label">A+</span>
+        </button>
+      </div>
+
       <!-- Cambiar vista de cámaras -->
       <button class="btn-header-icon" id="btn-toggle-camera-layout" onclick="window.toggleCameraLayout()" title="Ver cámaras más grandes o compactas">
         <i data-icon="video" data-size="16"></i>
       </button>
-
-      <!-- Ajuste tamaño de letra -->
-      <button class="btn-header-icon" id="btn-font-size" onclick="window.cycleFontSize()" title="Tamaño de letra">A+</button>
 
       <!-- Botón Logística (Si es host abre panel, si no, abre PIN) -->
       <button class="btn-header-icon" id="btn-host-trigger" onclick="window.openHostModal()" title="Control de Anfitrión">
