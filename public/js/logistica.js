@@ -1,6 +1,6 @@
 // logistica.js - Consola de Mando para el Anfitrión / Director de Logística
-import { NOVENA_DATA } from '/js/novena-data.js?v=6.3';
-import { icon, replaceDomIcons } from '/js/icons.js?v=6.3';
+import { NOVENA_DATA } from '/js/novena-data.js?v=8.0';
+import { icon, replaceDomIcons } from '/js/icons.js?v=8.0';
 
 // Cálculo automático del día de la Novena según fecha local (America/Guayaquil, UTC-5)
 // Día 1: 30 de Septiembre de 2026
@@ -41,19 +41,8 @@ const state = {
   speakerSocketId: null,
   speakerName: 'Esperando Orador',
   participants: [],
-  activeTab: 'rezo', // 'rezo', 'audio', 'video'
-  steps: [],
-  peers: new Map(), // Para monitor WebRTC de video
-  rtcConfig: {
-    iceServers: [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'stun:stun2.l.google.com:19302' },
-      { urls: 'stun:stun3.l.google.com:19302' },
-      { urls: 'stun:stun4.l.google.com:19302' },
-      { urls: 'stun:stun.cloudflare.com:3478' }
-    ]
-  }
+  activeTab: 'rezo', // 'rezo', 'tools'
+  steps: []
 };
 
 // Generador de misterio del día según tradición católica
@@ -71,122 +60,138 @@ function getMysteryByDay(dayIndex) {
   return NOVENA_DATA.rosario.misterios[key];
 }
 
-// Construir lista de los 17 pasos canónicos de la Novena
+// Construir lista de los 24 pasos canónicos de la Novena y Santo Rosario (Pantalla Única)
 function buildSteps(diaNum, mysteryType) {
   const dayData = NOVENA_DATA.dias.find(d => d.dia === diaNum) || NOVENA_DATA.dias[0];
-  const mysteryObj = mysteryType ? NOVENA_DATA.rosario.misterios[mysteryType] : getMysteryByDay(new Date().getDay());
+  const mType = mysteryType || dayData.tipoMisterio || getMysteryByDay(new Date().getDay());
+  const mysteryObj = NOVENA_DATA.rosario.misterios[mType] || NOVENA_DATA.rosario.misterios.dolorosos;
+
+  const fullPrayer = dayData.oracionFamiliar || '';
+  const paragraphs = fullPrayer.split('\n\n').filter(Boolean);
+  const p1 = paragraphs[0] || fullPrayer;
+  const p2 = paragraphs.slice(1).join(' ') || fullPrayer;
 
   return [
     {
-      id: 'senial-cruz',
-      badge: 'Inicio',
-      title: 'Señal de la Cruz',
+      id: 'cruz',
+      badge: '1. Ritos Iniciales',
+      title: 'I. Señal de la Santa Cruz',
       role: 'chorus',
-      preview: 'Por la señal de la Santa Cruz, de nuestros enemigos líbranos Señor, Dios nuestro...'
+      preview: 'Por la señal de la Santa Cruz, de nuestros enemigos, líbranos, Señor...'
     },
     {
-      id: 'acto-contricion',
-      badge: 'Ritos Iniciales',
-      title: NOVENA_DATA?.actoContricion?.title || 'Acto de Contrición',
-      role: 'orador',
-      preview: NOVENA_DATA?.actoContricion?.paragraphs?.[0] || 'Señor mío Jesucristo, Dios y Hombre verdadero...'
-    },
-    // 3. Novena del Día
-    {
-      id: 'oracion-inicial',
-      badge: 'Novena',
-      title: NOVENA_DATA.oracionInicial.title,
-      role: 'orador',
-      preview: NOVENA_DATA.oracionInicial.paragraphs[0]
+      id: 'contricion',
+      badge: '1. Ritos Iniciales',
+      title: 'II. Acto de Contrición',
+      role: 'chorus',
+      preview: 'Señor mío Jesucristo, Dios y Hombre verdadero, Creador, Padre y Redentor mío...'
     },
     {
-      id: 'reflexion-dia',
-      badge: `Día ${dayData.dia}`,
-      title: dayData.titulo,
+      id: 'intencion',
+      badge: dayData.dia === 5 ? '2. Intención (Quinto Día)' : `2. Intención (Día ${dayData.dia})`,
+      title: dayData.dia === 5 ? 'Intención del Quinto Día por la Mami Olguita' : `Intención del Día ${dayData.dia}`,
       role: 'orador',
-      preview: dayData.reflexion.slice(0, 140) + '...'
+      preview: dayData.intencion ? dayData.intencion.slice(0, 140) + '...' : 'Padre Misericordioso, nos reunimos en este día para ofrecerte este Santo Rosario...'
     },
     {
-      id: 'oracion-dia',
-      badge: `Día ${dayData.dia}`,
-      title: `Oración del Día ${dayData.dia}`,
-      role: 'orador',
-      preview: dayData.oracion[0]
+      id: 'credo',
+      badge: '2. Profesión de Fe',
+      title: 'El Credo de los Apóstoles',
+      role: 'chorus',
+      preview: 'Creo en Dios, Padre Todopoderoso, Creador del cielo y de la tierra. Creo en Jesucristo...'
     },
-    {
-      id: 'mensaje-familia',
-      badge: 'Unión Familiar',
-      title: 'Mensaje para la Familia',
-      role: 'orador',
-      preview: dayData.mensajeFamilia.slice(0, 140) + '...'
-    },
-    // 4. El Santo Rosario
-    {
-      id: 'rosario-inicio',
-      badge: 'Santo Rosario',
-      title: 'Ofrecimiento y Credo',
-      role: 'orador',
-      preview: NOVENA_DATA.rosario.credo.guia.slice(0, 130) + '...'
-    },
-    // Los 5 misterios
-    ...mysteryObj.lista.map((mItem, idx) => {
+    ...mysteryObj.lista.flatMap((mItem, idx) => {
       const mTitulo = typeof mItem === 'string' ? mItem : mItem.titulo;
       const mMeditacion = typeof mItem === 'object' && mItem.meditacion ? mItem.meditacion : '';
-      const mCita = typeof mItem === 'object' && mItem.cita ? mItem.cita : '';
-      const mRef = typeof mItem === 'object' && mItem.referencia ? ` (${mItem.referencia})` : '';
-      return {
-        id: `misterio-${idx + 1}`,
-        badge: `${mysteryObj.nombre} (${idx + 1}/5)`,
-        title: `${idx + 1}º Misterio: ${mTitulo}`,
-        role: 'rosario',
-        preview: mCita ? `📖 "${mCita.slice(0, 75)}..."${mRef} | 🕊️ "${mMeditacion.slice(0, 60)}..."` : (mMeditacion ? `Meditación: "${mMeditacion.slice(0, 75)}..." | 1 PN, 10 AM, Gloria y Jaculatorias.` : `Rezo del misterio: 1 Padre Nuestro, 10 Ave Marías y 1 Gloria al Padre.`)
-      };
+      return [
+        {
+          id: `misterio-${idx + 1}`,
+          badge: `${mysteryObj.nombre} (${idx + 1}/5) • Meditación`,
+          title: `${idx + 1}º Misterio: ${mTitulo}`,
+          role: 'orador',
+          preview: mMeditacion ? `Meditación: "${mMeditacion.slice(0, 100)}..."` : 'Contemplamos este misterio ofreciéndolo por el descanso eterno de la mami Olguita.'
+        },
+        {
+          id: `misterio-${idx + 1}-rosario`,
+          badge: `${mysteryObj.nombre} (${idx + 1}/5) • Rezo y Jaculatoria`,
+          title: `${idx + 1}º Misterio: Decenario y Jaculatoria`,
+          role: 'rosario',
+          preview: '10 Avemarías interactivas con cuentas táctiles y Jaculatoria tradicional: "Si por tu preciosa sangre..."'
+        }
+      ];
     }),
     {
-      id: 'cuentas-finales',
-      badge: 'Santo Rosario',
-      title: 'Padre Nuestro, 3 Ave Marías y Gloria al Padre',
+      id: 'cuentas-fe',
+      badge: '3. Oraciones Finales (1/3)',
+      title: '1ª Ave María por su Pureza • Por la Fe',
       role: 'chorus',
-      preview: 'Al terminar los misterios: 1 Padre Nuestro, 3 Ave Marías por la Fe, Esperanza y Caridad, y 1 Gloria al Padre.'
+      preview: 'Guía: Dios te salve, María Santísima, Hija de Dios Padre... en tus manos encomendamos nuestra fe y el alma de la mami Olguita.'
+    },
+    {
+      id: 'cuentas-esperanza',
+      badge: '3. Oraciones Finales (2/3)',
+      title: '2ª Ave María por su Pureza • Por la Esperanza',
+      role: 'chorus',
+      preview: 'Guía: Dios te salve, María Santísima, Madre de Dios Hijo... en tus manos encomendamos nuestra esperanza y el descanso eterno de la mami Olguita.'
+    },
+    {
+      id: 'cuentas-caridad',
+      badge: '3. Oraciones Finales (3/3)',
+      title: '3ª Ave María por su Pureza • Por la Caridad y Unión',
+      role: 'chorus',
+      preview: 'Guía: Dios te salve, María Santísima, Esposa del Espíritu Santo... en tus manos encomendamos nuestra caridad y la unión inquebrantable de nuestra familia.'
     },
     {
       id: 'la-salve',
-      badge: 'Santo Rosario',
-      title: 'La Salve a la Santísima Virgen',
+      badge: '3. Oraciones Finales',
+      title: 'La Salve a la Santísima Virgen María',
       role: 'chorus',
       preview: NOVENA_DATA.rosario.salve.guia.slice(0, 130) + '...'
     },
     {
-      id: 'letanias',
-      badge: 'Santo Rosario',
-      title: 'Letanías Lauretanas',
+      id: 'letanias-1',
+      badge: '3. Oraciones Finales • Letanías (1/3)',
+      title: 'Letanías: Invocaciones y Santa María',
       role: 'chorus',
-      preview: 'Señor, ten piedad de ella... Santa María, ruega por ella...'
-    },
-    // 5. Oraciones Finales y Despedida
-    {
-      id: 'oracion-final-olguita',
-      badge: 'Oraciones Finales',
-      title: NOVENA_DATA.oracionFinalOlguita.title,
-      role: 'orador',
-      preview: NOVENA_DATA.oracionFinalOlguita.paragraphs[0]
+      preview: 'Invocaciones a la Santísima Trinidad y Santa María. Respondemos: "Ruega por la mami Olguita"'
     },
     {
-      id: 'oracion-final-familia',
-      badge: 'Oraciones Finales',
-      title: NOVENA_DATA.oracionFinalFamilia.title,
+      id: 'letanias-2',
+      badge: '3. Oraciones Finales • Letanías (2/3)',
+      title: 'Letanías: Títulos de la Santísima Virgen',
+      role: 'chorus',
+      preview: 'Títulos y virtudes marianas (Madre del Salvador, Rosa mística, Salud de los enfermos...). Respondemos: "Ruega por la mami Olguita"'
+    },
+    {
+      id: 'letanias-3',
+      badge: '3. Oraciones Finales • Letanías (3/3)',
+      title: 'Letanías: Reina Celestial y Cordero de Dios',
+      role: 'chorus',
+      preview: 'Reina de los Ángeles, de las Familias y Cordero de Dios. Respondemos: "Ruega por la mami Olguita"'
+    },
+    {
+      id: 'oracion-reconciliacion-1',
+      badge: '4. Oración Familiar (1/2)',
+      title: '🤍 Oración Familiar: Conciencia y Perdón',
       role: 'orador',
-      preview: NOVENA_DATA.oracionFinalFamilia.paragraphs[0]
+      preview: p1.slice(0, 140) + '...'
+    },
+    {
+      id: 'oracion-reconciliacion-2',
+      badge: '4. Oración Familiar (2/2)',
+      title: '🤍 Oración Familiar: Unión y Sanación',
+      role: 'orador',
+      preview: p2.slice(0, 140) + '...'
     },
     {
       id: 'despedida-homenaje',
-      badge: 'Descanso Eterno',
-      title: 'Despedida y Homenaje a Mami Olguita',
+      badge: '5. Cierre y Homenaje',
+      title: 'Despedida, Bendición y Homenaje Conmemorativo',
       role: 'chorus',
-      preview: 'Dale, Señor, el descanso eterno, y brille para ella la luz perpetua. Que descanse en paz. Amén.'
+      preview: 'El Señor nos bendiga y nos guarde de todo mal... Homenaje conmemorativo de fotos.'
     }
   ];
-  }
+}
 
 // Retroalimentación Háptica
 function haptic(ms = 30) {
@@ -301,11 +306,8 @@ function initSocket() {
     const savedPin = localStorage.getItem('novena-host-pin');
     state.socket.emit('claim-host', { pin: savedPin || '1234', name: state.hostName, isLogistics: true });
 
-    // La consola de logística es un control remoto puro (no entra a la llamada como oyente)
+    // La consola de logística es un control remoto puro
     state.socket.emit('get-participants');
-
-    // Solicitar e inicializar transmisión de cámaras de una
-    state.socket.emit('request-video-callers');
   });
 
   state.socket.on('disconnect', () => {
@@ -355,24 +357,6 @@ function initSocket() {
       state.participants = list;
       renderRoster();
       updateConnectedCountBadge();
-
-      // Iniciar automáticamente monitor de cámaras para cada familiar conectado
-      const family = getFamilyParticipants();
-      family.forEach(u => {
-        if (!state.peers.has(u.socketId)) {
-          createMonitorPeer(u.socketId, u.userName, true);
-        }
-      });
-
-      // Limpiar peers de familiares que hayan salido
-      const activeIds = new Set(family.map(u => u.socketId));
-      for (const [sId, peer] of state.peers.entries()) {
-        if (!activeIds.has(sId)) {
-          if (peer.pc) peer.pc.close();
-          if (peer.tileEl) peer.tileEl.remove();
-          state.peers.delete(sId);
-        }
-      }
     }
   });
 
@@ -384,8 +368,6 @@ function initSocket() {
     unlockConsole();
     showToast('Consola de Anfitrión Activada', 'crown');
   });
-
-  setupWebRTCListeners();
 }
 
 // -------------------------------------------------------------
@@ -452,6 +434,13 @@ window.jumpToStep = function(stepIdx) {
   showToast(`${state.steps[stepIdx].title}`, 'book');
 };
 
+window.jumpToStepId = function(stepId) {
+  const sIdx = state.steps.findIndex(s => s.id === stepId);
+  if (sIdx !== -1) {
+    window.jumpToStep(sIdx);
+  }
+};
+
 window.setAveMaria = function(count) {
   haptic(30);
   state.currentAveMaria = Math.min(10, Math.max(0, count));
@@ -501,70 +490,21 @@ window.setMysteryType = function(type) {
 };
 
 // -------------------------------------------------------------
-// MESA DE SONIDO: CONTROL DE MICRÓFONOS Y PRESETS
+// DESIGNACIÓN DE ORADOR & MODAL DE FAMILIARES
 // -------------------------------------------------------------
 
-// Presets maestros de 1 toque (Orador solo, Coro general, Silencio total)
-window.applyAudioPreset = function(preset) {
-  haptic([45, 30, 45]);
-  if (state.socket && state.socket.connected) {
-    state.socket.emit('set-audio-preset', { preset });
-  }
-  fetch('/api/audio/preset', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ preset })
-  }).catch(() => {});
-
-  if (preset === 'orador') {
-    showToast('Modo Orador: solo habla quien lee', 'speaker');
-    state.participants.forEach(p => {
-      p.isAudioMuted = (p.socketId !== state.speakerSocketId);
-    });
-  } else if (preset === 'coro') {
-    showToast('Modo Coro: micrófonos abiertos para responder', 'users');
-    state.participants.forEach(p => {
-      p.isAudioMuted = false;
-    });
-  } else if (preset === 'silencio') {
-    showToast('Silencio total activado para reflexión', 'mic-off');
-    state.participants.forEach(p => {
-      p.isAudioMuted = true;
-    });
-  }
-  renderRoster();
-};
-
-window.masterUnmuteAll = function() {
-  window.applyAudioPreset('coro');
-};
-
-window.masterMuteAll = function() {
-  window.applyAudioPreset('silencio');
-};
-
-window.toggleUserMic = function(targetSocketId, currentIsMuted) {
-  haptic(35);
-  const willEnable = Boolean(currentIsMuted);
-  if (state.socket && state.socket.connected) {
-    state.socket.emit('set-user-audio-state', {
-      targetSocketId,
-      enabled: willEnable
-    });
-  }
-  fetch('/api/audio/user', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ targetSocketId, enabled: willEnable })
-  }).catch(() => {});
-
-  showToast(willEnable ? 'Micrófono activado' : 'Micrófono silenciado', willEnable ? 'mic' : 'mic-off');
-
-  const user = state.participants.find(p => p.socketId === targetSocketId);
-  if (user) {
-    user.isAudioMuted = !willEnable;
+window.openSpeakerModal = function() {
+  haptic(30);
+  const modal = document.getElementById('speaker-modal-overlay');
+  if (modal) {
+    modal.classList.add('open');
     renderRoster();
   }
+};
+
+window.closeSpeakerModal = function() {
+  const modal = document.getElementById('speaker-modal-overlay');
+  if (modal) modal.classList.remove('open');
 };
 
 window.designateSpeaker = function(targetSocketId, userName) {
@@ -587,6 +527,7 @@ window.designateSpeaker = function(targetSocketId, userName) {
   state.speakerName = userName;
   updateSpeakerUI();
   renderRoster();
+  window.closeSpeakerModal();
 };
 
 // -------------------------------------------------------------
@@ -701,12 +642,12 @@ function renderRoster() {
   const familyList = getFamilyParticipants();
   if (!familyList || familyList.length === 0) {
     container.innerHTML = `
-      <div style="text-align: center; color: var(--text-muted); font-size: 0.88rem; padding: 2.5rem 1rem; line-height: 1.6;">
+      <div style="text-align: center; color: var(--text-muted); font-size: 0.88rem; padding: 2rem 1rem; line-height: 1.6;">
         <div style="margin-bottom: 0.6rem; display: flex; justify-content: center;">
           ${icon('users', { size: 36, color: '#DFB15B' })}
         </div>
         <strong style="color: var(--gold-light);">Esperando que los familiares se conecten</strong><br>
-        <span style="font-size: 0.8rem;">Cuando tus familiares toquen "Entrar a rezar con la familia" desde sus celulares, aparecerán aquí para que puedas controlar sus micrófonos o nombrarlos como Orador.</span>
+        <span style="font-size: 0.8rem;">Cuando tus familiares entren al rezo desde sus celulares, aparecerán aquí para que puedas nombrarlos como Orador.</span>
       </div>
     `;
     return;
@@ -714,38 +655,28 @@ function renderRoster() {
 
   container.innerHTML = familyList.map(user => {
     const isSpeaker = user.socketId === state.speakerSocketId;
-    const isMuted = Boolean(user.isAudioMuted);
     const displayName = user.userName || 'Familiar';
     const initials = displayName.slice(0, 2).toUpperCase();
 
     return `
-      <div class="participant-control-card ${!isMuted ? 'is-speaking' : ''} ${isSpeaker ? 'is-speaker-role' : ''}">
+      <div class="participant-control-card ${isSpeaker ? 'is-speaker-role' : ''}" 
+           style="cursor: pointer; padding: 0.75rem 0.85rem;" 
+           onclick="window.designateSpeaker('${user.socketId}', '${displayName}')">
         <div class="participant-card-left">
-          <div class="participant-avatar-badge">
+          <div class="participant-avatar-badge" style="position:relative;">
             ${initials}
-            <span class="participant-mic-status-indicator ${isMuted ? 'muted' : 'open'}">
-              ${isMuted ? icon('mic-off', { size: 11 }) : icon('mic', { size: 11 })}
-            </span>
           </div>
           <div class="participant-meta-info">
             <span class="participant-name-text">${displayName}</span>
             <span class="participant-role-pill ${isSpeaker ? 'speaker' : ''}">
-              ${isSpeaker ? `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('speaker', { size: 11 })} Orador Designado</span>` : `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('user', { size: 11 })} Oyente</span>`}
+              ${isSpeaker ? `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('speaker', { size: 11 })} Orador Actual</span>` : `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('user', { size: 11 })} En línea</span>`}
             </span>
           </div>
         </div>
 
         <div class="participant-card-actions">
-          <!-- Botón de Silenciar / Prender Mic -->
-          <button class="btn-toggle-mic ${isMuted ? 'is-muted' : 'is-open'}"
-                  onclick="window.toggleUserMic('${user.socketId}', ${isMuted})"
-                  style="display:inline-flex; align-items:center; justify-content:center; gap:0.25rem;">
-            ${isMuted ? `${icon('mic', { size: 13 })} Prender` : `${icon('mic-off', { size: 13 })} Silenciar`}
-          </button>
-
-          <!-- Botón de Hacer Orador -->
           <button class="btn-assign-speaker ${isSpeaker ? 'active' : ''}" 
-                  onclick="window.designateSpeaker('${user.socketId}', '${displayName}')"
+                  onclick="event.stopPropagation(); window.designateSpeaker('${user.socketId}', '${displayName}')"
                   title="Nombrar orador"
                   style="display:inline-flex; align-items:center; justify-content:center; gap:0.25rem;">
             ${isSpeaker ? `${icon('star', { size: 13 })} Orador` : `${icon('crown', { size: 13 })} Nombrar`}
@@ -773,13 +704,7 @@ function updateConnectedCountBadge() {
     headerCount.innerHTML = `<span style="display:inline-flex; align-items:center; gap:0.25rem;">${icon('users', { size: 13 })} ${count} familiar${count === 1 ? '' : 'es'}</span>`;
   }
 
-  // 2. Tab audio badge
-  const tabAudioCount = document.getElementById('tab-audio-count');
-  if (tabAudioCount) {
-    tabAudioCount.textContent = `${count}`;
-  }
-
-  // 3. Quick family bar en la pestaña principal
+  // 2. Quick family bar en la pestaña principal
   const quickCount = document.getElementById('quick-family-count');
   const quickNames = document.getElementById('quick-family-names');
   if (quickCount) quickCount.textContent = `${count}`;
@@ -792,7 +717,6 @@ function updateConnectedCountBadge() {
     }
   }
 
-  // 4. Roster total count en la pestaña de audio
   const rosterCount = document.getElementById('roster-total-count');
   if (rosterCount) {
     rosterCount.textContent = `${count} familiar${count === 1 ? '' : 'es'}`;
@@ -814,10 +738,6 @@ window.switchTab = function(tabName) {
   document.querySelectorAll('.tab-panel').forEach(panel => {
     panel.classList.toggle('active', panel.id === `tab-panel-${tabName}`);
   });
-
-  if (tabName === 'video' && typeof window.syncAllCameraMonitors === 'function') {
-    window.syncAllCameraMonitors();
-  }
 };
 
 // -------------------------------------------------------------
@@ -880,260 +800,6 @@ window.submitConsolePin = function() {
     haptic(150);
     alert('PIN de logística incorrecto (El PIN es 1234)');
   }
-};
-
-// -------------------------------------------------------------
-// MONITOR WEBRTC DE CÁMARAS (Video Wall)
-// -------------------------------------------------------------
-
-function setupWebRTCListeners() {
-  if (!state.socket) return;
-
-  // 1. Recibir lista de usuarios con cámara activa al conectar
-  state.socket.on('active-video-callers', ({ callers }) => {
-    console.log('[WebRTC Monitor] Callers activos recibidos:', callers);
-    if (Array.isArray(callers)) {
-      callers.forEach(u => {
-        if (u.socketId !== state.socket.id && !u.userName?.includes('(Mando)')) {
-          createMonitorPeer(u.socketId, u.userName, true);
-        }
-      });
-    }
-  });
-
-  state.socket.on('call-joined', ({ existingUsers }) => {
-    if (Array.isArray(existingUsers)) {
-      existingUsers.forEach(u => {
-        if (u.socketId !== state.socket.id && !u.userName?.includes('(Mando)')) {
-          createMonitorPeer(u.socketId, u.userName, true);
-        }
-      });
-    }
-  });
-
-  state.socket.on('user-joined-call', ({ socketId, userName }) => {
-    if (socketId === state.socket.id) return;
-    if (userName && userName.includes('(Mando)')) return;
-    console.log('[WebRTC Monitor] Nuevo familiar en llamada:', userName, socketId);
-    createMonitorPeer(socketId, userName, true);
-  });
-
-  state.socket.on('webrtc-offer', async ({ senderSocketId, senderName, offer }) => {
-    const pc = createMonitorPeer(senderSocketId, senderName, false);
-    const peer = state.peers.get(senderSocketId);
-    try {
-      await pc.setRemoteDescription(new RTCSessionDescription(offer));
-      // Drenar candidatos que hayan llegado antes del remoteDescription
-      if (peer && peer.pendingCandidates && peer.pendingCandidates.length > 0) {
-        for (const cand of peer.pendingCandidates) {
-          try {
-            await pc.addIceCandidate(new RTCIceCandidate(cand));
-          } catch (e) {}
-        }
-        peer.pendingCandidates = [];
-      }
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
-      state.socket.emit('webrtc-answer', { targetSocketId: senderSocketId, answer });
-    } catch (err) {
-      console.warn('[WebRTC Monitor] Error en webrtc-offer:', err);
-    }
-  });
-
-  state.socket.on('webrtc-answer', async ({ senderSocketId, answer }) => {
-    const peer = state.peers.get(senderSocketId);
-    if (peer && peer.pc) {
-      try {
-        await peer.pc.setRemoteDescription(new RTCSessionDescription(answer));
-        // Drenar candidatos que hayan llegado antes del remoteDescription
-        if (peer.pendingCandidates && peer.pendingCandidates.length > 0) {
-          for (const cand of peer.pendingCandidates) {
-            try {
-              await peer.pc.addIceCandidate(new RTCIceCandidate(cand));
-            } catch (e) {}
-          }
-          peer.pendingCandidates = [];
-        }
-      } catch (err) {
-        console.warn('[WebRTC Monitor] Error en webrtc-answer:', err);
-      }
-    }
-  });
-
-  state.socket.on('webrtc-ice-candidate', async ({ senderSocketId, candidate }) => {
-    const peer = state.peers.get(senderSocketId);
-    if (!peer || !peer.pc || !candidate) return;
-    try {
-      if (!peer.pc.remoteDescription || !peer.pc.remoteDescription.type) {
-        peer.pendingCandidates.push(candidate);
-      } else {
-        await peer.pc.addIceCandidate(new RTCIceCandidate(candidate));
-      }
-    } catch (err) {
-      console.warn('[WebRTC Monitor] ICE candidate err:', err);
-    }
-  });
-
-  state.socket.on('user-left-call', ({ socketId }) => {
-    const peer = state.peers.get(socketId);
-    if (peer) {
-      if (peer.pc) peer.pc.close();
-      if (peer.tileEl) peer.tileEl.remove();
-      state.peers.delete(socketId);
-    }
-  });
-}
-
-function createMonitorPeer(targetSocketId, userName, isInitiator) {
-  if (state.peers.has(targetSocketId)) {
-    const existing = state.peers.get(targetSocketId);
-    if (existing.pc && existing.pc.connectionState !== 'failed' && existing.pc.connectionState !== 'closed') {
-      return existing.pc;
-    }
-    if (existing.pc) existing.pc.close();
-    if (existing.tileEl) existing.tileEl.remove();
-    state.peers.delete(targetSocketId);
-  }
-
-  const pc = new RTCPeerConnection(state.rtcConfig);
-  const wallGrid = document.getElementById('video-wall-grid');
-
-  const tileEl = document.createElement('div');
-  tileEl.className = 'video-monitor-tile';
-  tileEl.id = `monitor-${targetSocketId}`;
-  tileEl.innerHTML = `
-    <video autoplay playsinline muted webkit-playsinline class="video-monitor-element"></video>
-    <div class="video-monitor-avatar">${(userName || 'F').slice(0, 2).toUpperCase()}</div>
-    <div class="video-monitor-name">${userName || 'Familiar'}</div>
-  `;
-
-  if (wallGrid) wallGrid.appendChild(tileEl);
-
-  const videoEl = tileEl.querySelector('video');
-  const avatarEl = tileEl.querySelector('.video-monitor-avatar');
-
-  // Asegurar atributos estándar para autoplay inmediato sin silenciar error
-  videoEl.muted = true;
-  videoEl.defaultMuted = true;
-  videoEl.playsInline = true;
-  videoEl.setAttribute('playsinline', 'true');
-  videoEl.setAttribute('webkit-playsinline', 'true');
-  videoEl.setAttribute('muted', 'true');
-  videoEl.setAttribute('autoplay', 'true');
-
-  const peerData = {
-    pc,
-    userName,
-    tileEl,
-    videoEl,
-    avatarEl,
-    pendingCandidates: [],
-    stream: new MediaStream()
-  };
-
-  state.peers.set(targetSocketId, peerData);
-
-  pc.ontrack = (event) => {
-    console.log(`[WebRTC Monitor] Video/Audio track recibido de ${userName}: ${event.track.kind}`);
-    const stream = (event.streams && event.streams[0]) ? event.streams[0] : peerData.stream;
-    if (!event.streams || !event.streams[0]) {
-      peerData.stream.addTrack(event.track);
-    }
-    if (event.track.kind === 'video') {
-      videoEl.srcObject = stream;
-
-      const markPlaying = () => {
-        videoEl.classList.add('is-playing');
-      };
-
-      const startPlay = () => {
-        videoEl.play()
-          .then(markPlaying)
-          .catch(err => {
-            console.warn('Video play deferred on mobile:', err);
-          });
-      };
-
-      videoEl.onloadedmetadata = startPlay;
-      videoEl.onloadeddata = markPlaying;
-      videoEl.onplaying = markPlaying;
-      startPlay();
-
-      event.track.onmute = () => {
-        videoEl.classList.remove('is-playing');
-      };
-      event.track.onunmute = () => {
-        videoEl.classList.add('is-playing');
-      };
-    }
-  };
-
-  pc.onicecandidate = (event) => {
-    if (event.candidate && state.socket) {
-      state.socket.emit('webrtc-ice-candidate', {
-        targetSocketId,
-        candidate: event.candidate
-      });
-    }
-  };
-
-  pc.onconnectionstatechange = () => {
-    console.log(`[WebRTC Monitor] Estado conexión con ${userName}: ${pc.connectionState}`);
-    if (pc.connectionState === 'failed') {
-      setTimeout(() => {
-        if (state.peers.has(targetSocketId)) {
-          state.peers.delete(targetSocketId);
-          pc.close();
-          if (tileEl) tileEl.remove();
-          createMonitorPeer(targetSocketId, userName, true);
-        }
-      }, 1500);
-    }
-  };
-
-  // Solicitar recepción de video y audio con transceivers estándar W3C
-  try {
-    pc.addTransceiver('video', { direction: 'recvonly' });
-    pc.addTransceiver('audio', { direction: 'recvonly' });
-  } catch (e) {
-    console.warn('Transceiver fallback', e);
-  }
-
-  if (isInitiator) {
-    pc.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: true })
-      .then(offer => pc.setLocalDescription(offer))
-      .then(() => {
-        state.socket.emit('webrtc-offer', {
-          targetSocketId,
-          senderName: `${state.hostName} (Mando)`,
-          offer: pc.localDescription
-        });
-      })
-      .catch(console.warn);
-  }
-
-  return pc;
-}
-
-window.syncAllCameraMonitors = function() {
-  if (state.socket && state.socket.connected) {
-    state.socket.emit('request-video-callers');
-  }
-  const familyList = getFamilyParticipants();
-  familyList.forEach(u => {
-    if (u.socketId && u.socketId !== state.socket.id && !u.userName?.includes('(Mando)')) {
-      if (!state.peers.has(u.socketId)) {
-        createMonitorPeer(u.socketId, u.userName, true);
-      }
-    }
-  });
-  state.peers.forEach(peer => {
-    if (peer.videoEl) {
-      peer.videoEl.play().then(() => {
-        peer.videoEl.classList.add('is-playing');
-      }).catch(() => {});
-    }
-  });
 };
 
 // -------------------------------------------------------------

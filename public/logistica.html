@@ -27,7 +27,7 @@
       <div class="pin-gate-icon"><i data-icon="crown" data-size="44" data-color="#DFB15B"></i></div>
       <h2 class="pin-gate-title">Mando de Logística</h2>
       <p class="pin-gate-desc">
-        Consola maestra para pasar las diapositivas y controlar los micrófonos de la familia.
+        Consola maestra para guiar el rezo y pasar las oraciones en familia.
       </p>
       
       <input type="password" id="console-pin-input" class="pin-input-field" maxlength="4" placeholder="••••" inputmode="numeric" onkeyup="if(event.key==='Enter') window.submitConsolePin()">
@@ -61,7 +61,7 @@
           <span id="connection-status-text">En Vivo</span>
         </div>
 
-        <div class="header-count-pill" id="header-count-pill" onclick="window.switchTab('audio')" style="background: rgba(223, 177, 91, 0.15); border: 1px solid var(--border-subtle); border-radius: 999px; padding: 0.25rem 0.55rem; font-size: 0.72rem; font-weight: 700; color: var(--gold-light); cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+        <div class="header-count-pill" id="header-count-pill" onclick="window.openSpeakerModal()" style="background: rgba(223, 177, 91, 0.15); border: 1px solid var(--border-subtle); border-radius: 999px; padding: 0.25rem 0.55rem; font-size: 0.72rem; font-weight: 700; color: var(--gold-light); cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
           <span id="header-user-count" style="display:inline-flex; align-items:center; gap:0.25rem;"><i data-icon="users" data-size="13"></i> 0 en línea</span>
         </div>
 
@@ -72,19 +72,11 @@
       </div>
     </header>
 
-    <!-- 2. BARRA DE PESTAÑAS TÁCTILES (4 PESTAÑAS) -->
+    <!-- 2. BARRA DE PESTAÑAS TÁCTILES (2 PESTAÑAS) -->
     <nav class="nav-tab-bar">
       <button class="tab-btn active" data-tab="rezo" onclick="window.switchTab('rezo')">
         <span class="tab-icon"><i data-icon="book" data-size="18"></i></span>
         <span>Rezo</span>
-      </button>
-      <button class="tab-btn" data-tab="audio" onclick="window.switchTab('audio')">
-        <span class="tab-icon"><i data-icon="mic" data-size="18"></i></span>
-        <span>Mics (<span id="tab-audio-count">0</span>)</span>
-      </button>
-      <button class="tab-btn" data-tab="video" onclick="window.switchTab('video')">
-        <span class="tab-icon"><i data-icon="video" data-size="18"></i></span>
-        <span>Cámaras</span>
       </button>
       <button class="tab-btn" data-tab="tools" onclick="window.switchTab('tools')">
         <span class="tab-icon"><i data-icon="sliders" data-size="18"></i></span>
@@ -107,13 +99,13 @@
               <span class="speaker-banner-name" id="speaker-master-name">Esperando Orador</span>
             </div>
           </div>
-          <button class="btn-change-speaker" onclick="window.switchTab('audio')">
+          <button class="btn-change-speaker" onclick="window.openSpeakerModal()">
             Cambiar
           </button>
         </div>
 
         <!-- Barra rápida de familiares conectados en la sala -->
-        <div class="family-quick-bar" onclick="window.switchTab('audio')">
+        <div class="family-quick-bar" onclick="window.openSpeakerModal()">
           <div class="family-quick-info">
             <i data-icon="users" data-size="22" data-color="#DFB15B"></i>
             <div style="min-width: 0;">
@@ -126,25 +118,29 @@
             </div>
           </div>
           <button class="btn-change-speaker" style="font-size: 0.72rem; padding: 0.35rem 0.55rem; white-space: nowrap; display:inline-flex; align-items:center; gap:0.25rem;">
-            <i data-icon="mic" data-size="13"></i> Mesa Mics
+            <i data-icon="users" data-size="13"></i> Ver Familia
           </button>
         </div>
 
         <!-- Salto Rápido por Secciones Litúrgicas -->
         <div class="category-pills-strip">
-          <button class="category-pill-btn" onclick="window.jumpToStep(0)"><i data-icon="cross" data-size="12"></i> Cruz</button>
-          <button class="category-pill-btn" onclick="window.jumpToStep(1)"><i data-icon="book" data-size="12"></i> Oración</button>
-          <button class="category-pill-btn" onclick="window.jumpToStep(2)"><i data-icon="heart" data-size="12"></i> Reflexión</button>
-          <button class="category-pill-btn" onclick="window.jumpToStep(4)"><i data-icon="rosary" data-size="12"></i> Rosario</button>
-          <button class="category-pill-btn" onclick="window.jumpToStep(11)"><i data-icon="star" data-size="12"></i> Letanías</button>
-          <button class="category-pill-btn" onclick="window.jumpToStep(12)"><i data-icon="candle" data-size="12"></i> Final</button>
+          <button class="category-pill-btn" onclick="window.jumpToStepId('cruz')"><i data-icon="cross" data-size="12"></i> Cruz</button>
+          <button class="category-pill-btn" onclick="window.jumpToStepId('contricion')"><i data-icon="heart" data-size="12"></i> Contrición</button>
+          <button class="category-pill-btn" onclick="window.jumpToStepId('intencion')"><i data-icon="book" data-size="12"></i> Intención</button>
+          <button class="category-pill-btn" onclick="window.jumpToStepId('credo')"><i data-icon="star" data-size="12"></i> Credo</button>
+          <button class="category-pill-btn" onclick="window.jumpToStepId('misterio-1')"><i data-icon="rosary" data-size="12"></i> Rosario</button>
+          <button class="category-pill-btn" onclick="window.jumpToStepId('cuentas-fe')"><i data-icon="star" data-size="12"></i> Cuentas</button>
+          <button class="category-pill-btn" onclick="window.jumpToStepId('la-salve')"><i data-icon="heart" data-size="12"></i> Salve</button>
+          <button class="category-pill-btn" onclick="window.jumpToStepId('letanias-1')"><i data-icon="heart" data-size="12"></i> Letanías</button>
+          <button class="category-pill-btn" onclick="window.jumpToStepId('oracion-reconciliacion-1')"><i data-icon="candle" data-size="12"></i> Familia</button>
+          <button class="category-pill-btn" onclick="window.jumpToStepId('despedida-homenaje')"><i data-icon="sparkles" data-size="12"></i> Final</button>
         </div>
 
         <!-- Tarjeta del Paso Actual en Pantalla -->
         <div class="current-slide-card">
           <div class="slide-header-meta">
-            <span class="slide-badge-day" id="slide-day-badge">Día 1 de la Novena</span>
-            <span class="slide-badge-index" id="slide-step-badge">Paso 1 de 17</span>
+            <span class="slide-badge-day" id="slide-day-badge">Día 5 de la Novena</span>
+            <span class="slide-badge-index" id="slide-step-badge">Paso 1 de 12</span>
           </div>
 
           <h2 class="slide-title-text" id="slide-title-el">Señal de la Cruz</h2>
@@ -242,91 +238,44 @@
 
       </section>
 
-      <!-- ================= PESTAÑA 2: MESA DE AUDIO Y MICRÓFONOS ================= -->
-      <section class="tab-panel" id="tab-panel-audio">
+      <!-- ================= PESTAÑA 2: MANDO & HERRAMIENTAS DE LOGÍSTICA ================= -->
+      <section class="tab-panel" id="tab-panel-tools">
 
-        <!-- Caja de Mandos Maestros de Audio con Presets de 1 Toque -->
-        <div class="audio-master-box">
-          <div class="master-audio-title">
-            <span style="display:inline-flex; align-items:center; gap:0.4rem;"><i data-icon="sliders" data-size="17"></i> Control Maestro de Voces</span>
+        <!-- 0. Plantillas Imprimibles y PDF (Orador e Invitados) -->
+        <div class="tools-card-box" style="border: 1.5px solid var(--gold-primary); background: rgba(223, 177, 91, 0.08);">
+          <div class="tools-card-header">
+            <span class="tools-card-title" style="color: var(--gold-light);"><i data-icon="book" data-size="16"></i> Plantillas para Imprimir y PDF (Día 5)</span>
           </div>
-
-          <!-- Presets de 1 toque -->
-          <div class="audio-presets-grid">
-            <div class="btn-preset-card preset-orador" onclick="window.applyAudioPreset('orador')">
-              <i data-icon="speaker" data-size="20" data-color="#7dd3fc"></i>
-              <span class="preset-card-title">Orador Solo</span>
-              <span class="preset-card-desc">Silencia oyentes</span>
-            </div>
-            <div class="btn-preset-card preset-coro" onclick="window.applyAudioPreset('coro')">
-              <i data-icon="users" data-size="20" data-color="#22c55e"></i>
-              <span class="preset-card-title">Todos a Coro</span>
-              <span class="preset-card-desc">Abre todos los mics</span>
-            </div>
-            <div class="btn-preset-card preset-silencio" onclick="window.applyAudioPreset('silencio')">
-              <i data-icon="mic-off" data-size="20" data-color="#ef4444"></i>
-              <span class="preset-card-title">Silencio</span>
-              <span class="preset-card-desc">Para meditación</span>
-            </div>
-          </div>
-
-          <div class="master-audio-grid" style="margin-top: 0.6rem;">
-            <button class="btn-master-sound unmute-all" onclick="window.masterUnmuteAll()">
-              <i data-icon="mic" data-size="24"></i>
-              <span>ABRIR TODOS</span>
-            </button>
-
-            <button class="btn-master-sound mute-all" onclick="window.masterMuteAll()">
-              <i data-icon="mic-off" data-size="24"></i>
-              <span>SILENCIAR TODOS</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Lista de Familiares en Línea -->
-        <div>
-          <div class="roster-header">
-            <div class="section-subtitle" style="margin: 0; display:inline-flex; align-items:center; gap:0.35rem;">
-              <i data-icon="users" data-size="16"></i> Familiares Conectados
-            </div>
-            <span class="roster-count-badge" id="roster-total-count">0 familiares</span>
-          </div>
-
-          <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0.3rem 0 0.6rem 0;">
-            Controla el micrófono de cada persona o nómbrala como Orador para que lea:
+          <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin: 0.4rem 0 0.6rem 0;">
+            Hojas listas para imprimir o enviar en PDF con letra grande y lectura cómoda:
           </p>
 
-          <div class="roster-cards-container" id="roster-cards-container">
-            <!-- Rellenado por logistica.js -->
+          <!-- Opción 1: Orador / Lector -->
+          <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--gold-border); border-radius: 6px; padding: 0.5rem; margin-bottom: 0.5rem;">
+            <div style="font-size: 0.82rem; font-weight: 700; color: var(--gold-light); margin-bottom: 0.35rem;">📖 Para el Orador / Lector (Guía completa):</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem;">
+              <a href="/plantilla-imprimir-dia-5.html" target="_blank" class="btn-change-speaker" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: var(--gold-primary); color: #190a24; font-weight: 700; border: none; padding: 0.45rem; font-size: 0.78rem;">
+                <span>🖨️ Ver Imprimible</span>
+              </a>
+              <a href="/Novena_Mami_Olguita_Dia_5.pdf" download class="btn-change-speaker" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: #851d2e; color: #ffffff; font-weight: 700; border: none; padding: 0.45rem; font-size: 0.78rem;">
+                <span>📥 Descargar PDF</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Opción 2: Invitados y Familia -->
+          <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(96, 165, 250, 0.4); border-radius: 6px; padding: 0.5rem;">
+            <div style="font-size: 0.82rem; font-weight: 700; color: #93c5fd; margin-bottom: 0.35rem;">👥 Para Invitados y Familia (Respuestas y Coro):</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem;">
+              <a href="/plantilla-invitados-dia-5.html" target="_blank" class="btn-change-speaker" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: #2563eb; color: #ffffff; font-weight: 700; border: none; padding: 0.45rem; font-size: 0.78rem;">
+                <span>🖨️ Ver Imprimible</span>
+              </a>
+              <a href="/Novena_Mami_Olguita_Dia_5_Invitados.pdf" download class="btn-change-speaker" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: #1e3a8a; color: #ffffff; font-weight: 700; border: none; padding: 0.45rem; font-size: 0.78rem;">
+                <span>📥 Descargar PDF</span>
+              </a>
+            </div>
           </div>
         </div>
-
-      </section>
-
-      <!-- ================= PESTAÑA 3: MONITOR DE CÁMARAS ================= -->
-      <section class="tab-panel" id="tab-panel-video">
-        
-        <div class="video-wall-header">
-          <div class="section-subtitle" style="margin: 0; display:inline-flex; align-items:center; gap:0.35rem;">
-            <i data-icon="video" data-size="16"></i> Cámaras de la Familia en Vivo
-          </div>
-          <button class="btn-change-speaker" onclick="window.syncAllCameraMonitors()" style="font-size: 0.72rem; padding: 0.3rem 0.6rem; display: inline-flex; align-items: center; gap: 0.3rem;">
-            <i data-icon="refresh" data-size="13"></i> Refrescar
-          </button>
-        </div>
-
-        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.6rem;">
-          Monitorea las transmisiones de video de todos los familiares conectados:
-        </p>
-
-        <div class="video-wall-grid" id="video-wall-grid">
-          <!-- Miniaturas de video inyectadas por logistica.js -->
-        </div>
-
-      </section>
-
-      <!-- ================= PESTAÑA 4: MANDO & HERRAMIENTAS DE LOGÍSTICA ================= -->
-      <section class="tab-panel" id="tab-panel-tools">
         
         <!-- 1. Cronómetro de la Sesión de Rezo -->
         <div class="tools-card-box">
@@ -469,7 +418,23 @@
     </div>
   </div>
 
-  <script type="module" src="/js/icons.js?v=6.3"></script>
-  <script type="module" src="/js/logistica.js?v=6.3"></script>
+  <!-- MODAL PARA SELECCIONAR ORADOR / ASIGNAR LECTURA -->
+  <div class="modal-overlay" id="speaker-modal-overlay" onclick="if(event.target === this) window.closeSpeakerModal()">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display:inline-flex; align-items:center; gap:0.4rem;"><i data-icon="users" data-size="18"></i> Familiares Conectados</h3>
+        <button class="btn-close-modal" onclick="window.closeSpeakerModal()"><i data-icon="x" data-size="18"></i></button>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.5rem 0 0.8rem 0;">
+        Toca a un familiar para nombrarlo orador y guiar la lectura actual:
+      </p>
+      <div class="roster-cards-container" id="roster-cards-container" style="display:flex; flex-direction:column; gap:0.5rem; max-height: 50vh; overflow-y: auto;">
+        <!-- Inyectado por logistica.js -->
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/icons.js?v=9.0"></script>
+  <script type="module" src="/js/logistica.js?v=9.0"></script>
 </body>
 </html>

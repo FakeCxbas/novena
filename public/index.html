@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Novena por el Eterno Descanso de Mami Olguita</title>
-  <meta name="description" content="Novena y Santo Rosario por el eterno descanso de Mami Olguita. Rezo familiar en vivo con sincronización y videollamada.">
+  <meta name="description" content="Novena y Santo Rosario por el eterno descanso de Mami Olguita. Rezo familiar en vivo con sincronización en tiempo real.">
   <meta name="theme-color" content="#15110f">
   
   <!-- Conexión anticipada a Google Fonts (Cormorant Garamond, Lora, Plus Jakarta Sans) -->
@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=7.0">
+  <link rel="stylesheet" href="css/style.css?v=9.0">
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="role-familia">
@@ -56,7 +56,7 @@
           <input type="radio" name="entry-role-radio" value="familia" onchange="window.selectEntryRole('familia')" checked>
           <div class="entry-role-content">
             <div class="entry-role-title"><i data-icon="users" data-size="16"></i> Familia / Oyente (Recomendado)</div>
-            <div class="entry-role-desc">Solo rezo y respondo a coro. La pantalla cambia solita con el anfitrión.</div>
+            <div class="entry-role-desc">Rezo y respondo a coro. La pantalla cambia sincronizada con el anfitrión.</div>
           </div>
         </label>
 
@@ -105,45 +105,8 @@
       </button>
 
       <p style="font-family: var(--font-sans); font-size: 0.72rem; color: var(--text-muted); margin-top: 0.8rem; line-height: 1.35;">
-        Ajustaremos automáticamente tu micrófono y conexión para que todo fluya sin complicaciones.
+        Sincronización en tiempo real para rezar todos juntos en familia.
       </p>
-    </div>
-  </div>
-
-  <!-- GUÍA DE PERMISOS DE MICRÓFONO CON FLECHA ANIMADA -->
-  <div class="modal-overlay" id="permission-guide-overlay" style="display: none; z-index: 400; align-items: flex-start; padding-top: 1rem;">
-    <div style="background: var(--bg-surface); border: 2px solid var(--gold-primary); border-radius: var(--radius-lg); padding: 1.2rem; max-width: 360px; text-align: center; box-shadow: var(--shadow-warm); margin: 0 auto;">
-      <div style="margin-bottom: 0.6rem; animation: bounce 1.2s infinite ease-in-out; display: flex; justify-content: center;">
-        <i data-icon="arrow-up" data-size="44" data-color="#DFB15B" data-stroke="2.5"></i>
-      </div>
-      <h3 style="font-family: var(--font-serif); color: var(--gold-primary); font-size: 1.15rem; margin-bottom: 0.4rem;">
-        Permite tu micrófono
-      </h3>
-      <p style="font-family: var(--font-sans); font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
-        Toca en <strong>"Permitir"</strong> arriba en tu pantalla para que tu familia pueda escucharte rezar.
-      </p>
-    </div>
-  </div>
-
-  <!-- GUÍA SI SE BLOQUEÓ EL PERMISO -->
-  <div class="modal-overlay" id="permission-blocked-modal">
-    <div class="modal-sheet">
-      <div class="modal-header">
-        <h3 class="modal-title" style="color: var(--danger-color); display: flex; align-items: center; gap: 0.4rem;">
-          <i data-icon="alert-triangle" data-size="18"></i>
-          <span>Micrófono bloqueado</span>
-        </h3>
-        <button class="btn-header-icon" onclick="window.closeModal('permission-blocked-modal')"><i data-icon="x" data-size="16"></i></button>
-      </div>
-      <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: var(--radius-md); font-family: var(--font-sans); font-size: 0.88rem; line-height: 1.8; margin-bottom: 1.2rem;">
-        <div><strong>1.</strong> Toca el <strong>icono del candado</strong> <i data-icon="lock" data-size="14"></i> al lado de la dirección de la página.</div>
-        <div><strong>2.</strong> Activa el <strong>Micrófono</strong> en "Permitir".</div>
-        <div><strong>3.</strong> Toca el botón de abajo para recargar.</div>
-      </div>
-      <button class="btn-enter-room" onclick="location.reload()" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
-        <i data-icon="refresh" data-size="16"></i>
-        <span>Volver a intentar</span>
-      </button>
     </div>
   </div>
 
@@ -162,7 +125,7 @@
     <!-- Indicador de Quién está Leyendo (Orador) -->
     <div class="speaker-pill-status" id="speaker-pill-status">
       <span class="live-dot"></span>
-      <span id="speaker-name-label">Oración en Vivo</span>
+      <span id="speaker-name-label">Oración Familiar</span>
     </div>
 
     <div class="nav-right-controls">
@@ -203,74 +166,12 @@
     </div>
   </header>
 
-  <!-- TIRA DE CÁMARAS VISIBLE (~76px) -->
-  <section class="family-cameras-strip-container" id="family-cameras-strip">
-    <!-- Mi miniatura -->
-    <div class="camera-mini-tile self" id="local-camera-tile">
-      <video id="local-video" autoplay muted playsinline webkit-playsinline></video>
-      <div class="camera-mini-avatar" id="local-avatar">Tú</div>
-      <div class="camera-mini-name" id="local-user-name">Tú</div>
-      <div class="tile-mic-indicator" id="local-tile-mic-badge" onclick="window.toggleAudio()">
-        <i data-icon="mic" data-size="12"></i>
-      </div>
-    </div>
-
-    <!-- Miniaturas de la familia -->
-    <div id="remote-cameras-container" style="display: contents;"></div>
-  </section>
-
-  <!-- CONTENIDO PRINCIPAL: LECTURA DE LA NOVENA (DISPOSICIÓN HORIZONTAL PARA TV Y PANTALLAS GRANDES) -->
+  <!-- CONTENIDO PRINCIPAL: LECTURA DE LA NOVENA (PANTALLA LIMPIA, TEXTO GRANDE) -->
   <main class="main-prayer-container" id="main-prayer-container">
-    
-    <!-- COLUMNA LATERAL EN PANTALLA HORIZONTAL / TV: RETRATO, VELA Y DETALLES -->
-    <aside class="tv-memorial-sidebar" id="tv-memorial-sidebar">
-      <div class="tv-sidebar-card">
-        <!-- Foto destacada (Retrato de Mami Olguita o foto del paso/misterio) -->
-        <div class="tv-portrait-container">
-          <img src="/olguita.jpg" alt="Mami Olguita" class="tv-portrait-img" id="tv-sidebar-img">
-          <div class="tv-candle-badge" title="Luz perpetua en su memoria">
-            <svg class="tv-candle-svg" width="22" height="26" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2C10.5 4 8 7 8 10C8 12.2 9.8 14 12 14C14.2 14 16 12.2 16 10C16 7 13.5 4 12 2Z" fill="#F59E0B" />
-              <path d="M12 5C11.2 6.5 10 8.5 10 10.5C10 11.6 10.9 12.5 12 12.5C13.1 12.5 14 11.6 14 10.5C14 8.5 12.8 6.5 12 5Z" fill="#FEF08A" />
-            </svg>
-          </div>
-        </div>
-
-        <div class="tv-sidebar-info">
-          <h3 class="tv-sidebar-name">Mami Olguita</h3>
-          <p class="tv-sidebar-quote">«Siempre en nuestros corazones»</p>
-          <div class="tv-sidebar-day-badge" id="tv-sidebar-day">Día 3 • Novena Familiar</div>
-        </div>
-
-        <!-- Indicador de Guía / Orador en la TV -->
-        <div class="tv-sidebar-speaker">
-          <span class="tv-speaker-title">Voz Guía:</span>
-          <span class="tv-speaker-val" id="tv-sidebar-speaker-name">Sebastián</span>
-        </div>
-
-        <!-- Contador grande de Ave Marías en la TV si estamos en un misterio -->
-        <div class="tv-rosary-widget" id="tv-rosary-widget" style="display: none;">
-          <div class="tv-rosary-header">
-            <span>Cuentas del Rosario</span>
-            <span id="tv-rosary-count" class="tv-rosary-count">0 / 10</span>
-          </div>
-          <div class="tv-rosary-dots" id="tv-rosary-dots">
-            <!-- 10 bolitas doradas sincronizadas -->
-          </div>
-        </div>
-
-        <!-- Teclas de atajo para TV / Control Remoto -->
-        <div class="tv-remote-hint">
-          <span>Usa <strong>←</strong> / <strong>→</strong> o <strong>Espacio</strong> para pasar página</span>
-        </div>
-      </div>
-    </aside>
-
-    <!-- COLUMNA PRINCIPAL: SANTUARIO LITÚRGICO DE LECTURA -->
     <article class="prayer-card" id="prayer-card">
       <div class="card-top-header">
         <span class="day-badge-text" id="day-step-badge">Día 1 de la Novena</span>
-        <span class="step-progress-pill" id="step-progress-indicator">Paso 1 de 18</span>
+        <span class="step-progress-pill" id="step-progress-indicator">Paso 1 de 12</span>
       </div>
 
       <h2 class="section-title" id="card-section-title">Cargando novena...</h2>
@@ -281,36 +182,24 @@
     </article>
   </main>
 
-  <!-- BARRA INFERIOR FLOTANTE FIJA (~54px) -->
-  <footer class="bottom-floating-bar">
+  <!-- BARRA INFERIOR FLOTANTE FIJA (~50px) -->
+  <footer class="bottom-floating-bar" id="bottom-floating-bar">
     <div class="bottom-bar-inner">
-      <!-- MODO FAMILIA / OYENTES: Solo 1 botón para abrir/cerrar micrófono y cámara -->
-      <div class="family-listener-controls" id="family-listener-controls">
-        <button class="listener-mic-action listener-mic-open" id="btn-family-mic" onclick="window.toggleAudio()">
-          <span id="family-mic-icon"><i data-icon="mic" data-size="18"></i></span>
-          <span id="family-mic-text">Micrófono ENCENDIDO (Te escuchan todos)</span>
-        </button>
-
-        <button class="btn-cam-toggle" id="btn-family-cam" onclick="window.toggleVideo()" title="Prender / Apagar cámara">
-          <i data-icon="video" data-size="18"></i>
-        </button>
-      </div>
-
-      <!-- MODO ANFITRIÓN (LOGÍSTICA): Control de diapositivas y botón de herramientas -->
+      <!-- CONTROLES DE NAVEGACIÓN Y LOGÍSTICA -->
       <div class="host-nav-controls" id="host-nav-controls">
-        <button class="btn-host-step prev" id="btn-prev" onclick="window.prevStep()" disabled>
-          <i data-icon="chevron-left" data-size="18"></i>
+        <button class="btn-host-step prev" id="btn-prev" onclick="window.prevStep()" disabled title="Paso anterior (Tecla ←)">
+          <i data-icon="chevron-left" data-size="16"></i>
           <span>Anterior</span>
         </button>
 
-        <button class="btn-host-logistics" onclick="window.openModal('logistics-modal')" title="Panel de Logística">
+        <button class="btn-host-logistics" id="btn-host-logistics" onclick="window.openHostModal()" title="Panel de Logística / Control">
           <i data-icon="settings" data-size="15"></i>
           <span>Logística</span>
         </button>
 
-        <button class="btn-host-step next" id="btn-next" onclick="window.nextStep()">
+        <button class="btn-host-step next" id="btn-next" onclick="window.nextStep()" title="Paso siguiente (Tecla → o Espacio)">
           <span>Siguiente</span>
-          <i data-icon="chevron-right" data-size="18"></i>
+          <i data-icon="chevron-right" data-size="16"></i>
         </button>
       </div>
     </div>
@@ -348,50 +237,7 @@
         </div>
       </div>
 
-      <!-- Sección 2: Control de Micrófonos (Silenciar y Prender) -->
-      <div class="logistics-card-section">
-        <h4 class="logistics-section-heading" style="display: flex; align-items: center; gap: 0.4rem;">
-          <i data-icon="mic" data-size="16"></i>
-          <span>Control de Micrófonos</span>
-        </h4>
-        <p class="logistics-section-sub">Prende o apaga micrófonos a todos o a cada persona individualmente:</p>
-        
-        <!-- Presets rápidos de 1 toque -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin-bottom: 0.6rem;">
-          <button class="btn-audio-action" onclick="window.setAudioPreset('orador')" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.4); color: #7dd3fc; font-size: 0.73rem; padding: 0.5rem 0.2rem; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;">
-            <i data-icon="speaker" data-size="16"></i>
-            <span>Orador Solo</span>
-          </button>
-          <button class="btn-audio-action" onclick="window.setAudioPreset('coro')" style="background: rgba(34, 197, 94, 0.12); border-color: rgba(34, 197, 94, 0.4); color: #86efac; font-size: 0.73rem; padding: 0.5rem 0.2rem; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;">
-            <i data-icon="users" data-size="16"></i>
-            <span>Todos Coro</span>
-          </button>
-          <button class="btn-audio-action" onclick="window.setAudioPreset('silencio')" style="background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; font-size: 0.73rem; padding: 0.5rem 0.2rem; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;">
-            <i data-icon="mic-off" data-size="16"></i>
-            <span>Silencio</span>
-          </button>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.8rem;">
-          <button class="btn-audio-action mute" onclick="window.setAllListenersAudio(false)" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
-            <i data-icon="mic-off" data-size="16"></i>
-            <span>Silenciar Todos</span>
-          </button>
-          <button class="btn-audio-action unmute" onclick="window.setAllListenersAudio(true)" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
-            <i data-icon="mic" data-size="16"></i>
-            <span>Abrir Todos</span>
-          </button>
-        </div>
-
-        <div style="font-size: 0.75rem; font-weight: 700; color: var(--gold-primary); text-transform: uppercase; margin-bottom: 0.4rem;">
-          Familiares Conectados (Control Individual):
-        </div>
-        <div class="family-members-mic-list" id="family-members-mic-list">
-          <!-- Lista con toggle de mic para cada persona -->
-        </div>
-      </div>
-
-      <!-- Sección 3: Selector de Día -->
+      <!-- Sección 2: Selector de Día -->
       <div class="logistics-card-section">
         <h4 class="logistics-section-heading" style="display: flex; align-items: center; gap: 0.4rem;">
           <i data-icon="calendar" data-size="16"></i>
@@ -402,7 +248,7 @@
         </div>
       </div>
 
-      <!-- Sección 4: Saltar a oración -->
+      <!-- Sección 3: Saltar a oración -->
       <div class="logistics-card-section">
         <h4 class="logistics-section-heading" style="display: flex; align-items: center; gap: 0.4rem;">
           <i data-icon="book" data-size="16"></i>
@@ -434,6 +280,59 @@
         <button class="btn-enter-room" onclick="window.submitHostPin()">
           Tomar Control de la Novena
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PLANTILLAS PARA IMPRIMIR Y DESCARGAR PDF (ORADOR E INVITADOS) -->
+  <div class="modal-overlay" id="print-modal" onclick="if(event.target === this) window.closeModal('print-modal')">
+    <div class="modal-sheet" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display: flex; align-items: center; gap: 0.4rem; color: var(--gold-light);">
+          <i data-icon="book" data-size="18"></i>
+          <span>Plantillas para Imprimir y PDF</span>
+        </h3>
+        <button class="btn-header-icon" onclick="window.closeModal('print-modal')"><i data-icon="x" data-size="16"></i></button>
+      </div>
+
+      <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.45; margin-bottom: 0.8rem;">
+        Selecciona la versión que necesitas imprimir o descargar para el Quinto Día (ambas con letra grande y lectura fácil en papel):
+      </p>
+
+      <!-- Opción 1: Orador / Lector -->
+      <div style="background: rgba(223, 177, 91, 0.08); border: 1.5px solid var(--gold-primary); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 0.8rem;">
+        <div style="display: flex; align-items: center; gap: 0.4rem; font-weight: 700; color: var(--gold-light); font-size: 0.95rem; margin-bottom: 0.25rem;">
+          <span>📖 Guía del Orador / Lector</span>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 0.6rem 0; line-height: 1.35;">
+          Para quien lee y proclama las oraciones, citas bíblicas, meditaciones en voz alta y jaculatorias guiadas.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem;">
+          <a href="/plantilla-imprimir-dia-5.html" target="_blank" class="btn-bead-action" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: var(--gold-primary); color: #190a24; font-weight: 700; font-size: 0.78rem; padding: 0.5rem;">
+            <span>🖨️ Ver Imprimible</span>
+          </a>
+          <a href="/Novena_Mami_Olguita_Dia_5.pdf" download class="btn-bead-action" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: #851d2e; color: #ffffff; font-weight: 700; font-size: 0.78rem; padding: 0.5rem;">
+            <span>📥 Descargar PDF</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Opción 2: Invitados y Familia -->
+      <div style="background: rgba(37, 99, 235, 0.08); border: 1.5px solid rgba(96, 165, 250, 0.5); border-radius: var(--radius-md); padding: 0.85rem;">
+        <div style="display: flex; align-items: center; gap: 0.4rem; font-weight: 700; color: #93c5fd; font-size: 0.95rem; margin-bottom: 0.25rem;">
+          <span>👥 Guía para Invitados y Familia</span>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 0.6rem 0; line-height: 1.35;">
+          Resalta en negrita todas las respuestas compartidas, Acto de Contrición, Credo, misterios y jaculatorias a coro.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem;">
+          <a href="/plantilla-invitados-dia-5.html" target="_blank" class="btn-bead-action" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: #2563eb; color: #ffffff; font-weight: 700; font-size: 0.78rem; padding: 0.5rem;">
+            <span>🖨️ Ver Imprimible</span>
+          </a>
+          <a href="/Novena_Mami_Olguita_Dia_5_Invitados.pdf" download class="btn-bead-action" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.3rem; background: #1e3a8a; color: #ffffff; font-weight: 700; font-size: 0.78rem; padding: 0.5rem;">
+            <span>📥 Descargar PDF</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -493,6 +392,8 @@
         <div class="lightbox-subcaption">Usa las flechas o desliza para explorar las fotos de Mami Olguita</div>
       </div>
     </div>
+  </div>
+
   <!-- TEATRO DE PROYECCIÓN DE DESPEDIDA A PANTALLA COMPLETA (46 FOTOGRAFÍAS SINCRONIZADAS) -->
   <div class="tribute-theater-overlay" id="tribute-theater-overlay" style="display: none;">
     <!-- Audio de acompañamiento para la música conmemorativa -->
@@ -540,7 +441,7 @@
   <!-- Toast de Notificaciones -->
   <div id="toast-container" class="toast-container"></div>
 
-  <script type="module" src="/js/icons.js?v=7.0"></script>
-  <script type="module" src="/js/app.js?v=7.0"></script>
+  <script type="module" src="/js/icons.js?v=9.0"></script>
+  <script type="module" src="/js/app.js?v=9.0"></script>
 </body>
 </html>
